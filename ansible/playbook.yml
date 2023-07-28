@@ -1,0 +1,14 @@
+---
+- hosts: my-hosts
+
+  roles:
+    - role: ethersphere.bee
+  vars:
+    bee_config:
+      swap-endpoint: https://rpc.gnosischain.com/
+      #swap-endpoint: https://gno.getblock.io/<API-KEY>/mainnet/
+      swap-initial-deposit: 0
+      cors-allowed-origins: '*'
+      db-open-files-limit: 2000
+      debug-api-enable: true
+      full-node: true
