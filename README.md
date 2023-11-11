@@ -98,5 +98,5 @@ Now provision it using Ansible:
 
 ```
 cd ansible
-ansible-playbook -i hosts.yml blobscan.yml -l [staging|prod] -e env=[staging|prod]
+ansible-playbook -i hosts.yml blobscan.yml -l [staging|prod]
 ```
