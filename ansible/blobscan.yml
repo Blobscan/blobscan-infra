@@ -5,6 +5,8 @@
 
   vars_files:
     - roles/common/vars/vault.yml
+    - environments/{{ env }}/group_vars/all
+    - environments/{{ env }}/group_vars/vault.yml
 
   roles:
     - role: common
