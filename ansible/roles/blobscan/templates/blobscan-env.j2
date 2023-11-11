@@ -1,0 +1,58 @@
+COMPOSE_FILE=docker-compose.staging.yml
+# &connection_limit=1
+DATABASE_URL={{ database_url }}
+
+SECRET_KEY={{ secret_key }}
+
+CHAIN_ID={{ chain_id }}
+
+BEE_ENDPOINT={{ bee_endpoint }}
+BEE_DEBUG_ENDPOINT={{ bee_debug_endpoint }}
+
+NEXT_PUBLIC_NETWORK_NAME={{ network_name }}
+NEXT_PUBLIC_EXPLORER_BASE_URL={{ explorer_base_url }}
+NEXT_PUBLIC_BEACON_BASE_URL={{ beacon_base_url }}
+
+INDEXER_TAG={{ indexer_tag }}
+BLOBSCAN_TAG={{ blobscan_tag }}
+
+### rest api server
+EXTERNAL_WEB_PORT={{ external_web_port }}
+BLOBSCAN_API_PORT={{ blobscan_api_port }}
+EXTERNAL_API_PORT={{ external_api_port }}
+
+POSTGRES_STORAGE_ENABLED={{ postgres_storage_enabled }}
+SWARM_STORAGE_ENABLED={{ swarm_storage_enabled }}
+GOOGLE_STORAGE_ENABLED={{ google_storage_enabled }}
+GOOGLE_STORAGE_BUCKET_NAME={{ gcs_bucket_name }}
+GOOGLE_STORAGE_PROJECT_ID={{ google_project_id }}
+GOOGLE_SERVICE_KEY={{ google_service_key }}
+SENTRY_DSN_API={{ sentry_dsn_api }}
+
+#### blobscan indexer
+
+BLOBSCAN_API_ENDPOINT={{ blobscan_api_endpoint }}
+BEACON_NODE_ENDPOINT={{ beacon_node_endpoint }}
+EXECUTION_NODE_ENDPOINT={{ execution_node_endpoint }}
+SENTRY_DSN_INDEXER={{ sentry_dsn_indexer }}
+RUST_LOG={{ indexer_log }}
+
+### BEE (ethereum swarm)
+
+BEE_CORS_ALLOWED_ORIGINS=*
+BEE_DB_OPEN_FILES_LIMIT=2000
+BEE_DEBUG_API_ENABLE=true
+BEE_FULL_NODE=true
+BEE_PASSWORD={{ bee_password }}
+BEE_SWAP_ENDPOINT={{ bee_swap_endpoint }}
+
+### telemetry
+
+METRICS_ENABLED={{ metrics_enabled }}
+TRACES_ENABLED={{ traces_enabled }}
+
+OTLP_AUTH_USERNAME={{ otlp_auth_username }}
+OTLP_AUTH_PASSWORD={{ otlp_auth_password }}
+
+OTEL_EXPORTER_OTLP_PROTOCOL={{ otlp_protocol }}
+OTEL_EXPORTER_OTLP_ENDPOINT={{ otlp_url }}

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd /home/deploy/{{item}}
+git pull
+
+docker compose up -d indexer api

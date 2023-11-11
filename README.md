@@ -4,6 +4,12 @@ Provision and deployment of Blobscan infrastructure
 
 Uses [https://github.com/ethersphere/ansible-role-bee/](ansible-role-bee).
 
+Features:
+
+* Terraform for managing infra
+* Ansible for provisioning
+* Grafana Agent for monitoring
+
 ## Install dependencies
 
 **Terraform**
@@ -17,7 +23,7 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 sudo apt update && sudo apt install terraform
 ```
 
-## Provision ethswarm node with Ansible
+## Provision Ethereum Swarm node
 
 add host to `$HOME/.ssh/config`
 
@@ -50,7 +56,7 @@ ansible-playbook setup-monitoring.yml -i hosts -l eth_nodes
 ansible-playbook playbook.yml -i hosts
 ```
 
-## Provision blobscan
+## Provisioning blobscan
 
 ```
 cd terraform
@@ -86,4 +92,11 @@ Host blobscan-stg
 Hostname 34.132.253.15
 User your-username
 Port 22
+```
+
+Now provision it using Ansible:
+
+```
+cd ansible
+ansible-playbook -i hosts.yml blobscan.yml -l [staging|prod] -e env=[staging|prod]
 ```

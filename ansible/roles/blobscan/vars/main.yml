@@ -1,0 +1,46 @@
+# blobscan configuration
+
+metrics_enabled: "true"
+traces_enabled: "true"
+
+indexer_log: blob_indexer=INFO
+
+external_web_port: 3000
+blobscan_api_port: 3001
+external_api_port: 3001
+
+postgres_storage_enabled: "true"
+swarm_storage_enabled: "true"
+google_storage_enabled: "false"
+
+chain_id: 7011893061
+network_name: dencun-devnet-11
+explorer_base_url: https://dora.dencun-devnet-11.ethpandaops.io/
+beacon_base_url: https://light-beaconchain-explorer.dencun-devnet-11.ethpandaops.io/
+# https://light-beaconchain-explorer.dencun-devnet-11.ethpandaops.io/
+
+# deployment
+
+github_account: blobscan
+
+# secrets
+
+database_url: "{{ vault_database_url }}"
+secret_key: "{{ vault_secret_key }}"
+
+bee_endpoint: "{{ vault_bee_endpoint }}"
+bee_debug_endpoint: "{{ vault_bee_debug_endpoint }}"
+
+gcs_bucket_name: "{{ vault_gcs_bucket_name }}"
+google_project_id: "{{ vault_google_project_id }}"
+google_service_key: "{{ vault_google_service_key }}"
+
+sentry_dsn_api: "{{ vault_sentry_dsn_api }}"
+sentry_dsn_indexer: "{{ vault_sentry_dsn_indexer }}"
+
+blobscan_api_endpoint: "{{ vault_blobscan_api_endpoint }}"
+beacon_node_endpoint: "{{ vault_beacon_node_endpoint }}"
+execution_node_endpoint: "{{ vault_execution_node_endpoint }}"
+
+bee_password: "{{ vault_bee_password }}"
+bee_swap_endpoint: "{{ vault_bee_swap_endpoint }}"

@@ -1,0 +1,14 @@
+- name: Install common dependencies (apt)
+  apt:
+    update_cache: yes
+    name:
+      - bwm-ng
+      - fd-find
+      - htop
+      - iotop
+      - jq
+      - ncdu
+      - net-tools
+      - tmux
+      - vim
+      - vnstat

@@ -1,0 +1,70 @@
+- name: Install Grafana Agent
+  ansible.builtin.include_role:
+    name: grafana.grafana.grafana_agent
+  vars:
+    grafana_agent_metrics_config:
+      configs:
+        - name: integrations
+          remote_write:
+            - basic_auth:
+                password: '{{ grafana_cloud_api_key }}'
+                username: '{{ metrics_username }}'
+              url: '{{ prometheus_url }}'
+
+        - name: blobscan-api
+          remote_write:
+            - basic_auth:
+                password: '{{ grafana_cloud_api_key }}'
+                username: '{{ metrics_username }}'
+              url: '{{ prometheus_url }}'
+          scrape_configs:
+          - job_name: blobscan-api
+            static_configs:
+              - targets:
+                  - localhost:3001
+            relabel_configs: []
+            metric_relabel_configs: []
+            # relabel_configs:
+            # - replacement: "blobscan-api-prod"
+            #   target_label: instance
+            # metric_relabel_configs:
+            #  - action: keep
+            #    regex: nodejs_active_handles_total|nodejs_active_requests_total|nodejs_eventloop_lag_p50_seconds|nodejs_eventloop_lag_p99_seconds|nodejs_eventloop_lag_seconds|nodejs_external_memory_bytes|nodejs_gc_duration_seconds_count|nodejs_gc_duration_seconds_sum|nodejs_heap_size_total_bytes|nodejs_heap_size_used_bytes|nodejs_heap_space_size_used_bytes|nodejs_version_info|process_cpu_seconds_total|process_cpu_system_seconds_total|process_cpu_user_seconds_total|process_resident_memory_bytes|process_start_time_seconds
+            #    source_labels:
+            #    - __name__
+
+      global:
+        scrape_interval: 60s
+      wal_directory: /tmp/grafana-agent-wal
+    grafana_agent_logs_config:
+      configs:
+        - clients:
+            - basic_auth:
+                password: '{{ grafana_cloud_api_key }}'
+                username: '{{ logs_username }}'
+              url: '{{ loki_url }}'
+          name: default
+          positions:
+            filename: /tmp/positions.yaml
+          scrape_configs:
+            - job_name: integrations/node_exporter_direct_scrape
+              static_configs:
+                - targets:
+                    - localhost
+                  labels:
+                    instance: hostname
+                    __path__: /var/log/*.log
+                    job: integrations/node_exporter
+          target_config:
+            sync_period: 10s
+    grafana_agent_integrations_config:
+      node_exporter:
+        enabled: true
+        instance: ${HOSTNAME:-default}
+      prometheus_remote_write:
+        - basic_auth:
+            password: '{{ grafana_cloud_api_key }}'
+            username: '{{ metrics_username }}'
+          url: '{{ prometheus_url }}'
+    grafana_agent_env_vars:
+      HOSTNAME: '%H'

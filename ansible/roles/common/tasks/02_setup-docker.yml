@@ -1,0 +1,40 @@
+# Most of the initial tasks follow the instructions here: https://docs.docker.com/engine/install/ubuntu/
+# for install Docker Engine on Ubuntu.
+
+# Packages needs to use HTTPS apt repos
+- name: Prepare to add Docker apt repo
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg-agent
+      - software-properties-common
+
+- name: Add Docker repo key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    state: present
+
+# If you're using apt on Ubuntu, change focal for your machine's actual codename
+# If you're not using apt at all, you'll have to change the next steps to install
+# Docker using a different method.
+- name: Add Docker apt repo
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+    state: present
+
+- name: Install deployment dependencies (apt)
+  apt:
+    update_cache: yes
+    allow_unauthenticated: yes
+    name:
+      - python3-pip
+      - xz-utils
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      # Allows Ansible to become an unprivileged user
+      # https://github.com/georchestra/ansible/issues/55#issuecomment-588313638
+      - acl
