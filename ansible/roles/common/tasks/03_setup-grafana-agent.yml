@@ -43,7 +43,7 @@
                 password: '{{ grafana_cloud_api_key }}'
                 username: '{{ logs_username }}'
               url: '{{ loki_url }}'
-          name: default
+          name: integrations
           positions:
             filename: /tmp/positions.yaml
           scrape_configs:
@@ -55,16 +55,88 @@
                     instance: hostname
                     __path__: /var/log/*.log
                     job: integrations/node_exporter
+            - job_name: integrations/docker
+              docker_sd_configs:
+              - host: unix:///run/docker.sock
+                refresh_interval: 5s
+              relabel_configs:
+              - action: replace
+                replacement: integrations/docker
+                source_labels:
+                - __meta_docker_container_id
+                target_label: job
+              - action: replace
+                replacement: localhost:9090
+                source_labels:
+                - __meta_docker_container_id
+                target_label: instance
+              - source_labels:
+                - __meta_docker_container_name
+                regex: '/(.*)'
+                target_label: container
+              - source_labels:
+                - __meta_docker_container_log_stream
+                target_label: stream
           target_config:
             sync_period: 10s
+    grafana_agent_traces_config:
+      configs:
+      - name: default
+        # TODO: Quitar los receivers que no necesitemos
+        receivers:
+          jaeger:
+            protocols:
+              thrift_http:
+          otlp:
+            protocols:
+              http:
+              grpc:
+        remote_write:
+          - endpoint: '{{ tempo_url }}'
+            basic_auth:
+              username: '{{ logs_username }}'
+              password: '{{ grafana_cloud_api_key }}'
     grafana_agent_integrations_config:
+      agent:
+        enabled: true
+        relabel_configs:
+        - action: replace
+          source_labels:
+          - agent_hostname
+          target_label: instance
+      cadvisor:
+        enabled: true
+        docker_only: true
+        instance: localhost:9090
+        relabel_configs:
+          - action: replace
+            replacement: integrations/docker
+            target_label: job
+        metric_relabel_configs:
+        - action: keep
+          regex: (prometheus_target_.*|prometheus_sd_discovered_targets|agent_build.*|agent_wal_samples_appended_total|process_start_time_seconds)
+          source_labels:
+          - __name__
       node_exporter:
         enabled: true
         instance: ${HOSTNAME:-default}
+        include_exporter_metrics: true
+        disable_collectors:
+          - "mdadm"
+        relabel_configs:
+          - action: replace
+            replacement: integrations/node_exporter
+            target_label: job
       prometheus_remote_write:
         - basic_auth:
             password: '{{ grafana_cloud_api_key }}'
             username: '{{ metrics_username }}'
           url: '{{ prometheus_url }}'
+      # redis_exporter:
+      # postgres_exporter:
+      # github_exporter:
+      # blackbox:
+      # gcp_exporter:
+
     grafana_agent_env_vars:
       HOSTNAME: '%H'
