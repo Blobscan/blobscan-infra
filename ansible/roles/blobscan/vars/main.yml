@@ -19,10 +19,6 @@ explorer_base_url: https://dora.dencun-devnet-11.ethpandaops.io/
 beacon_base_url: https://light-beaconchain-explorer.dencun-devnet-11.ethpandaops.io/
 # https://light-beaconchain-explorer.dencun-devnet-11.ethpandaops.io/
 
-# deployment
-
-github_account: blobscan
-
 # secrets
 
 database_url: "{{ vault_database_url }}"

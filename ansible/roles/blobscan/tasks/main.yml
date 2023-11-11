@@ -19,6 +19,8 @@
   copy:
     src: ./authorized_keys_file.conf
     dest: /etc/ssh/sshd_config.d/authorized_keys_file.conf
+  notify:
+    - reload ssh
 
 # For each service, generate an SSH key pair used for cloning git repos
 # and deploying over SSH
@@ -75,17 +77,18 @@
 - name: Copy blobscan aliases
   copy:
     src: ./blobscan_aliases.sh
-    dest: /home/deploy/blobscan_aliases.sh
+    dest: /home/deploy/aliases.sh
     owner: deploy
 
 - name: Add blobscan aliases to bashrc
   lineinfile:
     dest: "/home/deploy/.bashrc"
-    line: ". $HOME/blobscan_aliases.sh"
+    line: ". $HOME/aliases.sh"
     owner: deploy
 
 - name: Clone repositories
-  command: git -C /home/deploy clone git@{{ item }}.github.com:{{ github_account }}/{{ item }}.git
+  command: git -C /home/deploy clone https://github.com/blobscan/{{ item }}.git
+  # command: git -C /home/deploy clone git@{{ item }}.github.com:{{ github_account }}/{{ item }}.git
   args:
     creates: /home/deploy/{{ item }}/
   loop: "{{ apps }}"

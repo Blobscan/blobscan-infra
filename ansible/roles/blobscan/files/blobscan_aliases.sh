@@ -1,5 +1,6 @@
 #/bin/bash
 BLOBSCAN_DIR=$HOME/blobscan
+BLOBSCAN_IDX_DIR=$HOME/blobscan-indexer.rs
 
 blobscan-check-blocks() {
   while true; do echo "$(date)| $(cast block-number)"; sleep 300; done
@@ -26,6 +27,11 @@ blobscan-logs() {
 blobscan-stop() {
   cd $BLOBSCAN_DIR
   docker compose stop
+}
+
+indexer-logs() {
+  cd $BLOBSCAN_IDX_DIR
+  docker compose logs -f --tail=100 $@
 }
 
 alias wfree="watch free -m"
