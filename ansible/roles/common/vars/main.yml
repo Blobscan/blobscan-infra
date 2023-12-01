@@ -8,7 +8,10 @@ otlp_protocol: http/protobuf
 # secrets
 
 grafana_cloud_api_key: "{{ vault_grafana_cloud_api_key }}"
+grafana_cloud_logs_api_key: "{{ vault_grafana_cloud_logs_api_key }}"
 metrics_username: "{{ vault_metrics_username }}"
 logs_username: "{{ vault_logs_username }}"
+traces_username: "{{ vault_traces_username }}"
+
 otlp_auth_username: "{{ vault_otlp_auth_username }}"
 otlp_auth_password: "{{ vault_otlp_auth_password }}"

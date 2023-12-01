@@ -3,6 +3,7 @@
     update_cache: yes
     name:
       - bwm-ng
+      - fail2ban
       - fd-find
       - htop
       - iotop

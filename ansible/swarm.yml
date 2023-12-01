@@ -1,8 +1,15 @@
 ---
-- hosts: my-hosts
+- hosts: swarm
+  become: yes
+  become_user: root
 
   roles:
+    - role: common
     - role: ethersphere.bee
+
+  vars_files:
+    - roles/common/vars/vault.yml
+
   vars:
     bee_config:
       swap-endpoint: https://rpc.gnosischain.com/

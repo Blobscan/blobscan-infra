@@ -44,16 +44,13 @@ ansible-galaxy install ethersphere.bee
 ansible-galaxy collection install grafana.grafana
 ```
 
+Edit the hosts file.
+
 And run ansible
 
 ```
 cd ansible
-
-
-ansible-playbook setup-monitoring.yml -i hosts -l devnet
-ansible-playbook setup-monitoring.yml -i hosts -l eth_nodes
-
-ansible-playbook playbook.yml -i hosts
+ansible-playbook swarm.yml -i hosts.yml -l swarm
 ```
 
 ## Provisioning blobscan
@@ -64,7 +61,8 @@ cp terraform.tfvars.example terraform.tfvars
 
 # adjust your values in terraform.tfvars
 
-terraform workspace new blobstan-staging
+# the workspace name will be the instance name too
+terraform workspace new blobstan-staging-01
 terraform plan
 terraform apply
 ```

@@ -8,7 +8,7 @@ blobscan-check-blocks() {
 
 blobscan-up() {
   cd $BLOBSCAN_DIR
-  docker compose up -d api indexer
+  docker compose up -d
 }
 
 blobscan-resetdb() {

@@ -18,20 +18,18 @@
                 username: '{{ metrics_username }}'
               url: '{{ prometheus_url }}'
           scrape_configs:
-          - job_name: blobscan-api
-            static_configs:
-              - targets:
-                  - localhost:3001
-            relabel_configs: []
-            metric_relabel_configs: []
-            # relabel_configs:
-            # - replacement: "blobscan-api-prod"
-            #   target_label: instance
-            # metric_relabel_configs:
-            #  - action: keep
-            #    regex: nodejs_active_handles_total|nodejs_active_requests_total|nodejs_eventloop_lag_p50_seconds|nodejs_eventloop_lag_p99_seconds|nodejs_eventloop_lag_seconds|nodejs_external_memory_bytes|nodejs_gc_duration_seconds_count|nodejs_gc_duration_seconds_sum|nodejs_heap_size_total_bytes|nodejs_heap_size_used_bytes|nodejs_heap_space_size_used_bytes|nodejs_version_info|process_cpu_seconds_total|process_cpu_system_seconds_total|process_cpu_user_seconds_total|process_resident_memory_bytes|process_start_time_seconds
-            #    source_labels:
-            #    - __name__
+            - job_name: blobscan-api
+              static_configs:
+                - targets:
+                    - localhost:3001
+              relabel_configs:
+                - replacement: "{{ env }}"
+                  target_label: environment
+              metric_relabel_configs:
+                - action: keep
+                  regex: nodejs_active_handles_total|nodejs_active_requests_total|nodejs_eventloop_lag_p50_seconds|nodejs_eventloop_lag_p99_seconds|nodejs_eventloop_lag_seconds|nodejs_external_memory_bytes|nodejs_gc_duration_seconds_count|nodejs_gc_duration_seconds_sum|nodejs_heap_size_total_bytes|nodejs_heap_size_used_bytes|nodejs_heap_space_size_used_bytes|nodejs_version_info|process_cpu_seconds_total|process_cpu_system_seconds_total|process_cpu_user_seconds_total|process_resident_memory_bytes|process_start_time_seconds
+                  source_labels:
+                    - __name__
 
       global:
         scrape_interval: 60s
@@ -40,21 +38,21 @@
       configs:
         - clients:
             - basic_auth:
-                password: '{{ grafana_cloud_api_key }}'
+                password: '{{ grafana_cloud_logs_api_key }}'
                 username: '{{ logs_username }}'
               url: '{{ loki_url }}'
           name: integrations
           positions:
             filename: /tmp/positions.yaml
           scrape_configs:
-            - job_name: integrations/node_exporter_direct_scrape
-              static_configs:
-                - targets:
-                    - localhost
-                  labels:
-                    instance: hostname
-                    __path__: /var/log/*.log
-                    job: integrations/node_exporter
+            # - job_name: integrations/node_exporter_direct_scrape
+            #   static_configs:
+            #     - targets:
+            #         - localhost
+            #       labels:
+            #         instance: hostname
+            #         __path__: /var/log/*.log
+            #         job: integrations/node_exporter
             - job_name: integrations/docker
               docker_sd_configs:
               - host: unix:///run/docker.sock
@@ -77,6 +75,8 @@
               - source_labels:
                 - __meta_docker_container_log_stream
                 target_label: stream
+              - replacement: "{{ env }}"
+                target_label: environment
           target_config:
             sync_period: 10s
     grafana_agent_traces_config:
@@ -94,7 +94,7 @@
         remote_write:
           - endpoint: '{{ tempo_url }}'
             basic_auth:
-              username: '{{ logs_username }}'
+              username: '{{ traces_username }}'
               password: '{{ grafana_cloud_api_key }}'
     grafana_agent_integrations_config:
       agent:
@@ -104,6 +104,32 @@
           source_labels:
           - agent_hostname
           target_label: instance
+        - replacement: "{{ env }}"
+          target_label: environment
+      blackbox:
+        enabled: true
+        blackbox_targets:
+          - name: blobscan-api
+            address: https://api.blobscan.com
+            module: http_2xx
+          - name: blobscan-web
+            address: https://blobscan.com
+            module: http_2xx
+          - name: blobscan-web-stg
+            address: https://staging.blobscan.com
+            module: http_2xx
+        blackbox_config:
+          modules:
+            http_2xx:
+              prober: http
+              timeout: 5s
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - replacement: "{{ env }}"
+            target_label: environment
       cadvisor:
         enabled: true
         docker_only: true
@@ -112,6 +138,8 @@
           - action: replace
             replacement: integrations/docker
             target_label: job
+          - replacement: "{{ env }}"
+            target_label: environment
         metric_relabel_configs:
         - action: keep
           regex: (prometheus_target_.*|prometheus_sd_discovered_targets|agent_build.*|agent_wal_samples_appended_total|process_start_time_seconds)
@@ -127,6 +155,8 @@
           - action: replace
             replacement: integrations/node_exporter
             target_label: job
+          - replacement: "{{ env }}"
+            target_label: environment
       prometheus_remote_write:
         - basic_auth:
             password: '{{ grafana_cloud_api_key }}'
@@ -135,8 +165,13 @@
       # redis_exporter:
       # postgres_exporter:
       # github_exporter:
-      # blackbox:
       # gcp_exporter:
 
     grafana_agent_env_vars:
       HOSTNAME: '%H'
+
+- name: Add grafana-agent user to docker group
+  user:
+    name: grafana-agent
+    groups:
+      - docker

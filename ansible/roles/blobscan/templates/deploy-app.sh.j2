@@ -3,4 +3,4 @@
 cd /home/deploy/{{item}}
 git pull
 
-docker compose up -d
+docker compose pull && docker compose up -d
