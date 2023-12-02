@@ -1,4 +1,10 @@
 indexer_tag: master
 blobscan_tag: stable
 
-chain_id: 7011893061
+postgres_storage_enabled: "false"
+swarm_storage_enabled: "false"
+google_storage_enabled: "true"
+chain_id: 7011893062
+network_name: dencun-devnet-12
+explorer_base_url: https://dora.dencun-devnet-12.ethpandaops.io/
+beacon_base_url: https://dencun-devnet-12.beaconcha.in/
