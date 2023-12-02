@@ -101,3 +101,18 @@
     dest: /home/deploy/{{ item }}/.env
     owner: deploy
   loop: "{{ apps }}"
+
+- name: Configure cron (daily)
+  ansible.builtin.cron:
+    name: "Update daily stats"
+    minute: "5"
+    hour: "0"
+    job: "cd $HOME/blobscan && docker compose exec api pnpm job:daily >> $HOME/cron.log"
+    user: deploy
+
+- name: Configure cron (overall)
+  ansible.builtin.cron:
+    name: "Update overall stats"
+    minute: "*/15"
+    job: "cd $HOME/blobscan && docker compose exec api pnpm job:overall >> $HOME/cron.log"
+    user: deploy
