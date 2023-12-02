@@ -18,6 +18,7 @@ resource "google_compute_instance" "instance_with_ip" {
         initialize_params{
             image = "debian-cloud/debian-12"
             size = 100
+            type = "pd-balanced"
         }
     }
 

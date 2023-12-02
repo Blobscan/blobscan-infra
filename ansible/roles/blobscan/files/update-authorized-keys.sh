@@ -14,7 +14,7 @@ do
 done
 
 USERS="pablo"
-for user in $(USERS); do
-	cp /home/$user/.ssh/authorized_keys /etc/ssh/authorized_keys/$user
+for user in $USERS; do
+  cp /home/$user/.ssh/authorized_keys /etc/ssh/authorized_keys/$user
   chmod 644 /etc/ssh/authorized_keys/$user
 done
