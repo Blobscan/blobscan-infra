@@ -13,7 +13,7 @@ do
   echo "restrict,command=\"./deploy-${app}.sh\",no-pty,no-port-forwarding,no-x11-forwarding,no-agent-forwarding `cat /home/deploy/.ssh/${app}.id_ed25519.pub`" >> /etc/ssh/authorized_keys/deploy
 done
 
-USERS="pablo"
+USERS="pablo elessar gabi"
 for user in $USERS; do
   cp /home/$user/.ssh/authorized_keys /etc/ssh/authorized_keys/$user
   chmod 644 /etc/ssh/authorized_keys/$user
