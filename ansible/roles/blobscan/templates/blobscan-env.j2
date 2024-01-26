@@ -2,6 +2,11 @@ COMPOSE_FILE=docker-compose.api.yml
 # &connection_limit=1
 DATABASE_URL={{ database_url }}
 
+REDIS_QUEUE_HOST={{ redis_host }}
+REDIS_QUEUE_PORT={{ redis_port }}
+REDIS_QUEUE_USERNAME={{ redis_username }}
+REDIS_QUEUE_PASSWORD={{ redis_password }}
+
 SECRET_KEY={{ secret_key }}
 
 CHAIN_ID={{ chain_id }}
@@ -28,6 +33,8 @@ GOOGLE_STORAGE_BUCKET_NAME={{ gcs_bucket_name }}
 GOOGLE_STORAGE_PROJECT_ID={{ google_project_id }}
 GOOGLE_SERVICE_KEY={{ google_service_key }}
 SENTRY_DSN_API={{ sentry_dsn_api }}
+
+BLOB_PROPAGATOR_ENABLED={{ blobscan_queue_enabled }}
 
 #### blobscan indexer
 

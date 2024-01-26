@@ -4,12 +4,12 @@
   vars:
     grafana_agent_metrics_config:
       configs:
-        - name: integrations
-          remote_write:
-            - basic_auth:
-                password: '{{ grafana_cloud_api_key }}'
-                username: '{{ metrics_username }}'
-              url: '{{ prometheus_url }}'
+        #- name: integrations
+        #  remote_write:
+        #    - basic_auth:
+        #        password: '{{ grafana_cloud_api_key }}'
+        #        username: '{{ metrics_username }}'
+        #      url: '{{ prometheus_url }}'
 
         - name: blobscan-api
           remote_write:
@@ -82,7 +82,7 @@
     grafana_agent_traces_config:
       configs:
       - name: default
-        # TODO: Quitar los receivers que no necesitemos
+        # TODO: Remove unused receivers
         receivers:
           jaeger:
             protocols:
@@ -110,13 +110,10 @@
         enabled: true
         blackbox_targets:
           - name: blobscan-api
-            address: https://api.blobscan.com
+            address: "https://api.{{ domain }}"
             module: http_2xx
           - name: blobscan-web
-            address: https://blobscan.com
-            module: http_2xx
-          - name: blobscan-web-stg
-            address: https://staging.blobscan.com
+            address: "https://{{ domain }}"
             module: http_2xx
         blackbox_config:
           modules:

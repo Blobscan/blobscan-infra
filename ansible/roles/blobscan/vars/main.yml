@@ -1,3 +1,18 @@
+# letsencrypt (api)
+
+letsencrypt_certificates: [["api.{{ domain }}"]]
+#letsencrypt_certificates: [["api.{{ domain }}", "{{ extra_goerli_domain }}"]]
+letsencrypt_email: "{{ vault_letsencrypt_email }}"
+
+# grafana configuration
+
+prometheus_url: https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push
+loki_url: https://logs-prod-eu-west-0.grafana.net/loki/api/v1/push
+tempo_url: https://tempo-eu-west-0.grafana.net
+
+otlp_url: https://otlp-gateway-prod-eu-west-0.grafana.net/otlp
+otlp_protocol: http/protobuf
+
 # blobscan configuration
 
 metrics_enabled: "true"
@@ -8,6 +23,7 @@ indexer_log: blob_indexer=INFO
 external_web_port: 3000
 blobscan_api_port: 3001
 external_api_port: 3001
+blobscan_api_endpoint: "http://localhost:3001"
 
 # secrets
 
@@ -24,9 +40,22 @@ google_service_key: "{{ vault_google_service_key }}"
 sentry_dsn_api: "{{ vault_sentry_dsn_api }}"
 sentry_dsn_indexer: "{{ vault_sentry_dsn_indexer }}"
 
-blobscan_api_endpoint: "{{ vault_blobscan_api_endpoint }}"
 beacon_node_endpoint: "{{ vault_beacon_node_endpoint }}"
 execution_node_endpoint: "{{ vault_execution_node_endpoint }}"
 
 bee_password: "{{ vault_bee_password }}"
 bee_swap_endpoint: "{{ vault_bee_swap_endpoint }}"
+
+redis_host: "{{ vault_redis_host }}"
+redis_port: "{{ vault_redis_port }}"
+redis_username: "{{ vault_redis_username }}"
+redis_password: "{{ vault_redis_password }}"
+
+grafana_cloud_api_key: "{{ vault_grafana_cloud_api_key }}"
+grafana_cloud_logs_api_key: "{{ vault_grafana_cloud_logs_api_key }}"
+metrics_username: "{{ vault_metrics_username }}"
+logs_username: "{{ vault_logs_username }}"
+traces_username: "{{ vault_traces_username }}"
+
+otlp_auth_username: "{{ vault_otlp_auth_username }}"
+otlp_auth_password: "{{ vault_otlp_auth_password }}"

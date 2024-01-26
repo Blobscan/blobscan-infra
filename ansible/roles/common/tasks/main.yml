@@ -1,3 +1,1 @@
 - include_tasks: 01_setup-common.yml
-- include_tasks: 02_setup-docker.yml
-- include_tasks: 03_setup-grafana-agent.yml

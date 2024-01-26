@@ -4,10 +4,25 @@
   become_user: root
 
   vars_files:
-    - roles/common/vars/vault.yml
+    - roles/blobscan/vars/main.yml
+    - roles/blobscan/vars/vault.yml
     - environments/{{ env }}/group_vars/all
-    - environments/{{ env }}/group_vars/vault.yml
+    - environments/{{ env }}/group_vars/vault_{{ network_name }}.yml
+    - environments/{{ network_name }}/group_vars/all
 
   roles:
     - role: common
+    - role: geerlingguy.docker
+      vars:
+        docker_package_state: present
+        docker_install_compose_plugin: true
+
     - role: blobscan
+    - role: julienpalard.nginx_letsencrypt
+  tasks:
+    - name: Configure nginx as reverse proxy for Blobscan API
+      template:
+        src: ./roles/blobscan/templates/nginx-certbot.conf.j2
+        dest: /etc/nginx/sites-available/blobscan-api.conf
+      notify:
+        - reload nginx

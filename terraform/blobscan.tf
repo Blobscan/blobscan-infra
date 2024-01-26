@@ -4,19 +4,20 @@ resource "google_compute_address" "static" {
 
   labels = {
     app = "blobscan"
-    env = terraform.workspace == "blobscan-staging" ? "staging" : "production"
+    env = "${var.env}"
   }
 }
 
 // Define VM resource
-resource "google_compute_instance" "instance_with_ip" {
+resource "google_compute_instance" "blobscan" {
     name         = terraform.workspace
-    machine_type = "e2-small"
+    machine_type = "${var.vm_size}"
     zone         = "${var.zone}"
+    tags         = ["allow-ssh", "allow-eth-traffic"]
 
     boot_disk {
         initialize_params{
-            image = "debian-cloud/debian-12"
+            image = "ubuntu-os-cloud/ubuntu-minimal-2204-lts"
             size = 100
             type = "pd-balanced"
         }
@@ -35,11 +36,48 @@ resource "google_compute_instance" "instance_with_ip" {
 
   labels = {
     app = "blobscan"
-    env = terraform.workspace == "blobscan-staging" ? "staging" : "production"
+    env = "${var.env}"
   }
 }
 
-// Expose IP of VM
+# fetching already created DNS zone
+data "google_dns_managed_zone" "blobscan_zone" {
+  name = "blobscan"
+}
+
+resource "google_dns_record_set" "blobscan_network_domain" {
+  name         = var.env == "prod" ? "${var.network}.blobscan.com." : "stg-${var.network}.blobscan.com."
+  managed_zone = data.google_dns_managed_zone.blobscan_zone.name
+  type         = "CNAME"
+  ttl          = 300
+  rrdatas = [
+    "cname.vercel-dns.com."
+  ]
+}
+
+resource "google_dns_record_set" "blobscan_api" {
+  name         = var.env == "prod" ? "api.${var.network}.blobscan.com." : "api.stg-${var.network}.blobscan.com."
+  managed_zone = data.google_dns_managed_zone.blobscan_zone.name
+  type         = "A"
+  ttl          = 300
+  rrdatas = [
+    google_compute_instance.blobscan.network_interface[0].access_config[0].nat_ip
+  ]
+}
+
 output "ip" {
- value = "${google_compute_instance.instance_with_ip.network_interface.0.access_config.0.nat_ip}"
+ value = "${google_compute_instance.blobscan.network_interface.0.access_config.0.nat_ip}"
+}
+
+output "vm_private_ip" {
+  value = google_compute_instance.blobscan.network_interface[0].network_ip
+  description = "The private IP address of the VM"
+}
+
+output "domain_api" {
+ value = "${google_dns_record_set.blobscan_api.name}"
+}
+
+output "domain_web" {
+ value = "${google_dns_record_set.blobscan_network_domain.name}"
 }

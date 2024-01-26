@@ -1,0 +1,32 @@
+---
+- name: Deploy ethereum - execution and consensus only
+  hosts: ethereum_nodes
+  become: true
+
+  vars:
+    deploy_execution: true
+    deploy_consensus: true
+    deploy_validator: false
+    expose_execution_client_authrpc_port_to_host: true
+    expose_execution_client_json_rpc_port_to_host: true
+    expose_execution_client_json_rpc_websocket_port_to_host: true
+    expose_execution_client_metrics_port_to_host: true
+    expose_consensus_client_http_port_to_host: true
+    expose_consensus_client_metrics_port_to_host: true
+    host_ip_address_to_bind_to: 0.0.0.0
+    nethermind_docker_image: nethermind/nethermind:1.25.3
+    lighthouse_docker_image: sigp/lighthouse:v4.6.0-amd64-modern
+    geth_docker_image: ethereum/client-go:v1.13.11
+
+  vars_files:
+    - environments/{{ network }}/group_vars/all
+
+  roles:
+    - role: common
+    - role: geerlingguy.docker
+      vars:
+        docker_package_state: present
+        docker_install_compose_plugin: true
+
+    - role: slingnode.ethereum
+    - role: slingnode.ethereum_observability

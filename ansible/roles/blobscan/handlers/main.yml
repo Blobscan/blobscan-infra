@@ -3,3 +3,9 @@
     name: ssh
     enabled: yes
     state: reloaded
+
+- name: reload nginx
+  systemd:
+    name: nginx
+    enabled: yes
+    state: reloaded
