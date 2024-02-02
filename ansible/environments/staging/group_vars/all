@@ -8,4 +8,4 @@ google_storage_enabled: "true"
 blobscan_queue_enabled: "false"
 
 root_domain: "blobscan.com"
-domain: "stg-{{ network_name }}.{{ root_domain }}"
+domain: "staging.{{ root_domain }}"

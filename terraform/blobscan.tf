@@ -46,7 +46,7 @@ data "google_dns_managed_zone" "blobscan_zone" {
 }
 
 resource "google_dns_record_set" "blobscan_network_domain" {
-  name         = var.env == "prod" ? "${var.network}.blobscan.com." : "stg-${var.network}.blobscan.com."
+  name         = var.env == "prod" ? "${var.network}.blobscan.com." : "staging.blobscan.com."
   managed_zone = data.google_dns_managed_zone.blobscan_zone.name
   type         = "CNAME"
   ttl          = 300
@@ -56,7 +56,7 @@ resource "google_dns_record_set" "blobscan_network_domain" {
 }
 
 resource "google_dns_record_set" "blobscan_api" {
-  name         = var.env == "prod" ? "api.${var.network}.blobscan.com." : "api.stg-${var.network}.blobscan.com."
+  name         = var.env == "prod" ? "api.${var.network}.blobscan.com." : "api.staging.blobscan.com."
   managed_zone = data.google_dns_managed_zone.blobscan_zone.name
   type         = "A"
   ttl          = 300

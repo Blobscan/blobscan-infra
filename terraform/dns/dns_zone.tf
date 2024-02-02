@@ -41,7 +41,8 @@ resource "google_dns_record_set" "vercel_txt" {
   type         = "TXT"
   ttl          = 300
   rrdatas      = [
-    "vc-domain-verify=stg-goerli.blobscan.com,6da5d62b5797925346a9"
+    "vc-domain-verify=staging.blobscan.com,4d547b4db1d17583b230",
+    "vc-domain-verify=holesky.blobscan.com,1e2dbdb249701cdb1b6a"
   ]
 }
 

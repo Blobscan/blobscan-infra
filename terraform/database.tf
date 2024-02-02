@@ -6,7 +6,7 @@ resource "digitalocean_database_cluster" "blobscan" {
   storage_size_mib = 61440
   region       = "${var.do_region}"
   node_count   = 1
-  tags = ["blobscan", "${var.env}", "${var.network}"]
+  tags         = ["blobscan", "${var.env}", "${var.network}"]
 }
 
 output "db_host" {
