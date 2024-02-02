@@ -1,0 +1,19 @@
+---
+- hosts: blobscan
+  become: yes
+  become_user: root
+
+  vars_files:
+    - roles/blobscan/vars/main.yml
+    - roles/blobscan/vars/vault.yml
+    - environments/{{ env }}/group_vars/all
+    - environments/{{ env }}/group_vars/vault_{{ network_name }}.yml
+    - environments/{{ network_name }}/group_vars/all
+
+  tasks:
+    - name: Copy .env files
+      template:
+        src: ./roles/blobscan/templates/{{ item }}-env.j2
+        dest: /home/deploy/{{ item }}/.env
+        owner: deploy
+      loop: "{{ apps }}"

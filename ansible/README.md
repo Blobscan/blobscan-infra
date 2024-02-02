@@ -33,3 +33,15 @@ ansible-playbook swarm.yml -i hosts.yml
 ```
 ansible-playbook blobscan.yml -i hosts.yml [-l ...]
 ```
+
+Check if there are manual or unapplied changes to the configuration files:
+
+```
+ansible-playbook update-blobscan-config.yml -i hosts.yml --check
+```
+
+Update the configuration files:
+
+```
+ansible-playbook update-blobscan-config.yml -i hosts.yml
+```
