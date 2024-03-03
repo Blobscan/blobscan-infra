@@ -1,7 +1,7 @@
 server {
 
     listen 443 ssl; # managed by Certbot
-    server_name api.{{ domain }} {{ extra_goerli_domain|default('') }};
+    server_name api.{{ domain }};
 
     access_log /var/log/nginx/blobscan-api_access.log;
     error_log /var/log/nginx/blobscan-api_error.log;
@@ -27,12 +27,6 @@ server {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
-    {% if extra_goerli_domain is defined %}
-    if ($host = {{ extra_goerli_domain }}) {
-        return 301 https://$host$request_uri;
-    } # managed by Certbot
-    {% endif %}
-
-    server_name api.{{ domain }} {{ extra_goerli_domain|default('') }};
+    server_name api.{{ domain }};
     return 404; # managed by Certbot
 }

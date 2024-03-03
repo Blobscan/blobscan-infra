@@ -20,6 +20,8 @@
 
   vars_files:
     - environments/{{ network }}/group_vars/all
+    - roles/blobscan/vars/main.yml
+    - roles/blobscan/vars/vault.yml
 
   roles:
     - role: common
@@ -30,3 +32,4 @@
 
     - role: slingnode.ethereum
     - role: slingnode.ethereum_observability
+    - role: grafana_ethereum_nodes

@@ -1,7 +1,6 @@
 # letsencrypt (api)
 
 letsencrypt_certificates: [["api.{{ domain }}"]]
-#letsencrypt_certificates: [["api.{{ domain }}", "{{ extra_goerli_domain }}"]]
 letsencrypt_email: "{{ vault_letsencrypt_email }}"
 
 # grafana configuration

@@ -4,28 +4,32 @@
   vars:
     grafana_agent_metrics_config:
       configs:
-
-        - name: blobscan-api
+        - name: "{{ network }}-node"
           remote_write:
             - basic_auth:
                 password: '{{ grafana_cloud_api_key }}'
                 username: '{{ metrics_username }}'
               url: '{{ prometheus_url }}'
           scrape_configs:
-            - job_name: blobscan-api
+            - job_name: execution
               static_configs:
                 - targets:
-                    - localhost:3001
+                    - "{{ execution_node_metrics }}"
               relabel_configs:
                 - replacement: "{{ env }}"
                   target_label: environment
-                - replacement: "{{ network_name }}"
+                - replacement: "{{ network }}"
                   target_label: network
-              metric_relabel_configs:
-                - action: keep
-                  regex: nodejs_active_handles_total|nodejs_active_requests_total|nodejs_eventloop_lag_p50_seconds|nodejs_eventloop_lag_p99_seconds|nodejs_eventloop_lag_seconds|nodejs_external_memory_bytes|nodejs_gc_duration_seconds_count|nodejs_gc_duration_seconds_sum|nodejs_heap_size_total_bytes|nodejs_heap_size_used_bytes|nodejs_heap_space_size_used_bytes|nodejs_version_info|process_cpu_seconds_total|process_cpu_system_seconds_total|process_cpu_user_seconds_total|process_resident_memory_bytes|process_start_time_seconds
-                  source_labels:
-                    - __name__
+            - job_name: consensus
+              static_configs:
+                - targets:
+                    - "{{ beacon_node_metrics }}"
+              # metrics_path: "/debug/metrics" (geth)
+              relabel_configs:
+                - replacement: "{{ env }}"
+                  target_label: environment
+                - replacement: "{{ network }}"
+                  target_label: network
 
       global:
         scrape_interval: 60s
@@ -73,7 +77,7 @@
                 target_label: stream
               - replacement: "{{ env }}"
                 target_label: environment
-              - replacement: "{{ network_name }}"
+              - replacement: "{{ network }}"
                 target_label: network
           target_config:
             sync_period: 10s
@@ -104,37 +108,8 @@
           target_label: instance
         - replacement: "{{ env }}"
           target_label: environment
-        - replacement: "{{ network_name }}"
+        - replacement: "{{ network }}"
           target_label: network
-      blackbox:
-        enabled: true
-        blackbox_targets:
-          - name: blobscan-api
-            address: "https://api.{{ domain }}"
-            module: http_2xx
-          - name: blobscan-web
-            address: "https://{{ domain }}"
-            module: http_2xx
-          - name: consensus
-            address: "{{ beacon_node_endpoint }}"
-            module: http_2xx
-          - name: execution
-            address: "{{ execution_node_endpoint }}"
-            module: http_2xx
-        blackbox_config:
-          modules:
-            http_2xx:
-              prober: http
-              timeout: 5s
-        relabel_configs:
-          - source_labels: [__address__]
-            target_label: __param_target
-          - source_labels: [__param_target]
-            target_label: instance
-          - replacement: "{{ env }}"
-            target_label: environment
-          - replacement: "{{ network_name }}"
-            target_label: network
       cadvisor:
         enabled: true
         docker_only: true
@@ -145,7 +120,7 @@
             target_label: job
           - replacement: "{{ env }}"
             target_label: environment
-          - replacement: "{{ network_name }}"
+          - replacement: "{{ network }}"
             target_label: network
         metric_relabel_configs:
         - action: keep
@@ -164,7 +139,7 @@
             target_label: job
           - replacement: "{{ env }}"
             target_label: environment
-          - replacement: "{{ network_name }}"
+          - replacement: "{{ network }}"
             target_label: network
       prometheus_remote_write:
         - basic_auth:
