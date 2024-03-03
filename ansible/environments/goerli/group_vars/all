@@ -3,5 +3,5 @@ explorer_base_url: https://dora.goerli.ethpandaops.io/
 beacon_base_url: https://goerli.beaconcha.in/
 consensus_checkpoint_sync_url: https://goerli.checkpoint-sync.ethpandaops.io/
 
-vault_beacon_node_endpoint: http://10.128.0.24:5052
-vault_execution_node_endpoint: http://10.128.0.24:8545
+beacon_node_endpoint: http://10.128.0.24:5052
+execution_node_endpoint: http://10.128.0.24:8545

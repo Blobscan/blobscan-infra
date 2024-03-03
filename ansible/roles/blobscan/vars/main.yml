@@ -40,9 +40,6 @@ google_service_key: "{{ vault_google_service_key }}"
 sentry_dsn_api: "{{ vault_sentry_dsn_api }}"
 sentry_dsn_indexer: "{{ vault_sentry_dsn_indexer }}"
 
-beacon_node_endpoint: "{{ vault_beacon_node_endpoint }}"
-execution_node_endpoint: "{{ vault_execution_node_endpoint }}"
-
 bee_password: "{{ vault_bee_password }}"
 bee_swap_endpoint: "{{ vault_bee_swap_endpoint }}"
 
