@@ -11,6 +11,11 @@ blobscan-up() {
   docker compose up -d
 }
 
+blobscan-stop() {
+  cd $BLOBSCAN_DIR
+  docker compose stop
+}
+
 blobscan-resetdb() {
   cd $BLOBSCAN_DIR
   docker compose stop indexer
@@ -24,8 +29,13 @@ blobscan-logs() {
   docker compose logs -f --tail=100 $@
 }
 
-blobscan-stop() {
-  cd $BLOBSCAN_DIR
+indexer-up() {
+  cd $BLOBSCAN_IDX_DIR
+  docker compose up -d
+}
+
+indexer-stop() {
+  cd $BLOBSCAN_IDX_DIR
   docker compose stop
 }
 
