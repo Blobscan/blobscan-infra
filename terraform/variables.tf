@@ -46,6 +46,6 @@ variable "vm_size" {
   type = string
 }
 
-variable "api_domain" {
+variable "domain" {
   type = string
 }
