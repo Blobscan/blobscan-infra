@@ -4,7 +4,13 @@
       - nginx
       - python3-certbot-nginx
 
+- name: Check if nginx config already exists
+  ansible.builtin.stat:
+    path: /etc/nginx/sites-available/blobscan-api.conf
+  register: nginx_config
+
 - name: Configure nginx as reverse proxy for Blobscan API
+  when: not nginx_config.stat.exists
   template:
     src: ./nginx.conf.j2
     dest: /etc/nginx/sites-available/blobscan-api.conf

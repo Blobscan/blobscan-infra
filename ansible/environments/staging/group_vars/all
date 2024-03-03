@@ -5,7 +5,7 @@ postgres_storage_enabled: "false"
 swarm_storage_enabled: "false"
 google_storage_enabled: "true"
 
-blobscan_queue_enabled: "false"
+blobscan_queue_enabled: "true"
 
 root_domain: "blobscan.com"
 domain: "staging.{{ root_domain }}"

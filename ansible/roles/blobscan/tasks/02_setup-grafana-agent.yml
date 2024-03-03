@@ -18,6 +18,21 @@
                 username: '{{ metrics_username }}'
               url: '{{ prometheus_url }}'
           scrape_configs:
+            - job_name: execution
+              static_configs:
+                - targets:
+                    - "{{ execution_node_metrics }}"
+              relabel_configs:
+                - replacement: "{{ env }}"
+                  target_label: environment
+            - job_name: consensus
+              static_configs:
+                - targets:
+                    - "{{ beacon_node_metrics }}"
+              # metrics_path: "/debug/metrics" (geth)
+              relabel_configs:
+                - replacement: "{{ env }}"
+                  target_label: environment
             - job_name: blobscan-api
               static_configs:
                 - targets:
