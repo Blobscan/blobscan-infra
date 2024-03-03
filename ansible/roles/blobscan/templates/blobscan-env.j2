@@ -2,10 +2,7 @@ COMPOSE_FILE=docker-compose.api.yml
 # &connection_limit=1
 DATABASE_URL={{ database_url }}
 
-REDIS_QUEUE_HOST={{ redis_host }}
-REDIS_QUEUE_PORT={{ redis_port }}
-REDIS_QUEUE_USERNAME={{ redis_username }}
-REDIS_QUEUE_PASSWORD={{ redis_password }}
+REDIS_URI={{ redis_uri }}
 
 SECRET_KEY={{ secret_key }}
 

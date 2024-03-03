@@ -46,10 +46,7 @@ execution_node_endpoint: "{{ vault_execution_node_endpoint }}"
 bee_password: "{{ vault_bee_password }}"
 bee_swap_endpoint: "{{ vault_bee_swap_endpoint }}"
 
-redis_host: "{{ vault_redis_host }}"
-redis_port: "{{ vault_redis_port }}"
-redis_username: "{{ vault_redis_username }}"
-redis_password: "{{ vault_redis_password }}"
+redis_uri: "{{ vault_redis_uri }}"
 
 grafana_cloud_api_key: "{{ vault_grafana_cloud_api_key }}"
 grafana_cloud_logs_api_key: "{{ vault_grafana_cloud_logs_api_key }}"
