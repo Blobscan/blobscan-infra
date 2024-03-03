@@ -7,5 +7,4 @@ google_storage_enabled: "true"
 
 blobscan_queue_enabled: "true"
 
-root_domain: "blobscan.com"
-domain: "staging.{{ root_domain }}"
+domain: staging.blobscan.com

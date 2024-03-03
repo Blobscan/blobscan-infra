@@ -49,7 +49,7 @@ resource "google_dns_record_set" "vercel_txt" {
 resource "google_dns_record_set" "api_redirect" {
   name         = "api.blobscan.com."
   managed_zone = data.google_dns_managed_zone.blobscan_zone.name
-  type         = "CNAME"
+  type         = "A"
   ttl          = 300
-  rrdatas      = ["api.goerli.blobscan.com."]
+  rrdatas      = ["34.66.41.112"]
 }

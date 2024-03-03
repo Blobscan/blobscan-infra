@@ -45,3 +45,7 @@ variable "database_size" {
 variable "vm_size" {
   type = string
 }
+
+variable "api_domain" {
+  type = string
+}
