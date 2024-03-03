@@ -3,7 +3,7 @@
 ## Goerli
 
 ```
-cd terraform/ethereum_goerli
+cd terraform/ethereum_node
 cp terraform.tfvars.example terraform.tfvars
 
 # adjust your values in terraform.tfvars
@@ -44,6 +44,6 @@ Now provision it using Ansible:
 ```
 cd ansible
 ansible-galaxy collection install community.docker:==3.4.5
-ansible-playbook -i hosts.yml blobscan.yml -l [staging|prod]
+ansible-playbook -i hosts.yml blobscan.yml
 ```
 

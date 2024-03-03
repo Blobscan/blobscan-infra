@@ -14,9 +14,9 @@
     expose_consensus_client_http_port_to_host: true
     expose_consensus_client_metrics_port_to_host: true
     host_ip_address_to_bind_to: 0.0.0.0
-    nethermind_docker_image: nethermind/nethermind:1.25.3
-    lighthouse_docker_image: sigp/lighthouse:v4.6.0-amd64-modern
-    geth_docker_image: ethereum/client-go:v1.13.11
+    nethermind_docker_image: nethermind/nethermind:1.25.4
+    lighthouse_docker_image: sigp/lighthouse:v5.0.0-amd64-modern
+    geth_docker_image: ethereum/client-go:v1.13.14
 
   vars_files:
     - environments/{{ network }}/group_vars/all
