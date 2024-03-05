@@ -19,7 +19,7 @@ resource "google_compute_instance" "ethereum_node" {
     boot_disk {
         initialize_params{
             image = "ubuntu-os-cloud/ubuntu-minimal-2204-lts"
-            size = 600
+            size = "${var.disk_size}"
             type = "pd-balanced"
         }
     }

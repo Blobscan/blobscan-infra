@@ -37,3 +37,7 @@ variable "network" {
 variable "instance_type" {
   type = string
 }
+
+variable "disk_size" {
+  type = number
+}

@@ -1,41 +1,30 @@
 #!/bin/bash
+set -u
+
+deploy_network() {
+	export TF_VAR_network=$1
+	export TF_VAR_env=$2
+	export TF_VAR_domain="$3"
+	export TF_WORKSPACE=blobscan-$1-$2
+	export TF_VAR_database_size=$4
+	terraform apply
+}
 
 # Ethereum Goerli (used as staging)
 export TF_VAR_network=goerli
 export TF_VAR_env=staging
-export TF_VAR_database_size=db-s-2vcpu-4gb
-
+export TF_VAR_domain=staging.blobscan.com
 export TF_WORKSPACE=blobscan-$TF_VAR_env-goerli
-TF_VAR_domain="staging.blobscan.com" terraform apply
+terraform apply
 
 # Ethereum Goerli
-export TF_VAR_network=goerli
-export TF_VAR_env=prod
-export TF_VAR_database_size=db-s-2vcpu-4gb
-
-export TF_WORKSPACE=blobscan-$TF_VAR_network-$TF_VAR_env
-TF_VAR_domain="$TF_VAR_network.blobscan.com" terraform apply
+deploy_network goerli prod goerli.blobscan.com db-s-2vcpu-4gb
 
 # Ethereum Testnet Holesky
-export TF_VAR_network=holesky
-export TF_VAR_env=prod
-export TF_VAR_database_size=db-s-1vcpu-2gb
-
-export TF_WORKSPACE=blobscan-$TF_VAR_network-$TF_VAR_env
-TF_VAR_domain="$TF_VAR_network.blobscan.com" terraform apply
+deploy_network holesky prod holesky.blobscan.com db-s-1vcpu-2gb
 
 # Ethereum Testnet Sepolia
-export TF_VAR_network=sepolia
-export TF_VAR_env=prod
-export TF_VAR_database_size=db-s-1vcpu-2gb
-
-export TF_WORKSPACE=blobscan-$TF_VAR_network-$TF_VAR_env
-TF_VAR_domain="$TF_VAR_network.blobscan.com" terraform apply
+deploy_network sepolia prod sepolia.blobscan.com db-s-1vcpu-2gb
 
 # Ethereum Mainnet
-export TF_VAR_network=mainnet
-export TF_VAR_env=prod
-export TF_VAR_database_size=db-s-2vcpu-4gb
-
-export TF_WORKSPACE=blobscan-$TF_VAR_network-$TF_VAR_env
-TF_VAR_domain="blobscan.com" terraform apply
+deploy_network mainnet prod blobscan.com db-s-2vcpu-4gb
