@@ -22,6 +22,12 @@ ansible-galaxy install -r requirements.yml
 ansible-playbook ethereum-node.yml -i hosts.yml
 ```
 
+Using ethpandaops roles (only for Gnosis chain at the moment):
+
+```
+ansible-playbook ethereum-node-pandaops.yml -i hosts.yml
+```
+
 ## Provisioning a Swarm node
 
 ```

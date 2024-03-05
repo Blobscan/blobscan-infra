@@ -4,14 +4,18 @@ roles:
   - name: slingnode.ethereum_observability
   - name: geerlingguy.docker
     version: 7.0.2
+  - name: geerlingguy.pip
+    version: latest
   - name: julienpalard.nginx_letsencrypt
     version: master
   - name: ethersphere.bee
     version: main
-
 
 collections:
   - name: community.docker
     version: 3.5.0
   - name: grafana.grafana
     version: 2.2.4
+  - name: ethpandaops.general
+    source: https://github.com/ethpandaops/ansible-collection-general.git,master
+    type: git

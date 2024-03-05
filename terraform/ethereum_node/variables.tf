@@ -10,6 +10,7 @@ variable "gcp_credentials_path" {
 
 variable "region" {
   type = string
+  default = "us-west1"
 }
 
 variable "zone" {

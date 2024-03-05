@@ -1,0 +1,25 @@
+---
+- name: Deploy ethereum node using ethpandaops ansible roles
+  hosts: ethereum_nodes_pandaops
+  become: true
+
+  vars:
+    nethermind_container_command_extra_args:
+      - --config=gnosis
+      - --Sync.SnapSync=false
+      - --HealthChecks.Enabled=false
+      - --Pruning.CacheMb=2048
+    nimbus_announced_ip: 35.197.107.93  # otherwise {{ansible_host}} is used and ip can't be resolved by nimbus
+    nimbus_container_image: ghcr.io/gnosischain/gnosis-nimbus-eth2:latest
+    nimbus_container_command_extra_args:
+      - --network=gnosis
+
+  roles:
+    - role: common
+    - role: geerlingguy.docker
+    - role: geerlingguy.pip
+      pip_install_packages:
+      - name: docker
+    - role: ethpandaops.general.nethermind
+    - role: ethpandaops.general.nimbus
+    - role: ethpandaops.general.ethereum_metrics_exporter

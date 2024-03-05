@@ -1,8 +1,9 @@
 # Blobscan infra
 
-Provision and deployment of Blobscan infrastructure
+This repository contains Infractructure as Code (IaC) resources to deploy
+and provision Blobscan.
 
-Uses [https://github.com/ethersphere/ansible-role-bee/](ansible-role-bee).
+Uses [https://github.com/ethersphere/ansible-role-bee/](ansible-role-bee) among other [ansible requirements](ansible/requirements.yml).
 
 Features:
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ue
 
-deploy_network() {
+deploy_node() {
 	export TF_VAR_network=$1
 	export TF_VAR_disk_size=$2
 	export TF_VAR_zone=$3
@@ -10,8 +10,9 @@ deploy_network() {
 	terraform apply
 }
 
-deploy_network holesky 600 us-central1-a n2-custom-4-36608-ext
-deploy_network sepolia 600 us-central1-a c3-standard-4
-deploy_network mainnet 2100 us-west1-a n2-custom-4-22016-ext
+deploy_node holesky 600 us-central1-a n2-custom-4-36608-ext
+deploy_node sepolia 600 us-central1-a c3-standard-4
+deploy_node mainnet 2100 us-west1-a n2-custom-4-22016-ext
+deploy_node gnosis 600 us-west1-a n2-standard-4
 # broken
-deploy_network goerli 600 us-central1-a n2-custom-4-22272
+deploy_node goerli 600 us-central1-a n2-custom-4-22272
