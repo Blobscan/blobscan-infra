@@ -1,0 +1,11 @@
+chain_id: 100
+explorer_base_url: https://gnosisscan.io/
+beacon_base_url: https://beacon.gnosisscan.io/
+consensus_checkpoint_sync_url:
+
+beacon_node_endpoint: http://10.138.0.3:5052
+beacon_node_metrics: 10.138.0.3:8008
+execution_node_endpoint: http://10.138.0.3:8545
+execution_node_metrics: 10.138.0.3:6060
+
+domain: gnosis.blobscan.com

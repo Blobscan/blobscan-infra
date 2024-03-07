@@ -3,13 +3,23 @@
   hosts: ethereum_nodes_pandaops
   become: true
 
+  vars_files:
+    - roles/grafana_ethereum_nodes/vars/main.yml
+    - roles/grafana_ethereum_nodes/vars/vault.yml
+    - environments/gnosis/group_vars/all
+
   vars:
+    grafana_role: ethereum_node
+    ethereum_metrics_exporter_el_endpoint: http://execution:8545
+    ethereum_metrics_exporter_cl_endpoint: http://consensus:5051
+    nethermind_container_name: execution
     nethermind_container_command_extra_args:
       - --config=gnosis
       - --Sync.SnapSync=false
       - --HealthChecks.Enabled=false
       - --Pruning.CacheMb=2048
     nimbus_announced_ip: 35.197.107.93  # otherwise {{ansible_host}} is used and ip can't be resolved by nimbus
+    nimbus_container_name: consensus
     nimbus_container_image: ghcr.io/gnosischain/gnosis-nimbus-eth2:latest
     nimbus_container_command_extra_args:
       - --network=gnosis
@@ -20,6 +30,8 @@
     - role: geerlingguy.pip
       pip_install_packages:
       - name: docker
+    - role: grafana_ethereum_nodes
     - role: ethpandaops.general.nethermind
     - role: ethpandaops.general.nimbus
     - role: ethpandaops.general.ethereum_metrics_exporter
+    - role: ethpandaops.general.ethstats

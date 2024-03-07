@@ -14,6 +14,7 @@ deploy_blobscan() {
 export TF_VAR_network=goerli
 export TF_VAR_env=staging
 export TF_VAR_domain=staging.blobscan.com
+export TF_VAR_database_size=db-s-1vcpu-2gb
 export TF_WORKSPACE=blobscan-$TF_VAR_env-goerli
 terraform apply
 

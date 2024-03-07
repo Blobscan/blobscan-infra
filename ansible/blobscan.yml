@@ -3,6 +3,9 @@
   become: yes
   become_user: root
 
+  vars:
+    grafana_role: blobscan
+
   vars_files:
     - roles/blobscan/vars/main.yml
     - roles/blobscan/vars/vault.yml

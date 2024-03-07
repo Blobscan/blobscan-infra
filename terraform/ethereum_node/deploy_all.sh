@@ -15,4 +15,4 @@ deploy_node sepolia 600 us-central1-a c3-standard-4
 deploy_node mainnet 2100 us-west1-a n2-custom-4-22016-ext
 deploy_node gnosis 600 us-west1-a n2-standard-4
 # broken
-deploy_node goerli 600 us-central1-a n2-custom-4-22272
+deploy_node goerli 1024 us-central1-a n2-custom-4-22272

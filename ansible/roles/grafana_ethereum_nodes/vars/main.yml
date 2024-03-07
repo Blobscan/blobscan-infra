@@ -1,0 +1,36 @@
+grafana_cloud_api_key: "{{ vault_grafana_cloud_api_key }}"
+grafana_cloud_logs_api_key: "{{ vault_grafana_cloud_logs_api_key }}"
+metrics_username: "{{ vault_metrics_username }}"
+logs_username: "{{ vault_logs_username }}"
+traces_username: "{{ vault_traces_username }}"
+
+prometheus_url: https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push
+loki_url: https://logs-prod-eu-west-0.grafana.net/loki/api/v1/push
+tempo_url: https://tempo-eu-west-0.grafana.net
+
+ethereum_metrics_exporter_container_ports:
+  - "9095:9090"
+
+ethstats_container_env:
+  WS_SECRET: "{{ vault_ethstats_ws_secret }}"
+
+docker_network_name: "service_net"
+
+ethereum_metrics_exporter_container_networks:
+  - name: "{{ docker_network_name }}"
+
+nimbus_container_networks:
+  - name: "{{ docker_network_name }}"
+nimbus_container_ports:
+  - "0.0.0.0:{{ nimbus_ports_http_beacon }}:{{ nimbus_ports_http_beacon }}"
+  - "{{ nimbus_ports_p2p_tcp }}:{{ nimbus_ports_p2p_tcp }}"
+  - "{{ nimbus_ports_p2p_udp }}:{{ nimbus_ports_p2p_udp }}/udp"
+  - "{{ nimbus_ports_metrics }}:{{ nimbus_ports_metrics }}"
+
+nethermind_container_ports:
+  - "0.0.0.0:{{ nethermind_ports_http_rpc }}:{{ nethermind_ports_http_rpc }}"
+  - "0.0.0.0:{{ nethermind_ports_engine }}:{{ nethermind_ports_engine }}"
+  - "{{ nethermind_ports_p2p }}:{{ nethermind_ports_p2p }}"
+  - "{{ nethermind_ports_p2p }}:{{ nethermind_ports_p2p }}/udp"
+nethermind_container_networks:
+  - name: "{{ docker_network_name }}"

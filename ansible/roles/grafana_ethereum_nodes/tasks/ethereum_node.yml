@@ -1,0 +1,174 @@
+- name: Create a network
+  community.docker.docker_network:
+    name: "{{ docker_network_name }}"
+
+- name: Install Grafana Agent
+  ansible.builtin.include_role:
+    name: grafana.grafana.grafana_agent
+  vars:
+    grafana_agent_metrics_config:
+      configs:
+        - name: "{{ network }}-node"
+          remote_write:
+            - basic_auth:
+                password: '{{ grafana_cloud_api_key }}'
+                username: '{{ metrics_username }}'
+              url: '{{ prometheus_url }}'
+          scrape_configs:
+            - job_name: ethereum_metrics_exporter
+              static_configs:
+                - targets:
+                    - "http://localhost:8008"
+              relabel_configs:
+                - replacement: "{{ env }}"
+                  target_label: environment
+                - replacement: "{{ network }}"
+                  target_label: network
+            - job_name: execution
+              static_configs:
+                - targets:
+                    - "{{ execution_node_metrics }}"
+              relabel_configs:
+                - replacement: "{{ env }}"
+                  target_label: environment
+                - replacement: "{{ network }}"
+                  target_label: network
+            - job_name: consensus
+              static_configs:
+                - targets:
+                    - "{{ beacon_node_metrics }}"
+              # metrics_path: "/debug/metrics" (geth)
+              relabel_configs:
+                - replacement: "{{ env }}"
+                  target_label: environment
+                - replacement: "{{ network }}"
+                  target_label: network
+
+      global:
+        scrape_interval: 60s
+      wal_directory: /tmp/grafana-agent-wal
+    grafana_agent_logs_config:
+      configs:
+        - clients:
+            - basic_auth:
+                password: '{{ grafana_cloud_logs_api_key }}'
+                username: '{{ logs_username }}'
+              url: '{{ loki_url }}'
+          name: integrations
+          positions:
+            filename: /tmp/positions.yaml
+          scrape_configs:
+            # - job_name: integrations/node_exporter_direct_scrape
+            #   static_configs:
+            #     - targets:
+            #         - localhost
+            #       labels:
+            #         instance: hostname
+            #         __path__: /var/log/*.log
+            #         job: integrations/node_exporter
+            - job_name: integrations/docker
+              docker_sd_configs:
+              - host: unix:///run/docker.sock
+                refresh_interval: 5s
+              relabel_configs:
+              - action: replace
+                replacement: integrations/docker
+                source_labels:
+                - __meta_docker_container_id
+                target_label: job
+              - action: replace
+                replacement: localhost:9090
+                source_labels:
+                - __meta_docker_container_id
+                target_label: instance
+              - source_labels:
+                - __meta_docker_container_name
+                regex: '/(.*)'
+                target_label: container
+              - source_labels:
+                - __meta_docker_container_log_stream
+                target_label: stream
+              - replacement: "{{ env }}"
+                target_label: environment
+              - replacement: "{{ network }}"
+                target_label: network
+          target_config:
+            sync_period: 10s
+    grafana_agent_traces_config:
+      configs:
+      - name: default
+        # TODO: Remove unused receivers
+        receivers:
+          jaeger:
+            protocols:
+              thrift_http:
+          otlp:
+            protocols:
+              http:
+              grpc:
+        remote_write:
+          - endpoint: '{{ tempo_url }}'
+            basic_auth:
+              username: '{{ traces_username }}'
+              password: '{{ grafana_cloud_api_key }}'
+    grafana_agent_integrations_config:
+      agent:
+        enabled: true
+        relabel_configs:
+        - action: replace
+          source_labels:
+          - agent_hostname
+          target_label: instance
+        - replacement: "{{ env }}"
+          target_label: environment
+        - replacement: "{{ network }}"
+          target_label: network
+      cadvisor:
+        enabled: true
+        docker_only: true
+        instance: localhost:9090
+        relabel_configs:
+          - action: replace
+            replacement: integrations/docker
+            target_label: job
+          - replacement: "{{ env }}"
+            target_label: environment
+          - replacement: "{{ network }}"
+            target_label: network
+        metric_relabel_configs:
+        - action: keep
+          regex: (prometheus_target_.*|prometheus_sd_discovered_targets|agent_build.*|agent_wal_samples_appended_total|process_start_time_seconds)
+          source_labels:
+          - __name__
+      node_exporter:
+        enabled: true
+        instance: ${HOSTNAME:-default}
+        include_exporter_metrics: true
+        disable_collectors:
+          - "mdadm"
+        relabel_configs:
+          - action: replace
+            replacement: integrations/node_exporter
+            target_label: job
+          - replacement: "{{ env }}"
+            target_label: environment
+          - replacement: "{{ network }}"
+            target_label: network
+      prometheus_remote_write:
+        - basic_auth:
+            password: '{{ grafana_cloud_api_key }}'
+            username: '{{ metrics_username }}'
+          url: '{{ prometheus_url }}'
+      # redis_exporter:
+      # postgres_exporter:
+      # github_exporter:
+      # gcp_exporter:
+
+    grafana_agent_env_vars:
+      HOSTNAME: '%H'
+
+- name: Add grafana-agent user to docker group
+  user:
+    name: grafana-agent
+    groups:
+      - docker

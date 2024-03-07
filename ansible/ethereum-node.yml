@@ -3,7 +3,17 @@
   hosts: ethereum_nodes
   become: true
 
+  vars_files:
+    - environments/{{ network }}/group_vars/all
+    - roles/blobscan/vars/main.yml
+    - roles/blobscan/vars/vault.yml
+    - roles/grafana_ethereum_nodes/vars/main.yml
+    - roles/grafana_ethereum_nodes/vars/vault.yml
+
   vars:
+    grafana_role: "ethereum_node"
+    ethereum_metrics_exporter_el_endpoint: http://execution:8545
+    ethereum_metrics_exporter_cl_endpoint: http://consensus:5052
     deploy_execution: true
     deploy_consensus: true
     deploy_validator: false
@@ -18,18 +28,14 @@
     lighthouse_docker_image: sigp/lighthouse:v5.0.0-amd64-modern
     geth_docker_image: ethereum/client-go:v1.13.14
 
-  vars_files:
-    - environments/{{ network }}/group_vars/all
-    - roles/blobscan/vars/main.yml
-    - roles/blobscan/vars/vault.yml
-
   roles:
     - role: common
     - role: geerlingguy.docker
       vars:
         docker_package_state: present
         docker_install_compose_plugin: true
-
     - role: slingnode.ethereum
-    - role: slingnode.ethereum_observability
+#    - role: slingnode.ethereum_observability
     - role: grafana_ethereum_nodes
+    - role: ethpandaops.general.ethereum_metrics_exporter
+    - role: ethpandaops.general.ethstats
