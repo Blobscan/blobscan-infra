@@ -4,8 +4,6 @@ beacon_base_url: https://goerli.beaconcha.in/
 consensus_checkpoint_sync_url: https://goerli.checkpoint-sync.ethpandaops.io/
 
 beacon_node_endpoint: http://10.128.0.24:5052
-beacon_node_metrics: 10.128.0.24:8008
 execution_node_endpoint: http://10.128.0.24:8545
-execution_node_metrics: 10.128.0.24:6060
 
 domain: goerli.blobscan.com

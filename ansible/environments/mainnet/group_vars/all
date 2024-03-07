@@ -4,8 +4,6 @@ beacon_base_url: https://beaconcha.in/
 consensus_checkpoint_sync_url: https://beaconstate.ethstaker.cc/
 
 beacon_node_endpoint: http://10.128.0.34:5052
-beacon_node_metrics: 10.128.0.34:8008
 execution_node_endpoint: http://10.128.0.34:8545
-execution_node_metrics: 10.128.0.34:6060
 
 domain: blobscan.com

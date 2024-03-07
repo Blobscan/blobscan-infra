@@ -18,7 +18,7 @@
             - job_name: ethereum_metrics_exporter
               static_configs:
                 - targets:
-                    - "http://localhost:8008"
+                    - "http://localhost:9095"
               relabel_configs:
                 - replacement: "{{ env }}"
                   target_label: environment

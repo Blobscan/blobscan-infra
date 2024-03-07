@@ -4,8 +4,6 @@ beacon_base_url: https://holesky.beaconcha.in/
 consensus_checkpoint_sync_url: https://checkpoint-sync.holesky.ethpandaops.io/
 
 beacon_node_endpoint: http://10.128.0.29:5052
-beacon_node_metrics: 10.128.0.29:8008
 execution_node_endpoint: http://10.128.0.29:8545
-execution_node_metrics: 10.128.0.29:6060
 
 domain: holesky.blobscan.com

@@ -32,5 +32,10 @@ nethermind_container_ports:
   - "0.0.0.0:{{ nethermind_ports_engine }}:{{ nethermind_ports_engine }}"
   - "{{ nethermind_ports_p2p }}:{{ nethermind_ports_p2p }}"
   - "{{ nethermind_ports_p2p }}:{{ nethermind_ports_p2p }}/udp"
+  - "{{ nethermind_ports_metrics }}:{{ nethermind_ports_metrics }}"
+
 nethermind_container_networks:
   - name: "{{ docker_network_name }}"
+
+beacon_node_metrics: http://localhost:8008
+execution_node_metrics: http://localhost:6060
