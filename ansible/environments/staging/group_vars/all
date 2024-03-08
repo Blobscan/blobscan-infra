@@ -5,6 +5,4 @@ postgres_storage_enabled: "false"
 swarm_storage_enabled: "false"
 google_storage_enabled: "true"
 
-blobscan_queue_enabled: "true"
-
 domain: staging.blobscan.com
