@@ -19,7 +19,7 @@
               relabel_configs:
                 - replacement: "{{ env }}"
                   target_label: environment
-                - replacement: "{{ network_name }}"
+                - replacement: "{{ network }}"
                   target_label: network
               metric_relabel_configs:
                 - action: keep
@@ -73,7 +73,7 @@
                 target_label: stream
               - replacement: "{{ env }}"
                 target_label: environment
-              - replacement: "{{ network_name }}"
+              - replacement: "{{ network }}"
                 target_label: network
           target_config:
             sync_period: 10s
@@ -104,7 +104,7 @@
           target_label: instance
         - replacement: "{{ env }}"
           target_label: environment
-        - replacement: "{{ network_name }}"
+        - replacement: "{{ network }}"
           target_label: network
       blackbox:
         enabled: true
@@ -133,7 +133,7 @@
             target_label: instance
           - replacement: "{{ env }}"
             target_label: environment
-          - replacement: "{{ network_name }}"
+          - replacement: "{{ network }}"
             target_label: network
       cadvisor:
         enabled: true
@@ -145,7 +145,7 @@
             target_label: job
           - replacement: "{{ env }}"
             target_label: environment
-          - replacement: "{{ network_name }}"
+          - replacement: "{{ network }}"
             target_label: network
         metric_relabel_configs:
         - action: keep
@@ -164,7 +164,7 @@
             target_label: job
           - replacement: "{{ env }}"
             target_label: environment
-          - replacement: "{{ network_name }}"
+          - replacement: "{{ network }}"
             target_label: network
       prometheus_remote_write:
         - basic_auth:

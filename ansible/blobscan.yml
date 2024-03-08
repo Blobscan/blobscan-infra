@@ -9,9 +9,9 @@
   vars_files:
     - roles/blobscan/vars/main.yml
     - roles/blobscan/vars/vault.yml
-    - environments/{{ network_name }}/group_vars/all
+    - environments/{{ network }}/group_vars/all
     - environments/{{ env }}/group_vars/all
-    - environments/{{ env }}/group_vars/vault_{{ network_name }}.yml
+    - environments/{{ env }}/group_vars/vault_{{ network }}.yml
 
   roles:
     - role: common

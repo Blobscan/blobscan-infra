@@ -20,6 +20,7 @@ ansible-galaxy install -r requirements.yml
 
 ```
 ansible-playbook ethereum-node.yml -i hosts.yml
+ansible-playbook ethereum-node.yml -i hosts.yml -l sepolia_nodes
 ```
 
 Using ethpandaops roles (only for Gnosis chain at the moment):
@@ -37,7 +38,8 @@ ansible-playbook swarm.yml -i hosts.yml
 ## Provisioning a Blobscan instance
 
 ```
-ansible-playbook blobscan.yml -i hosts.yml [-l ...]
+ansible-playbook blobscan.yml -i hosts.yml
+ansible-playbook blobscan.yml -i hosts.yml -l sepolia
 ```
 
 Check if there are manual or unapplied changes to the configuration files:
