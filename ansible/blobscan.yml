@@ -10,8 +10,8 @@
     - roles/blobscan/vars/main.yml
     - roles/blobscan/vars/vault.yml
     - environments/{{ network }}/group_vars/all
+    - environments/{{ network }}/group_vars/vault.yml
     - environments/{{ env }}/group_vars/all
-    - environments/{{ env }}/group_vars/vault_{{ network }}.yml
 
   roles:
     - role: common
