@@ -8,24 +8,24 @@ prometheus_url: https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push
 loki_url: https://logs-prod-eu-west-0.grafana.net/loki/api/v1/push
 tempo_url: https://tempo-eu-west-0.grafana.net
 
+beacon_node_metrics: http://localhost:8008
+execution_node_metrics: http://localhost:6060
+
+docker_network_name: "service_net"
+
+# ethpandaops roles
+ethereum_node_cl_checkpoint_sync_enabled: true
 ethereum_metrics_exporter_container_ports:
   - "9095:9090"
 
 ethstats_container_env:
   WS_SECRET: "{{ vault_ethstats_ws_secret }}"
 
-docker_network_name: "service_net"
-
-ethereum_metrics_exporter_container_networks:
-  - name: "{{ docker_network_name }}"
-
-nimbus_container_networks:
-  - name: "{{ docker_network_name }}"
-nimbus_container_ports:
-  - "0.0.0.0:{{ nimbus_ports_http_beacon }}:{{ nimbus_ports_http_beacon }}"
-  - "{{ nimbus_ports_p2p_tcp }}:{{ nimbus_ports_p2p_tcp }}"
-  - "{{ nimbus_ports_p2p_udp }}:{{ nimbus_ports_p2p_udp }}/udp"
-  - "{{ nimbus_ports_metrics }}:{{ nimbus_ports_metrics }}"
+lodestar_container_ports:
+  - "0.0.0.0:{{ lodestar_ports_http_beacon }}:{{ lodestar_ports_http_beacon }}"
+  - "{{ lodestar_ports_p2p_tcp }}:{{ lodestar_ports_p2p_tcp }}"
+  - "{{ lodestar_ports_p2p_udp }}:{{ lodestar_ports_p2p_udp }}/udp"
+  - "{{ lodestar_ports_metrics }}:{{ lodestar_ports_metrics }}"
 
 nethermind_container_ports:
   - "0.0.0.0:{{ nethermind_ports_http_rpc }}:{{ nethermind_ports_http_rpc }}"
@@ -37,5 +37,8 @@ nethermind_container_ports:
 nethermind_container_networks:
   - name: "{{ docker_network_name }}"
 
-beacon_node_metrics: http://localhost:8008
-execution_node_metrics: http://localhost:6060
+lodestar_container_networks:
+  - name: "{{ docker_network_name }}"
+
+ethereum_metrics_exporter_container_networks:
+  - name: "{{ docker_network_name }}"

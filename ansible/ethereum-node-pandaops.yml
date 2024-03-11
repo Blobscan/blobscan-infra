@@ -18,12 +18,17 @@
       - --Sync.SnapSync=false
       - --HealthChecks.Enabled=false
       - --Pruning.CacheMb=2048
-    nimbus_announced_ip: 35.197.107.93  # otherwise {{ansible_host}} is used and ip can't be resolved by nimbus
-    nimbus_container_name: consensus
-    nimbus_container_image: ghcr.io/gnosischain/gnosis-nimbus-eth2:latest
-    nimbus_container_command_extra_args:
+    ethereum_node_cl_checkpoint_sync_enabled: true
+    lodestar_checkpoint_sync_enabled: true
+    lodestar_container_name: consensus
+    lodestar_execution_engine_endpoint: http://execution:8551
+    checkpoint_sync_url: https://checkpoint.gnosischain.com
+    lodestar_announced_ip: 35.197.31.226
+    lodestar_container_command_checkpoint_args:
+      - --checkpointSyncUrl={{ checkpoint_sync_url }}
+      - --nat
       - --network=gnosis
-    nimbus_execution_engine_endpoint: http://execution:8551
+
 
   roles:
     - role: common
@@ -33,6 +38,6 @@
       - name: docker
     - role: grafana_ethereum_nodes
     - role: ethpandaops.general.nethermind
-    - role: ethpandaops.general.nimbus
+    - role: ethpandaops.general.lodestar
     - role: ethpandaops.general.ethereum_metrics_exporter
     - role: ethpandaops.general.ethstats

@@ -27,7 +27,6 @@
     nethermind_docker_image: nethermind/nethermind:1.25.4
     lighthouse_docker_image: sigp/lighthouse:v5.0.0-amd64-modern
     geth_docker_image: ethereum/client-go:v1.13.14
-    nimbus_docker_image: ghcr.io/gnosischain/gnosis-nimbus-eth2:latest
 
   roles:
     - role: common

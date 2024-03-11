@@ -44,7 +44,8 @@ resource "google_dns_record_set" "vercel_txt" {
     "vc-domain-verify=www.blobscan.com,1130e79e0c9bf734078c",
     "vc-domain-verify=blobscan.com,1f1a5c04138fdc3a4cbf",
     "vc-domain-verify=staging.blobscan.com,4d547b4db1d17583b230",
-    "vc-domain-verify=holesky.blobscan.com,1e2dbdb249701cdb1b6a"
+    "vc-domain-verify=holesky.blobscan.com,1e2dbdb249701cdb1b6a",
+    "vc-domain-verify=gnosis.blobscan.com,12ab82cd499ac4c91bbb"
   ]
 }
 
