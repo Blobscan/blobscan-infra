@@ -49,3 +49,11 @@ variable "vm_size" {
 variable "domain" {
   type = string
 }
+
+variable "vercel_team_id" {
+  type = string
+}
+
+variable "vercel_token" {
+  type = string
+}
