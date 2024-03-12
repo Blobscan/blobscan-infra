@@ -18,9 +18,6 @@ export TF_VAR_database_size=db-s-1vcpu-2gb
 export TF_WORKSPACE=blobscan-$TF_VAR_env-goerli
 terraform apply
 
-# Ethereum Goerli
-deploy_blobscan goerli prod goerli.blobscan.com db-s-2vcpu-4gb
-
 # Ethereum Testnet Holesky
 deploy_blobscan holesky prod holesky.blobscan.com db-s-1vcpu-2gb
 
