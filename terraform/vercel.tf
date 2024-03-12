@@ -1,5 +1,5 @@
 resource "vercel_project" "blobscan" {
-  name      = "blobscan-${var.network}"
+  name      = var.env == "staging" ? "blobscan-staging" : "blobscan-${var.network}"
   team_id   = "${var.vercel_team_id}"
   framework = "nextjs"
   git_repository = {

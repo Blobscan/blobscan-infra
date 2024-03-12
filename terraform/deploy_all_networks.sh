@@ -10,13 +10,8 @@ deploy_blobscan() {
 	terraform apply
 }
 
-# Ethereum Goerli (used as staging)
-export TF_VAR_network=goerli
-export TF_VAR_env=staging
-export TF_VAR_domain=staging.blobscan.com
-export TF_VAR_database_size=db-s-1vcpu-2gb
-export TF_WORKSPACE=blobscan-$TF_VAR_env-goerli
-terraform apply
+# (blobscan staging) Ethereum Mainnet
+deploy_blobscan mainnet staging staging.blobscan.com db-s-1vcpu-2gb
 
 # Ethereum Testnet Holesky
 deploy_blobscan holesky prod holesky.blobscan.com db-s-1vcpu-2gb
