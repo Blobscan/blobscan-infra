@@ -4,11 +4,13 @@
   become_user: root
 
   vars_files:
+    - roles/blobscan/defaults/main.yml
     - roles/blobscan/vars/main.yml
     - roles/blobscan/vars/vault.yml
-    - environments/{{ env }}/group_vars/all
-    - environments/{{ network }}/group_vars/all
-    - environments/{{ network }}/group_vars/vault.yml
+    - roles/blobscan/vars/{{ network }}.yml
+    - inventory/{{ env }}/group_vars/all.yml
+    - inventory/{{ env }}/group_vars/{{ network }}.yml
+    - inventory/{{ env }}/group_vars/vault_{{ network }}.yml
 
   tasks:
     - name: Copy .env files
@@ -17,3 +19,12 @@
         dest: /home/deploy/{{ item }}/.env
         owner: deploy
       loop: "{{ apps }}"
+
+    - name: Restart api container
+      community.docker.docker_compose:
+        project_src: /home/deploy/blobscan
+
+    - name: Restart indexer container
+      community.docker.docker_compose:
+        project_src: /home/deploy/blobscan-indexer.rs
+        pull: true

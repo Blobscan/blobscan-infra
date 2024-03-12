@@ -1,0 +1,4 @@
+domain: sepolia.blobscan.com
+
+beacon_node_endpoint: http://10.128.0.30:5052
+execution_node_endpoint: http://10.128.0.30:8545

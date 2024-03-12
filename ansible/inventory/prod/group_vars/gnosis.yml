@@ -1,0 +1,4 @@
+domain: gnosis.blobscan.com
+
+beacon_node_endpoint: http://10.138.0.5:9596
+execution_node_endpoint: http://10.138.0.5:8545

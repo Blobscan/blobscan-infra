@@ -127,6 +127,12 @@
     owner: deploy
   loop: "{{ apps }}"
 
+- name: Restart containers
+  community.docker.docker_compose:
+    project_src: /home/deploy/{{ item }}
+    build: false
+  loop: "{{ apps }}"
+
 - name: Create nginx certbot snippet (this is needed for the certbot role)
   file:
     path: /etc/nginx/snippets/letsencrypt-api.{{ domain }}.conf

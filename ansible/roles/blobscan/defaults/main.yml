@@ -1,0 +1,11 @@
+# blobscan configuration
+
+metrics_enabled: "true"
+traces_enabled: "true"
+
+indexer_log: blob_indexer=INFO
+
+external_web_port: 3000
+blobscan_api_port: 3001
+external_api_port: 3001
+blobscan_api_endpoint: "http://localhost:3001"

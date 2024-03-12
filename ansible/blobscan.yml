@@ -6,12 +6,15 @@
   vars:
     grafana_role: blobscan
 
+
   vars_files:
+    - roles/blobscan/defaults/main.yml
     - roles/blobscan/vars/main.yml
     - roles/blobscan/vars/vault.yml
-    - environments/{{ network }}/group_vars/all
-    - environments/{{ network }}/group_vars/vault.yml
-    - environments/{{ env }}/group_vars/all
+    - roles/blobscan/vars/{{ network }}.yml
+    - inventory/{{ env }}/group_vars/all.yml
+    - inventory/{{ env }}/group_vars/{{ network }}.yml
+    - inventory/{{ env }}/group_vars/vault_{{ network }}.yml
 
   roles:
     - role: common

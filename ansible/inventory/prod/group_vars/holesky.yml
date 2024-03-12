@@ -1,0 +1,4 @@
+domain: holesky.blobscan.com
+
+beacon_node_endpoint: http://10.128.0.29:5052
+execution_node_endpoint: http://10.128.0.29:8545

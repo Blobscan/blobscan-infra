@@ -52,4 +52,5 @@ Update the configuration files:
 
 ```
 ansible-playbook update-blobscan-config.yml -i hosts.yml
+ansible-playbook update-blobscan-config.yml -i hosts.yml -l sepolia
 ```
