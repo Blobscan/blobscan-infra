@@ -1,6 +1,2 @@
 indexer_tag: master
 blobscan_tag: next
-
-postgres_storage_enabled: "false"
-swarm_storage_enabled: "true"
-google_storage_enabled: "true"

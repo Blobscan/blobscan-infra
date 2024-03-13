@@ -3,6 +3,10 @@
 metrics_enabled: "true"
 traces_enabled: "true"
 
+google_storage_enabled: "true"
+postgres_storage_enabled: "false"
+swarm_storage_enabled: "false"
+
 indexer_log: blob_indexer=INFO
 
 external_web_port: 3000
