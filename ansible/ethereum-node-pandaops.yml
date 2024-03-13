@@ -6,7 +6,7 @@
   vars_files:
     - roles/grafana_ethereum_nodes/vars/main.yml
     - roles/grafana_ethereum_nodes/vars/vault.yml
-    - environments/gnosis/group_vars/all
+    - inventory/prod/group_vars/gnosis.yml
 
   vars:
     grafana_role: ethereum_node

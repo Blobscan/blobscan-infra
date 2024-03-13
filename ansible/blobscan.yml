@@ -6,7 +6,6 @@
   vars:
     grafana_role: blobscan
 
-
   vars_files:
     - roles/blobscan/defaults/main.yml
     - roles/blobscan/vars/main.yml

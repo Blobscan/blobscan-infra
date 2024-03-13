@@ -1,4 +1,4 @@
-beacon_node_endpoint: http://10.128.0.34:5052
-execution_node_endpoint: http://10.128.0.34:8545
-
 domain: blobscan.com
+
+beacon_node_endpoint: http://10.138.0.2:5052
+execution_node_endpoint: http://10.138.0.2:5052

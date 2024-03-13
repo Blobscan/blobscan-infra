@@ -23,6 +23,7 @@
     - name: Restart api container
       community.docker.docker_compose:
         project_src: /home/deploy/blobscan
+        pull: true
 
     - name: Restart indexer container
       community.docker.docker_compose:

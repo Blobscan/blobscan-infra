@@ -4,13 +4,14 @@
   become: true
 
   vars_files:
-    - environments/{{ network }}/group_vars/all
     - roles/blobscan/vars/main.yml
     - roles/blobscan/vars/vault.yml
     - roles/grafana_ethereum_nodes/vars/main.yml
     - roles/grafana_ethereum_nodes/vars/vault.yml
+    - inventory/{{ env }}/group_vars/vault_{{ network }}.yml
 
   vars:
+    env: prod
     grafana_role: "ethereum_node"
     ethereum_metrics_exporter_el_endpoint: http://execution:8545
     ethereum_metrics_exporter_cl_endpoint: http://consensus:5052
