@@ -22,8 +22,15 @@ resource "vercel_project_environment_variable" "beacon_url" {
   target     = ["production"]
 }
 
-
 resource "vercel_project_environment_variable" "network" {
+  project_id = vercel_project.blobscan.id
+  team_id    = "${var.vercel_team_id}"
+  key        = "NETWORK_NAME"
+  value      = "${var.network}"
+  target     = ["production"]
+}
+
+resource "vercel_project_environment_variable" "network_next" {
   project_id = vercel_project.blobscan.id
   team_id    = "${var.vercel_team_id}"
   key        = "NEXT_PUBLIC_NETWORK_NAME"

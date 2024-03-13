@@ -7,6 +7,7 @@ resource "vercel_project" "blobscan" {
     repo = "blobscan/blobscan"
   }
   root_directory = "apps/web"
+  ignore_command = "if [ \"$VERCEL_ENV\" == \"production\" ]; then exit 1; else exit 0; fi"
 }
 
 resource "vercel_project_domain" "blobscan" {
