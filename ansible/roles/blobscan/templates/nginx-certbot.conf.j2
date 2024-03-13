@@ -7,7 +7,7 @@ server {
     error_log /var/log/nginx/blobscan-api_error.log;
 
     location / {
-        proxy_pass {{ blobscan_api_endpoint }};
+        proxy_pass {{ blobscan_api_endpoint }}/api/;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
