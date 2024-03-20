@@ -3,3 +3,6 @@ blobscan_tag: stable
 
 postgres_storage_enabled: "false"
 google_storage_enabled: "true"
+
+beacon_node_endpoint: "{{ vault_beacon_node_endpoint }}"
+execution_node_endpoint: "{{ vault_execution_node_endpoint }}"
