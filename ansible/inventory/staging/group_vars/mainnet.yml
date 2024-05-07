@@ -1,7 +1,3 @@
 domain: staging.blobscan.com
 
-beacon_node_endpoint: http://10.138.0.2:5052
-execution_node_endpoint: http://10.138.0.2:8545
-
-swarm_storage_enabled: "false"
-
+swarm_storage_enabled: "true"

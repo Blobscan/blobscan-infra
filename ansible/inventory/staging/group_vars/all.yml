@@ -1,2 +1,5 @@
 indexer_tag: master
 blobscan_tag: next
+
+beacon_node_endpoint: "{{ vault_beacon_node_endpoint }}"
+execution_node_endpoint: "{{ vault_execution_node_endpoint }}"

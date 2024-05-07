@@ -16,25 +16,6 @@ ansible-galaxy install -r requirements.yml
 
 # Playbooks
 
-## Provisioning an Ethereum node
-
-```
-ansible-playbook ethereum-node.yml -i hosts.yml
-ansible-playbook ethereum-node.yml -i hosts.yml -l sepolia_nodes
-```
-
-Using ethpandaops roles (only for Gnosis chain at the moment):
-
-```
-ansible-playbook ethereum-node-pandaops.yml -i hosts.yml
-```
-
-## Provisioning a Swarm node
-
-```
-ansible-playbook swarm.yml -i hosts.yml
-```
-
 ## Provisioning a Blobscan instance
 
 ```
@@ -53,4 +34,23 @@ Update the configuration files:
 ```
 ansible-playbook update-blobscan-config.yml -i hosts.yml
 ansible-playbook update-blobscan-config.yml -i hosts.yml -l sepolia
+```
+
+## Provisioning a Swarm node
+
+```
+ansible-playbook swarm.yml -i hosts.yml
+```
+
+## Provisioning an Ethereum node
+
+```
+ansible-playbook ethereum-node.yml -i hosts.yml
+ansible-playbook ethereum-node.yml -i hosts.yml -l sepolia_nodes
+```
+
+Using ethpandaops roles (only for Gnosis chain at the moment):
+
+```
+ansible-playbook ethereum-node-pandaops.yml -i hosts.yml
 ```
