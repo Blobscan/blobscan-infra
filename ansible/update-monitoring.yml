@@ -1,0 +1,11 @@
+---
+- hosts: blobscan
+  become: yes
+  become_user: root
+
+  vars_files:
+    - roles/blobscan_monitoring/vars/vault.yml
+    - inventory/{{ env }}/group_vars/{{ network }}.yml
+
+  roles:
+    - role: blobscan_monitoring

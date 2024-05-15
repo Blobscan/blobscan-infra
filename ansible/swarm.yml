@@ -4,7 +4,7 @@
   become_user: root
 
   vars_files:
-    - roles/common/vars/vault.yml
+    - roles/swarm_monitoring/vars/vault.yml
 
   vars:
     bee_config:
@@ -23,3 +23,4 @@
         docker_package_state: present
         docker_install_compose_plugin: true
     - role: ethersphere.bee
+    - role: swarm_monitoring

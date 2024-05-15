@@ -3,14 +3,12 @@
   become: yes
   become_user: root
 
-  vars:
-    grafana_role: blobscan
-
   vars_files:
     - roles/blobscan/defaults/main.yml
     - roles/blobscan/vars/main.yml
     - roles/blobscan/vars/vault.yml
     - roles/blobscan/vars/{{ network }}.yml
+    - roles/blobscan_monitoring/vars/vault.yml
     - inventory/{{ env }}/group_vars/all.yml
     - inventory/{{ env }}/group_vars/{{ network }}.yml
     - inventory/{{ env }}/group_vars/vault_{{ network }}.yml
@@ -23,6 +21,7 @@
         docker_install_compose_plugin: true
 
     - role: blobscan
+    - role: blobscan_monitoring
     - role: julienpalard.nginx_letsencrypt
   tasks:
     - name: Configure nginx as reverse proxy for Blobscan API

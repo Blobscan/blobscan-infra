@@ -6,7 +6,7 @@ traces_username: "{{ vault_traces_username }}"
 
 prometheus_url: https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push
 loki_url: https://logs-prod-eu-west-0.grafana.net/loki/api/v1/push
-tempo_url: https://tempo-eu-west-0.grafana.net
+tempo_url: tempo-eu-west-0.grafana.net:443
 
 beacon_node_metrics: http://localhost:8008
 execution_node_metrics: http://localhost:6060

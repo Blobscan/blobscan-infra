@@ -2,3 +2,5 @@ chain_id: 100
 explorer_base_url: https://gnosisscan.io/
 beacon_base_url: https://beacon.gnosisscan.io/
 checkpoint_sync_url: https://checkpoint.gnosischain.com
+
+swarm_storage_enabled: "true"

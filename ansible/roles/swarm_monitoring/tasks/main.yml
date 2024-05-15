@@ -5,7 +5,7 @@
     grafana_agent_metrics_config:
       configs:
 
-        - name: blobscan-api
+        - name: swarm-node
           remote_write:
             - basic_auth:
                 password: '{{ grafana_cloud_api_key }}'
@@ -15,12 +15,14 @@
             - job_name: blobscan-api
               static_configs:
                 - targets:
-                    - localhost:3001
+                    - localhost:1633
+                    - localhost:1635
+                    # TODO: make sure we are scraping: node-exporter, cadvisor, blackbox
               relabel_configs:
-                - replacement: "{{ env }}"
-                  target_label: environment
-                - replacement: "{{ network }}"
-                  target_label: network
+                - action: replace
+                  source_labels:
+                    - agent_hostname
+                  target_label: instance
               metric_relabel_configs:
                 - action: keep
                   regex: nodejs_active_handles_total|nodejs_active_requests_total|nodejs_eventloop_lag_p50_seconds|nodejs_eventloop_lag_p99_seconds|nodejs_eventloop_lag_seconds|nodejs_external_memory_bytes|nodejs_gc_duration_seconds_count|nodejs_gc_duration_seconds_sum|nodejs_heap_size_total_bytes|nodejs_heap_size_used_bytes|nodejs_heap_space_size_used_bytes|nodejs_version_info|process_cpu_seconds_total|process_cpu_system_seconds_total|process_cpu_user_seconds_total|process_resident_memory_bytes|process_start_time_seconds
@@ -109,17 +111,11 @@
       blackbox:
         enabled: true
         blackbox_targets:
-          - name: blobscan-api
-            address: "https://api.{{ domain }}"
+          - name: swarm-node
+            address: "http://localhost:1635/health"
             module: http_2xx
-          - name: blobscan-web
-            address: "https://{{ domain }}"
-            module: http_2xx
-          - name: consensus
-            address: "{{ beacon_node_endpoint }}"
-            module: http_2xx
-          - name: execution
-            address: "{{ execution_node_endpoint }}"
+          - name: swarm-node-debug
+            address: "http://localhost:1633/health"
             module: http_2xx
         blackbox_config:
           modules:

@@ -15,7 +15,7 @@ collections:
   - name: community.docker
     version: 3.5.0
   - name: grafana.grafana
-    version: 2.2.4
-  - name: ethpandaops.general
-    source: https://github.com/ethpandaops/ansible-collection-general.git,master
-    type: git
+    version: 5.2.0
+# - name: ethpandaops.general
+#   source: https://github.com/ethpandaops/ansible-collection-general.git,master
+#   type: git

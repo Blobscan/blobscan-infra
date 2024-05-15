@@ -36,6 +36,12 @@ ansible-playbook update-blobscan-config.yml -i hosts.yml
 ansible-playbook update-blobscan-config.yml -i hosts.yml -l sepolia
 ```
 
+Update only the grafana agent:
+
+```
+ansible-playbook update-monitoring.yml -i hosts.yml
+```
+
 ## Provisioning a Swarm node
 
 ```
