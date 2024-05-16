@@ -41,7 +41,7 @@ Now provision it using Ansible:
 
 ```
 cd ansible
-ansible-galaxy collection install community.docker:==3.4.5
+ansible-galaxy install -r requirements.yml
 ansible-playbook -i hosts.yml swarm.yml
 ```
 

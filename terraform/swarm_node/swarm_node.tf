@@ -18,7 +18,7 @@ resource "google_compute_instance" "swarm_node" {
         initialize_params{
             image = "ubuntu-os-cloud/ubuntu-minimal-2204-lts"
             size = "${var.disk_size}"
-            type = "pd-balanced"
+            type = "pd-ssd"
         }
     }
 
