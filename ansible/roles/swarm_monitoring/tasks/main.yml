@@ -1,182 +1,295 @@
-- name: Install Grafana Agent
+- name: Install alloy
   ansible.builtin.include_role:
-    name: grafana.grafana.grafana_agent
+    name: grafana.grafana.alloy
   vars:
-    grafana_agent_metrics_config:
-      configs:
+    config: |
+      prometheus.remote_write "prom" {
+        endpoint {
+          url = "{{ prometheus_url }}"
 
-        - name: swarm-node
-          remote_write:
-            - basic_auth:
-                password: '{{ grafana_cloud_api_key }}'
-                username: '{{ metrics_username }}'
-              url: '{{ prometheus_url }}'
-          scrape_configs:
-            - job_name: blobscan-api
-              static_configs:
-                - targets:
-                    - localhost:1633
-                    - localhost:1635
-                    # TODO: make sure we are scraping: node-exporter, cadvisor, blackbox
-              relabel_configs:
-                - action: replace
-                  source_labels:
-                    - agent_hostname
-                  target_label: instance
-              metric_relabel_configs:
-                - action: keep
-                  regex: nodejs_active_handles_total|nodejs_active_requests_total|nodejs_eventloop_lag_p50_seconds|nodejs_eventloop_lag_p99_seconds|nodejs_eventloop_lag_seconds|nodejs_external_memory_bytes|nodejs_gc_duration_seconds_count|nodejs_gc_duration_seconds_sum|nodejs_heap_size_total_bytes|nodejs_heap_size_used_bytes|nodejs_heap_space_size_used_bytes|nodejs_version_info|process_cpu_seconds_total|process_cpu_system_seconds_total|process_cpu_user_seconds_total|process_resident_memory_bytes|process_start_time_seconds
-                  source_labels:
-                    - __name__
+          basic_auth {
+            username = "{{ metrics_username }}"
+            password = "{{ grafana_cloud_api_key }}"
+          }
 
-      global:
-        scrape_interval: 60s
-      wal_directory: /tmp/grafana-agent-wal
-    grafana_agent_logs_config:
-      configs:
-        - clients:
-            - basic_auth:
-                password: '{{ grafana_cloud_logs_api_key }}'
-                username: '{{ logs_username }}'
-              url: '{{ loki_url }}'
-          name: integrations
-          positions:
-            filename: /tmp/positions.yaml
-          scrape_configs:
-            # - job_name: integrations/node_exporter_direct_scrape
-            #   static_configs:
-            #     - targets:
-            #         - localhost
-            #       labels:
-            #         instance: hostname
-            #         __path__: /var/log/*.log
-            #         job: integrations/node_exporter
-            - job_name: integrations/docker
-              docker_sd_configs:
-              - host: unix:///run/docker.sock
-                refresh_interval: 5s
-              relabel_configs:
-              - action: replace
-                replacement: integrations/docker
-                source_labels:
-                - __meta_docker_container_id
-                target_label: job
-              - action: replace
-                replacement: localhost:9090
-                source_labels:
-                - __meta_docker_container_id
-                target_label: instance
-              - source_labels:
-                - __meta_docker_container_name
-                regex: '/(.*)'
-                target_label: container
-              - source_labels:
-                - __meta_docker_container_log_stream
-                target_label: stream
-              - replacement: "{{ env }}"
-                target_label: environment
-              - replacement: "{{ network }}"
-                target_label: network
-          target_config:
-            sync_period: 10s
-    grafana_agent_traces_config:
-      configs:
-      - name: default
-        # TODO: Remove unused receivers
-        receivers:
-          jaeger:
-            protocols:
-              thrift_http:
-          otlp:
-            protocols:
-              http:
-              grpc:
-        remote_write:
-          - endpoint: '{{ tempo_url }}'
-            basic_auth:
-              username: '{{ traces_username }}'
-              password: '{{ grafana_cloud_api_key }}'
-    grafana_agent_integrations_config:
-      agent:
-        enabled: true
-        relabel_configs:
-        - action: replace
-          source_labels:
-          - agent_hostname
-          target_label: instance
-        - replacement: "{{ env }}"
-          target_label: environment
-        - replacement: "{{ network }}"
-          target_label: network
-      blackbox:
-        enabled: true
-        blackbox_targets:
-          - name: swarm-node
-            address: "http://localhost:1635/health"
-            module: http_2xx
-          - name: swarm-node-debug
-            address: "http://localhost:1633/health"
-            module: http_2xx
-        blackbox_config:
-          modules:
-            http_2xx:
-              prober: http
-              timeout: 5s
-        relabel_configs:
-          - source_labels: [__address__]
-            target_label: __param_target
-          - source_labels: [__param_target]
-            target_label: instance
-          - replacement: "{{ env }}"
-            target_label: environment
-          - replacement: "{{ network }}"
-            target_label: network
-      cadvisor:
-        enabled: true
-        docker_only: true
-        instance: localhost:9090
-        relabel_configs:
-          - action: replace
-            replacement: integrations/docker
-            target_label: job
-          - replacement: "{{ env }}"
-            target_label: environment
-          - replacement: "{{ network }}"
-            target_label: network
-        metric_relabel_configs:
-        - action: keep
-          regex: (prometheus_target_.*|prometheus_sd_discovered_targets|agent_build.*|agent_wal_samples_appended_total|process_start_time_seconds)
-          source_labels:
-          - __name__
-      node_exporter:
-        enabled: true
-        instance: ${HOSTNAME:-default}
-        include_exporter_metrics: true
-        disable_collectors:
-          - "mdadm"
-        relabel_configs:
-          - action: replace
-            replacement: integrations/node_exporter
-            target_label: job
-          - replacement: "{{ env }}"
-            target_label: environment
-          - replacement: "{{ network }}"
-            target_label: network
-      prometheus_remote_write:
-        - basic_auth:
-            password: '{{ grafana_cloud_api_key }}'
-            username: '{{ metrics_username }}'
-          url: '{{ prometheus_url }}'
-      # redis_exporter:
-      # postgres_exporter:
-      # github_exporter:
-      # gcp_exporter:
+          queue_config { }
 
-    grafana_agent_env_vars:
-      HOSTNAME: '%H'
+          metadata_config { }
+        }
+      }
 
-- name: Add grafana-agent user to docker group
+      discovery.relabel "metrics_swarm_node" {
+        targets = concat(
+          [{
+            __address__ = "localhost:1633",
+          }],
+          [{
+            __address__ = "localhost:1635",
+          }],
+        )
+
+        rule {
+          source_labels = ["agent_hostname"]
+          target_label  = "instance"
+        }
+      }
+
+      prometheus.scrape "metrics_swarm_node" {
+        targets    = discovery.relabel.metrics_swarm_node.output
+        forward_to = [prometheus.relabel.metrics_swarm_node.receiver]
+        job_name   = "swarm-metrics"
+      }
+
+      prometheus.relabel "metrics_swarm_node" {
+        forward_to = [prometheus.remote_write.prom.receiver]
+
+        rule {
+          source_labels = ["__name__"]
+          regex         = "nodejs_active_handles_total|nodejs_active_requests_total|nodejs_eventloop_lag_p50_seconds|nodejs_eventloop_lag_p99_seconds|nodejs_eventloop_lag_seconds|nodejs_external_memory_bytes|nodejs_gc_duration_seconds_count|nodejs_gc_duration_seconds_sum|nodejs_heap_size_total_bytes|nodejs_heap_size_used_bytes|nodejs_heap_space_size_used_bytes|nodejs_version_info|process_cpu_seconds_total|process_cpu_system_seconds_total|process_cpu_user_seconds_total|process_resident_memory_bytes|process_start_time_seconds"
+          action        = "keep"
+        }
+      }
+
+      discovery.docker "integrations_docker" {
+        host             = "unix:///run/docker.sock"
+        refresh_interval = "5s"
+      }
+
+      discovery.relabel "integrations_docker" {
+        targets         = discovery.docker.integrations_docker.targets
+
+        rule {
+          source_labels = ["__meta_docker_container_id"]
+          target_label  = "job"
+          replacement   = "integrations/docker"
+        }
+
+        rule {
+          source_labels = ["__meta_docker_container_id"]
+          target_label  = "instance"
+          replacement   = "localhost:9090"
+        }
+
+        rule {
+          source_labels = ["__meta_docker_container_name"]
+          regex         = "/(.*)"
+          target_label  = "container"
+        }
+
+        rule {
+          source_labels = ["__meta_docker_container_log_stream"]
+          target_label  = "stream"
+        }
+
+        rule {
+          target_label = "environment"
+          replacement  = "{{ env }}"
+        }
+      }
+
+      loki.source.docker "integrations_docker" {
+        host             = "unix:///run/docker.sock"
+        targets          = discovery.docker.integrations_docker.targets
+        forward_to       = [loki.write.logs_integrations.receiver]
+        relabel_rules    = discovery.relabel.integrations_docker.rules
+        refresh_interval = "5s"
+      }
+
+
+      loki.write "logs_integrations" {
+        endpoint {
+          url = "{{ loki_url }}"
+        }
+
+        external_labels = {}
+      }
+
+      prometheus.exporter.self "integrations_agent" { }
+
+      discovery.relabel "integrations_agent" {
+        targets = prometheus.exporter.self.integrations_agent.targets
+
+        rule {
+          source_labels = ["agent_hostname"]
+          target_label  = "instance"
+        }
+
+        rule {
+          target_label = "environment"
+          replacement  = "{{ env }}"
+        }
+
+        rule {
+          target_label = "job"
+          replacement  = "integrations/agent"
+        }
+      }
+
+      prometheus.scrape "integrations_agent" {
+        targets    = discovery.relabel.integrations_agent.output
+        forward_to = [prometheus.remote_write.prom.receiver]
+        job_name   = "integrations/agent"
+      }
+
+      prometheus.exporter.blackbox "integrations_blackbox" {
+        config = "modules:\n  http_2xx:\n    prober: http\n    timeout: 5s\n"
+
+        target {
+          name    = "swarm-node"
+          address = "http://localhost:1635/health"
+          module  = "http_2xx"
+        }
+
+        target {
+          name    = "swarm-node-debug"
+          address = "http://localhost:1633/health"
+          module  = "http_2xx"
+        }
+      }
+
+      discovery.relabel "integrations_blackbox" {
+        targets = prometheus.exporter.blackbox.integrations_blackbox.targets
+
+        rule {
+          source_labels = ["__address__"]
+          target_label  = "__param_target"
+        }
+
+        rule {
+          source_labels = ["__param_target"]
+          target_label  = "instance"
+        }
+
+        rule {
+          target_label = "environment"
+          replacement  = "{{ env }}"
+        }
+
+        rule {
+          target_label = "job"
+          replacement  = "integrations/blackbox"
+        }
+      }
+
+      prometheus.scrape "integrations_blackbox" {
+        targets    = discovery.relabel.integrations_blackbox.output
+        forward_to = [prometheus.remote_write.prom.receiver]
+        job_name   = "integrations/blackbox"
+      }
+
+      prometheus.exporter.cadvisor "integrations_cadvisor" {
+        docker_only = true
+      }
+
+      discovery.relabel "integrations_cadvisor" {
+        targets = prometheus.exporter.cadvisor.integrations_cadvisor.targets
+
+        rule {
+          target_label = "job"
+          replacement  = "integrations/cadvisor"
+        }
+
+        rule {
+          target_label = "environment"
+          replacement  = "{{ env }}"
+        }
+
+        rule {
+          target_label = "instance"
+          replacement  = constants.hostname
+        }
+      }
+
+      prometheus.scrape "integrations_cadvisor" {
+        targets    = discovery.relabel.integrations_cadvisor.output
+        forward_to = [prometheus.relabel.integrations_cadvisor.receiver]
+        job_name   = "integrations/cadvisor"
+      }
+
+      prometheus.relabel "integrations_cadvisor" {
+        forward_to = [prometheus.remote_write.prom.receiver]
+
+        rule {
+          source_labels = ["__name__"]
+          regex         = "(prometheus_target_.*|prometheus_sd_discovered_targets|agent_build.*|agent_wal_samples_appended_total|process_start_time_seconds)"
+          action        = "keep"
+        }
+      }
+
+      prometheus.exporter.unix "integrations_node_exporter" { }
+
+      discovery.relabel "integrations_node_exporter" {
+        targets = prometheus.exporter.unix.integrations_node_exporter.targets
+
+        rule {
+          target_label = "job"
+          replacement  = "integrations/node_exporter"
+        }
+
+        rule {
+          target_label = "environment"
+          replacement  = "{{ env }}"
+        }
+
+        rule {
+          target_label = "instance"
+          replacement  = constants.hostname
+        }
+      }
+
+      prometheus.scrape "integrations_node_exporter" {
+        targets    = discovery.relabel.integrations_node_exporter.output
+        forward_to = [prometheus.remote_write.prom.receiver]
+        job_name   = "integrations/node_exporter"
+      }
+
+      otelcol.receiver.jaeger "default" {
+        protocols {
+          thrift_http { }
+        }
+
+        output {
+          traces = [otelcol.exporter.otlp.default_0.input]
+        }
+      }
+
+      otelcol.receiver.otlp "default" {
+        grpc {
+          include_metadata = true
+        }
+
+        http {
+          include_metadata = true
+        }
+
+        output {
+          metrics = []
+          logs    = []
+          traces  = [otelcol.exporter.otlp.default_0.input]
+        }
+      }
+
+      otelcol.exporter.otlp "default_0" {
+        retry_on_failure {
+          max_elapsed_time = "1m0s"
+        }
+
+        client {
+          endpoint = "{{ tempo_url }}"
+          headers  = {
+            authorization = "Basic {{ tempo_basic_auth }}",
+          }
+        }
+      }
+
+# TODO: Add more exporters
+# redis_exporter:
+# postgres_exporter:
+# github_exporter:
+# gcp_exporter:
+
+- name: Add alloy user to docker group
   user:
-    name: grafana-agent
+    name: alloy
     groups:
       - docker

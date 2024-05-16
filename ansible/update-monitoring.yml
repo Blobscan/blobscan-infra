@@ -3,9 +3,41 @@
   become: yes
   become_user: root
 
+  vars:
+    service_user: root
+    service_group: root
+
   vars_files:
     - roles/blobscan_monitoring/vars/vault.yml
     - inventory/{{ env }}/group_vars/{{ network }}.yml
 
+  pre_tasks:
+    - name: stop grafana-agent
+      systemd:
+        name: grafana-agent
+        enabled: no
+        state: stopped
+
   roles:
     - role: blobscan_monitoring
+
+- hosts: swarm
+  become: yes
+  become_user: root
+
+  vars:
+    service_user: root
+    service_group: root
+
+  vars_files:
+    - roles/blobscan_monitoring/vars/vault.yml
+
+  pre_tasks:
+    - name: stop grafana-agent
+      systemd:
+        name: grafana-agent
+        enabled: no
+        state: stopped
+
+  roles:
+    - role: swarm_monitoring

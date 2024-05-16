@@ -5,8 +5,8 @@ grafana_cloud_api_key: "{{ vault_grafana_cloud_api_key }}"
 grafana_cloud_logs_api_key: "{{ vault_grafana_cloud_logs_api_key }}"
 metrics_username: "{{ vault_metrics_username }}"
 logs_username: "{{ vault_logs_username }}"
-traces_username: "{{ vault_traces_username }}"
 
 prometheus_url: https://prometheus-prod-01-eu-west-0.grafana.net/api/prom/push
-loki_url: https://logs-prod-eu-west-0.grafana.net/loki/api/v1/push
+loki_url: https://{{ logs_username }}:{{ grafana_cloud_logs_api_key }}@logs-prod-eu-west-0.grafana.net/loki/api/v1/push
 tempo_url: tempo-eu-west-0.grafana.net:443
+tempo_basic_auth: "{{ vault_tempo_basic_auth }}"

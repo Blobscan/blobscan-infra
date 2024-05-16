@@ -8,13 +8,19 @@
 
   vars:
     bee_config:
-      swap-endpoint: https://rpc.gnosischain.com/
-      #swap-endpoint: https://gno.getblock.io/<API-KEY>/mainnet/
+      swap-endpoint: "{{ swarm_swap_endpoint }}"
       swap-initial-deposit: 0
       cors-allowed-origins: '*'
       db-open-files-limit: 2000
       debug-api-enable: true
       full-node: true
+      restricted: true
+      token-encryption-key: "{{ swarm_token_encryption_key }}"
+      password: "{{ swarm_password }}"
+      # admin-token: "{{ swarm_admin_token }}"
+    swarm_key: "{{ swarm_key }}"
+    libp2p_key: "{{ swarm_libp2p_key }}"
+    pss_key: "{{ swarm_pss_key }}"
 
   roles:
     - role: common
@@ -23,4 +29,9 @@
         docker_package_state: present
         docker_install_compose_plugin: true
     - role: ethersphere.bee
+#   - role: ethersphere.gatewayproxy
+#     vars:
+#       gatewayproxy_config:
+#         port: 8080
+#   - role: ethersphere.dashboard
     - role: swarm_monitoring
