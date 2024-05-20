@@ -16,8 +16,8 @@
       full-node: true
       restricted: true
       token-encryption-key: "{{ swarm_token_encryption_key }}"
-      password: "{{ swarm_password }}"
       # admin-token: "{{ swarm_admin_token }}"
+    password: "{{ swarm_password }}"
     swarm_key: "{{ swarm_key }}"
     libp2p_key: "{{ swarm_libp2p_key }}"
     pss_key: "{{ swarm_pss_key }}"
