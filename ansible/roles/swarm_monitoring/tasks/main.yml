@@ -19,18 +19,14 @@
       }
 
       discovery.relabel "metrics_swarm_node" {
-        targets = concat(
-          [{
-            __address__ = "localhost:1633",
-          }],
-          [{
-            __address__ = "localhost:1635",
-          }],
-        )
+        targets = [
+          { __address__ = "localhost:1633" },
+          { __address__ = "localhost:1635" },
+        ]
 
         rule {
-          source_labels = ["agent_hostname"]
-          target_label  = "instance"
+          target_label = "instance"
+          replacement  = constants.hostname
         }
       }
 
@@ -110,8 +106,8 @@
         targets = prometheus.exporter.self.integrations_agent.targets
 
         rule {
-          source_labels = ["agent_hostname"]
-          target_label  = "instance"
+          target_label = "instance"
+          replacement  = constants.hostname
         }
 
         rule {
@@ -151,13 +147,8 @@
         targets = prometheus.exporter.blackbox.integrations_blackbox.targets
 
         rule {
-          source_labels = ["__address__"]
-          target_label  = "__param_target"
-        }
-
-        rule {
-          source_labels = ["__param_target"]
-          target_label  = "instance"
+          target_label = "instance"
+          replacement  = constants.hostname
         }
 
         rule {

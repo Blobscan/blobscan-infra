@@ -19,13 +19,13 @@
       }
 
       discovery.relabel "blobscan_api" {
-        targets = [{
-          __address__ = "localhost:3001",
-        }]
+        targets = [
+          { __address__ = "localhost:3001" },
+        ]
 
         rule {
-          source_labels = ["agent_hostname"]
-          target_label  = "instance"
+          target_label = "instance"
+          replacement  = constants.hostname
         }
 
         rule {
@@ -53,6 +53,37 @@
           regex         = "nodejs_active_handles_total|nodejs_active_requests_total|nodejs_eventloop_lag_p50_seconds|nodejs_eventloop_lag_p99_seconds|nodejs_eventloop_lag_seconds|nodejs_external_memory_bytes|nodejs_gc_duration_seconds_count|nodejs_gc_duration_seconds_sum|nodejs_heap_size_total_bytes|nodejs_heap_size_used_bytes|nodejs_heap_space_size_used_bytes|nodejs_version_info|process_cpu_seconds_total|process_cpu_system_seconds_total|process_cpu_user_seconds_total|process_resident_memory_bytes|process_start_time_seconds"
           action        = "keep"
         }
+      }
+
+      discovery.relabel "blobscan_queue" {
+        targets = [
+          { __address__ = "localhost:3000" },
+        ]
+
+        rule {
+          target_label = "instance"
+          replacement  = constants.hostname
+        }
+
+        rule {
+          target_label = "environment"
+          replacement  = "{{ env }}"
+        }
+
+        rule {
+          target_label = "network"
+          replacement  = "{{ network }}"
+        }
+      }
+
+      prometheus.scrape "blobscan_queue" {
+        targets    = discovery.relabel.blobscan_queue.output
+        forward_to = [prometheus.relabel.blobscan_queue.receiver]
+        job_name   = "blobscan-queue"
+      }
+
+      prometheus.relabel "blobscan_queue" {
+        forward_to = [prometheus.remote_write.prom.receiver]
       }
 
       discovery.docker "integrations_docker" {
@@ -111,8 +142,8 @@
         targets = prometheus.exporter.self.integrations_agent.targets
 
         rule {
-          source_labels = ["agent_hostname"]
-          target_label  = "instance"
+          target_label = "instance"
+          replacement  = constants.hostname
         }
 
         rule {
@@ -163,13 +194,8 @@
         targets = prometheus.exporter.blackbox.integrations_blackbox.targets
 
         rule {
-          source_labels = ["__address__"]
-          target_label  = "__param_target"
-        }
-
-        rule {
-          source_labels = ["__param_target"]
-          target_label  = "instance"
+          target_label = "instance"
+          replacement  = constants.hostname
         }
 
         rule {
@@ -279,7 +305,7 @@
           traces = [otelcol.exporter.otlp.default_0.input]
         }
       }
-      
+
       otelcol.receiver.otlp "default" {
         grpc {
           include_metadata = true
@@ -327,3 +353,16 @@
     name: alloy
     groups:
       - docker
+
+- name: Run bullmq exporter
+  community.docker.docker_container:
+    name: "bullmq-prometheus"
+    image: "blossomlabs/bullmq-prometheus"
+    image_name_mismatch: recreate
+    state: started
+    restart_policy: always
+    ports: "3000:3000"
+    pull: "always"
+    env:
+      REDIS_URI: "{{ redis_uri }}"
+      REDIS_DB: "{{ redis_db }}:{{ network }}-{{ env }}"

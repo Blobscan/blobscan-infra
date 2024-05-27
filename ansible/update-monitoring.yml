@@ -8,8 +8,10 @@
     service_group: root
 
   vars_files:
+    - roles/blobscan_monitoring/vars/main.yml
     - roles/blobscan_monitoring/vars/vault.yml
     - inventory/{{ env }}/group_vars/{{ network }}.yml
+    - inventory/{{ env }}/group_vars/vault_{{ network }}.yml
 
   roles:
     - role: blobscan_monitoring

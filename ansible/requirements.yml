@@ -13,7 +13,7 @@ roles:
 
 collections:
   - name: community.docker
-    version: 3.5.0
+    version: 3.10.1
   - name: grafana.grafana
     version: 5.2.0
 # - name: ethpandaops.general
