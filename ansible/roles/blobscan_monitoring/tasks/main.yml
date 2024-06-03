@@ -13,7 +13,6 @@
           }
 
           queue_config { }
-
           metadata_config { }
         }
       }
@@ -47,12 +46,6 @@
 
       prometheus.relabel "blobscan_api" {
         forward_to = [prometheus.remote_write.prom.receiver]
-
-        rule {
-          source_labels = ["__name__"]
-          regex         = "nodejs_active_handles_total|nodejs_active_requests_total|nodejs_eventloop_lag_p50_seconds|nodejs_eventloop_lag_p99_seconds|nodejs_eventloop_lag_seconds|nodejs_external_memory_bytes|nodejs_gc_duration_seconds_count|nodejs_gc_duration_seconds_sum|nodejs_heap_size_total_bytes|nodejs_heap_size_used_bytes|nodejs_heap_space_size_used_bytes|nodejs_version_info|process_cpu_seconds_total|process_cpu_system_seconds_total|process_cpu_user_seconds_total|process_resident_memory_bytes|process_start_time_seconds"
-          action        = "keep"
-        }
       }
 
       discovery.relabel "blobscan_queue" {
@@ -136,38 +129,6 @@
         external_labels = {}
       }
 
-      prometheus.exporter.self "integrations_agent" { }
-
-      discovery.relabel "integrations_agent" {
-        targets = prometheus.exporter.self.integrations_agent.targets
-
-        rule {
-          target_label = "instance"
-          replacement  = constants.hostname
-        }
-
-        rule {
-          target_label = "environment"
-          replacement  = "{{ env }}"
-        }
-
-        rule {
-          target_label = "network"
-          replacement  = "{{ network }}"
-        }
-
-        rule {
-          target_label = "job"
-          replacement  = "integrations/agent"
-        }
-      }
-
-      prometheus.scrape "integrations_agent" {
-        targets    = discovery.relabel.integrations_agent.output
-        forward_to = [prometheus.remote_write.prom.receiver]
-        job_name   = "integrations/agent"
-      }
-
       prometheus.exporter.blackbox "integrations_blackbox" {
         config = "modules:\n  http_2xx:\n    prober: http\n    timeout: 5s\n"
 
@@ -228,8 +189,19 @@
         targets = prometheus.exporter.cadvisor.integrations_cadvisor.targets
 
         rule {
+          source_labels = ["__name__"]
+          regex         = "(container_last_seen|container_cpu_usage_seconds_total|container_spec_memory_reservation_limit_bytes|container_memory_usage_bytes|container_network_receive_bytes_total|container_network_transmit_bytes_total|container_network_tcp_usage_total|container_fs_usage_bytes|container_fs_limit_bytes|container_fs_inodes_free|container_fs_inodes_total)"
+          action        = "keep"
+        }
+
+        rule {
           target_label = "job"
           replacement  = "integrations/cadvisor"
+        }
+
+        rule {
+          target_label = "instance"
+          replacement  = constants.hostname
         }
 
         rule {
@@ -240,11 +212,6 @@
         rule {
           target_label = "network"
           replacement  = "{{ network }}"
-        }
-
-        rule {
-          target_label = "instance"
-          replacement  = constants.hostname
         }
       }
 
@@ -256,12 +223,6 @@
 
       prometheus.relabel "integrations_cadvisor" {
         forward_to = [prometheus.remote_write.prom.receiver]
-
-        rule {
-          source_labels = ["__name__"]
-          regex         = "(prometheus_target_.*|prometheus_sd_discovered_targets|agent_build.*|agent_wal_samples_appended_total|process_start_time_seconds)"
-          action        = "keep"
-        }
       }
 
       prometheus.exporter.unix "integrations_node_exporter" { }
@@ -270,8 +231,19 @@
         targets = prometheus.exporter.unix.integrations_node_exporter.targets
 
         rule {
+          source_labels = ["__name__"]
+          regex         = "(prometheus_fanout_latency_bucket|prometheus_target_sync_length_seconds)"
+          action        = "drop"
+        }
+
+        rule {
           target_label = "job"
           replacement  = "integrations/node_exporter"
+        }
+
+        rule {
+          target_label = "instance"
+          replacement  = constants.hostname
         }
 
         rule {
@@ -282,11 +254,6 @@
         rule {
           target_label = "network"
           replacement  = "{{ network }}"
-        }
-
-        rule {
-          target_label = "instance"
-          replacement  = constants.hostname
         }
       }
 

@@ -21,7 +21,7 @@
       discovery.relabel "metrics_swarm_node" {
         targets = [
           { __address__ = "localhost:1633" },
-          { __address__ = "localhost:1635" },
+          { __address__ = "localhost:1640" },
         ]
 
         rule {
@@ -41,8 +41,8 @@
 
         rule {
           source_labels = ["__name__"]
-          regex         = "nodejs_active_handles_total|nodejs_active_requests_total|nodejs_eventloop_lag_p50_seconds|nodejs_eventloop_lag_p99_seconds|nodejs_eventloop_lag_seconds|nodejs_external_memory_bytes|nodejs_gc_duration_seconds_count|nodejs_gc_duration_seconds_sum|nodejs_heap_size_total_bytes|nodejs_heap_size_used_bytes|nodejs_heap_space_size_used_bytes|nodejs_version_info|process_cpu_seconds_total|process_cpu_system_seconds_total|process_cpu_user_seconds_total|process_resident_memory_bytes|process_start_time_seconds"
-          action        = "keep"
+          regex         = "bee_localstore_leveldb_stats_bucket"
+          action        = "drop"
         }
       }
 
@@ -83,15 +83,6 @@
         }
       }
 
-      loki.source.docker "integrations_docker" {
-        host             = "unix:///run/docker.sock"
-        targets          = discovery.docker.integrations_docker.targets
-        forward_to       = [loki.write.logs_integrations.receiver]
-        relabel_rules    = discovery.relabel.integrations_docker.rules
-        refresh_interval = "5s"
-      }
-
-
       loki.write "logs_integrations" {
         endpoint {
           url = "{{ loki_url }}"
@@ -100,41 +91,8 @@
         external_labels = {}
       }
 
-      prometheus.exporter.self "integrations_agent" { }
-
-      discovery.relabel "integrations_agent" {
-        targets = prometheus.exporter.self.integrations_agent.targets
-
-        rule {
-          target_label = "instance"
-          replacement  = constants.hostname
-        }
-
-        rule {
-          target_label = "environment"
-          replacement  = "{{ env }}"
-        }
-
-        rule {
-          target_label = "job"
-          replacement  = "integrations/agent"
-        }
-      }
-
-      prometheus.scrape "integrations_agent" {
-        targets    = discovery.relabel.integrations_agent.output
-        forward_to = [prometheus.remote_write.prom.receiver]
-        job_name   = "integrations/agent"
-      }
-
       prometheus.exporter.blackbox "integrations_blackbox" {
         config = "modules:\n  http_2xx:\n    prober: http\n    timeout: 5s\n"
-
-        target {
-          name    = "swarm-node"
-          address = "http://localhost:1635/health"
-          module  = "http_2xx"
-        }
 
         target {
           name    = "swarm-node-debug"
@@ -176,18 +134,24 @@
         targets = prometheus.exporter.cadvisor.integrations_cadvisor.targets
 
         rule {
+          source_labels = ["__name__"]
+          regex         = "(container_last_seen|container_cpu_usage_seconds_total|container_spec_memory_reservation_limit_bytes|container_memory_usage_bytes|container_network_receive_bytes_total|container_network_transmit_bytes_total|container_network_tcp_usage_total|container_fs_usage_bytes|container_fs_limit_bytes|container_fs_inodes_free|container_fs_inodes_total)"
+          action        = "keep"
+        }
+
+        rule {
           target_label = "job"
           replacement  = "integrations/cadvisor"
         }
 
         rule {
-          target_label = "environment"
-          replacement  = "{{ env }}"
+          target_label = "instance"
+          replacement  = constants.hostname
         }
 
         rule {
-          target_label = "instance"
-          replacement  = constants.hostname
+          target_label = "environment"
+          replacement  = "{{ env }}"
         }
       }
 
@@ -199,12 +163,6 @@
 
       prometheus.relabel "integrations_cadvisor" {
         forward_to = [prometheus.remote_write.prom.receiver]
-
-        rule {
-          source_labels = ["__name__"]
-          regex         = "(prometheus_target_.*|prometheus_sd_discovered_targets|agent_build.*|agent_wal_samples_appended_total|process_start_time_seconds)"
-          action        = "keep"
-        }
       }
 
       prometheus.exporter.unix "integrations_node_exporter" { }
@@ -213,18 +171,24 @@
         targets = prometheus.exporter.unix.integrations_node_exporter.targets
 
         rule {
+          source_labels = ["__name__"]
+          regex         = "(prometheus_fanout_latency_bucket|prometheus_target_sync_length_seconds)"
+          action        = "drop"
+        }
+
+        rule {
           target_label = "job"
           replacement  = "integrations/node_exporter"
         }
 
         rule {
-          target_label = "environment"
-          replacement  = "{{ env }}"
+          target_label = "instance"
+          replacement  = constants.hostname
         }
 
         rule {
-          target_label = "instance"
-          replacement  = constants.hostname
+          target_label = "environment"
+          replacement  = "{{ env }}"
         }
       }
 
@@ -273,14 +237,36 @@
         }
       }
 
-# TODO: Add more exporters
-# redis_exporter:
-# postgres_exporter:
-# github_exporter:
-# gcp_exporter:
+#      loki.source.docker "integrations_docker" {
+#        host             = "unix:///run/docker.sock"
+#        targets          = discovery.docker.integrations_docker.targets
+#        forward_to       = [loki.write.logs_integrations.receiver]
+#        relabel_rules    = discovery.relabel.integrations_docker.rules
+#        refresh_interval = "5s"
+#      }
 
 - name: Add alloy user to docker group
   user:
     name: alloy
     groups:
       - docker
+
+- name: Run swarm-batch-exporter
+  community.docker.docker_container:
+    name: "swarm-batch-prometheus"
+    image: "blossomlabs/swarm-batch-prometheus"
+    image_name_mismatch: recreate
+    network_mode: host
+    state: started
+    restart_policy: always
+    pull: "always"
+
+- name: Run bee-dashboard
+  community.docker.docker_container:
+    name: "bee-dashboard"
+    image: "pablocastellano/bee-dashboard"
+    image_name_mismatch: recreate
+    network_mode: host
+    state: started
+    restart_policy: always
+    pull: "always"

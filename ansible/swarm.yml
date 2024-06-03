@@ -7,16 +7,15 @@
     - roles/swarm_monitoring/vars/vault.yml
 
   vars:
+    bee_package_state: latest
     bee_config:
+      swap-enable: false
       swap-endpoint: "{{ swarm_swap_endpoint }}"
       swap-initial-deposit: 0
       cors-allowed-origins: '*'
       db-open-files-limit: 2000
       debug-api-enable: true
       full-node: true
-      restricted: true
-      token-encryption-key: "{{ swarm_token_encryption_key }}"
-      # admin-token: "{{ swarm_admin_token }}"
     password: "{{ swarm_password }}"
     swarm_key: "{{ swarm_key }}"
     libp2p_key: "{{ swarm_libp2p_key }}"

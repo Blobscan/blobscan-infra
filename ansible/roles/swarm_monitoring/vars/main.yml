@@ -9,8 +9,6 @@ tempo_url: tempo-eu-west-0.grafana.net:443
 tempo_basic_auth: "{{ vault_tempo_basic_auth }}"
 
 swarm_swap_endpoint: "{{ vault_swarm_swap_endpoint }}"
-swarm_admin_token: "{{ vault_swarm_admin_token }}"
-swarm_token_encryption_key: "{{ vault_swarm_token_encryption_key }}"
 swarm_password: "{{ vault_swarm_password }}"
 swarm_key: "{{ vault_swarm_key }}"
 swarm_libp2p_key: "{{ vault_swarm_libp2p_key }}"
