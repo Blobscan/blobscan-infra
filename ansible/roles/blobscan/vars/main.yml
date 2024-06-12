@@ -26,7 +26,6 @@ database_url: "{{ vault_database_url }}"
 secret_key: "{{ vault_secret_key }}"
 
 bee_endpoint: "{{ vault_bee_endpoint }}"
-bee_debug_endpoint: "{{ vault_bee_debug_endpoint }}"
 
 gcs_bucket_name: "{{ vault_gcs_bucket_name }}"
 google_project_id: "{{ vault_google_project_id }}"
