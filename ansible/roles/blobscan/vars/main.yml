@@ -34,9 +34,6 @@ google_service_key: "{{ vault_google_service_key }}"
 sentry_dsn_api: "{{ vault_sentry_dsn_api }}"
 sentry_dsn_indexer: "{{ vault_sentry_dsn_indexer }}"
 
-bee_password: "{{ vault_bee_password }}"
-bee_swap_endpoint: "{{ vault_bee_swap_endpoint }}"
-
 redis_uri: "rediss://{{ vault_redis_user }}:{{ vault_redis_pass }}@{{ vault_redis_host }}:{{ vault_redis_port }}/{{ vault_redis_db }}"
 
 otlp_auth_username: "{{ vault_otlp_auth_username }}"

@@ -9,6 +9,7 @@ REDIS_URI={{ redis_uri }}
 SECRET_KEY="{{ secret_key }}"
 
 CHAIN_ID={{ chain_id }}
+LOG_LEVEL=debug
 
 BEE_ENDPOINT={{ bee_endpoint }}
 
@@ -28,6 +29,9 @@ BLOBSCAN_API_BASE_URL=https://api.{{ domain }}
 
 POSTGRES_STORAGE_ENABLED={{ postgres_storage_enabled }}
 SWARM_STORAGE_ENABLED={{ swarm_storage_enabled }}
+{% if swarm_storage_enabled|bool %}
+SWARM_BATCH_ID={{ swarm_batch_id }}
+{% endif %}
 GOOGLE_STORAGE_ENABLED={{ google_storage_enabled }}
 GOOGLE_STORAGE_BUCKET_NAME={{ gcs_bucket_name }}
 GOOGLE_STORAGE_PROJECT_ID={{ google_project_id }}
@@ -43,15 +47,6 @@ BEACON_NODE_ENDPOINT={{ beacon_node_endpoint }}
 EXECUTION_NODE_ENDPOINT={{ execution_node_endpoint }}
 SENTRY_DSN_INDEXER={{ sentry_dsn_indexer }}
 RUST_LOG={{ indexer_log }}
-
-### BEE (ethereum swarm)
-
-BEE_CORS_ALLOWED_ORIGINS=*
-BEE_DB_OPEN_FILES_LIMIT=2000
-BEE_DEBUG_API_ENABLE=true
-BEE_FULL_NODE=true
-BEE_PASSWORD={{ bee_password }}
-BEE_SWAP_ENDPOINT={{ bee_swap_endpoint }}
 
 ### telemetry
 
