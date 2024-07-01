@@ -1,0 +1,14 @@
+---
+- hosts:
+   - blobscan
+   - swarm
+  become: yes
+  become_user: root
+
+  tasks:
+    - name: Update openssh-server
+      apt:
+        update_cache: yes
+        state: latest
+        name:
+          - openssh-server
