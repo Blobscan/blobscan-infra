@@ -19,7 +19,8 @@ NEXT_PUBLIC_EXPLORER_BASE_URL={{ explorer_base_url }}
 NEXT_PUBLIC_BEACON_BASE_URL={{ beacon_base_url }}
 
 INDEXER_TAG={{ indexer_tag }}
-BLOBSCAN_TAG={{ blobscan_tag }}
+BLOBSCAN_WEB_TAG={{ blobscan_tag }}
+BLOBSCAN_API_TAG={{ blobscan_tag }}
 
 ### rest api server
 EXTERNAL_WEB_PORT={{ external_web_port }}
@@ -29,6 +30,7 @@ BLOBSCAN_API_BASE_URL=https://api.{{ domain }}
 
 POSTGRES_STORAGE_ENABLED={{ postgres_storage_enabled }}
 SWARM_STORAGE_ENABLED={{ swarm_storage_enabled }}
+SWARM_DEFERRED_UPLOAD=true
 {% if swarm_storage_enabled|bool %}
 SWARM_BATCH_ID={{ swarm_batch_id }}
 {% endif %}
