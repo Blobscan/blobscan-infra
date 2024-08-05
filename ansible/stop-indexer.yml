@@ -1,0 +1,11 @@
+---
+- hosts: blobscan
+  become: yes
+  become_user: root
+
+  tasks:
+    - name: Stop indexer container
+      community.docker.docker_compose:
+        project_src: /home/deploy/blobscan-indexer.rs
+        # Comment the following line to spin up the container (docker compose up)
+        stopped: true
