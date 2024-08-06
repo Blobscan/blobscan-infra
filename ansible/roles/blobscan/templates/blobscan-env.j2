@@ -30,7 +30,6 @@ BLOBSCAN_API_BASE_URL=https://api.{{ domain }}
 
 POSTGRES_STORAGE_ENABLED={{ postgres_storage_enabled }}
 SWARM_STORAGE_ENABLED={{ swarm_storage_enabled }}
-SWARM_DEFERRED_UPLOAD=true
 {% if swarm_storage_enabled|bool %}
 SWARM_BATCH_ID={{ swarm_batch_id }}
 {% endif %}
