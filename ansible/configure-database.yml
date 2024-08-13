@@ -1,0 +1,40 @@
+---
+- name: Manage Blobscan Privileges on PostgreSQL Database
+  hosts: blobscan
+
+  vars_files:
+    - inventory/{{ env }}/group_vars/vault_{{ network }}.yml
+
+  tasks:
+
+    # Note: username must be created using Digital Ocean UI
+
+    - name: Create the stored procedure in PostgreSQL
+      community.postgresql.postgresql_query:
+        db: "{{ db_name }}"
+        query: |
+          CREATE OR REPLACE PROCEDURE manage_blobscan_ro_privileges(database_name TEXT)
+          LANGUAGE plpgsql
+          AS $$
+          BEGIN
+              EXECUTE format('REVOKE ALL ON DATABASE %I FROM blobscan_ro;', database_name);
+              EXECUTE format('GRANT CONNECT ON DATABASE %I TO blobscan_ro;', database_name);
+              EXECUTE 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO blobscan_ro;';
+              EXECUTE 'ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO blobscan_ro;';
+          END $$;
+        login_host: "{{ db_host }}"
+        login_user: "{{ db_user }}"
+        login_password: "{{ db_password }}"
+        login_port: "{{ db_port }}"
+        autocommit: yes
+
+    - name: Execute the procedure to manage privileges
+      community.postgresql.postgresql_query:
+        db: "{{ db_name }}"
+        query: "CALL manage_blobscan_ro_privileges('{{ db_name }}');"
+        login_host: "{{ db_host }}"
+        login_user: "{{ db_user }}"
+        login_password: "{{ db_password }}"
+        login_port: "{{ db_port }}"
+        autocommit: yes
+

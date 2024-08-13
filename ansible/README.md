@@ -42,6 +42,12 @@ Update only the grafana agent:
 ansible-playbook update-monitoring.yml -i hosts.yml
 ```
 
+## Provisioning postgres database
+
+```
+update-playbook configure-database.yml -i hosts.yml
+```
+
 ## Provisioning a Swarm node
 
 ```

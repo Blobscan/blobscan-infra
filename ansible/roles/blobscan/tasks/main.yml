@@ -1,8 +1,10 @@
-- name: Install nginx
-  apt:
-    name:
-      - nginx
-      - python3-certbot-nginx
+- name: Install packages from APT (nginx, psycopg2)
+  apt: name={{ item }} update_cache=yes state=latest
+  with_items:
+    - nginx
+    - python3-certbot-nginx
+    # only used in the configure-database.yml playbook
+    - python3-psycopg2
 
 - name: Check if nginx config already exists
   ansible.builtin.stat:

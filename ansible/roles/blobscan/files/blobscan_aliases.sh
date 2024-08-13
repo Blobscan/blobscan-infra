@@ -8,7 +8,7 @@ blobscan-check-blocks() {
 
 blobscan-sql() {
 	source $HOME/blobscan/.env
-	docker run -ti --rm postgres:15 psql $DATABASE_URL
+	docker run -ti --rm postgres:16 psql $DATABASE_URL
 }
 
 alias propagator='docker compose exec api pnpm propagator'
@@ -24,6 +24,8 @@ blobscan-stop() {
 }
 
 blobscan-resetdb() {
+  echo "blobscan-resetdb is disabled for security reasons"
+  return
   cd $BLOBSCAN_DIR
   docker compose stop indexer
   docker compose exec api npx prisma migrate reset --schema packages/db/prisma/schema.prisma

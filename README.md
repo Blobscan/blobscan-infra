@@ -140,7 +140,7 @@ Lastly, provision everything using Ansible:
 
 ```
 cd ansible
-ansible-playbook -i hosts.yml blobscan.yml -l blobscan-goerli-prod
+ansible-playbook -i hosts.yml blobscan.yml -l staging
 ```
 
 Note: currently, you must log into your instance and start the docker compose services by yourself.
