@@ -18,9 +18,11 @@ NEXT_PUBLIC_NETWORK_NAME={{ network }}
 NEXT_PUBLIC_EXPLORER_BASE_URL={{ explorer_base_url }}
 NEXT_PUBLIC_BEACON_BASE_URL={{ beacon_base_url }}
 
-INDEXER_TAG={{ indexer_tag }}
 BLOBSCAN_WEB_TAG={{ blobscan_tag }}
 BLOBSCAN_API_TAG={{ blobscan_tag }}
+
+# deprecated - remove once promoted to production
+BLOBSCAN_TAG=stable
 
 ### rest api server
 EXTERNAL_WEB_PORT={{ external_web_port }}

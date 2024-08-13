@@ -7,7 +7,25 @@
 
   tasks:
 
-    # Note: username must be created using Digital Ocean UI
+    - name: Ensure the blobscan user exists in PostgreSQL
+      community.postgresql.postgresql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        db: "{{ db_name }}"
+        login_host: "{{ db_host }}"
+        login_user: "{{ db_admin_user }}"
+        login_password: "{{ db_admin_password }}"
+        login_port: "{{ db_port }}"
+
+    - name: Ensure the blobscan_ro readonly user exists in PostgreSQL
+      community.postgresql.postgresql_user:
+        name: "{{ db_readonly_user }}"
+        password: "{{ db_readonly_password }}"
+        db: "{{ db_name }}"
+        login_host: "{{ db_host }}"
+        login_user: "{{ db_admin_user }}"
+        login_password: "{{ db_admin_password }}"
+        login_port: "{{ db_port }}"
 
     - name: Create the stored procedure in PostgreSQL
       community.postgresql.postgresql_query:
@@ -17,14 +35,17 @@
           LANGUAGE plpgsql
           AS $$
           BEGIN
+              EXECUTE format('GRANT CONNECT ON DATABASE %I TO blobscan;', database_name);
+              EXECUTE 'GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO blobscan';
+
               EXECUTE format('REVOKE ALL ON DATABASE %I FROM blobscan_ro;', database_name);
               EXECUTE format('GRANT CONNECT ON DATABASE %I TO blobscan_ro;', database_name);
               EXECUTE 'GRANT SELECT ON ALL TABLES IN SCHEMA public TO blobscan_ro;';
               EXECUTE 'ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO blobscan_ro;';
           END $$;
         login_host: "{{ db_host }}"
-        login_user: "{{ db_user }}"
-        login_password: "{{ db_password }}"
+        login_user: "{{ db_admin_user }}"
+        login_password: "{{ db_admin_password }}"
         login_port: "{{ db_port }}"
         autocommit: yes
 
@@ -33,8 +54,8 @@
         db: "{{ db_name }}"
         query: "CALL manage_blobscan_ro_privileges('{{ db_name }}');"
         login_host: "{{ db_host }}"
-        login_user: "{{ db_user }}"
-        login_password: "{{ db_password }}"
+        login_user: "{{ db_admin_user }}"
+        login_password: "{{ db_admin_password }}"
         login_port: "{{ db_port }}"
         autocommit: yes
 
