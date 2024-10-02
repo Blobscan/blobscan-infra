@@ -21,12 +21,6 @@ NEXT_PUBLIC_BEACON_BASE_URL={{ beacon_base_url }}
 BLOBSCAN_WEB_TAG={{ blobscan_tag }}
 BLOBSCAN_API_TAG={{ blobscan_tag }}
 
-# deprecated - remove once promoted to production
-BLOBSCAN_TAG=stable
-
-# deprecated - remove once promoted to production
-SWARM_DEFERRED_UPLOAD=true
-
 ### rest api server
 EXTERNAL_WEB_PORT={{ external_web_port }}
 BLOBSCAN_API_PORT={{ blobscan_api_port }}
@@ -64,3 +58,8 @@ OTLP_AUTH_PASSWORD={{ otlp_auth_password }}
 
 OTEL_EXPORTER_OTLP_PROTOCOL={{ otlp_protocol }}
 OTEL_EXPORTER_OTLP_ENDPOINT={{ otlp_url }}
+
+### posthog
+
+POSTHOG_ID={{ posthog_id }}
+POSTHOG_HOST={{ posthog_host }}

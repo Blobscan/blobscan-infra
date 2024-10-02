@@ -3,6 +3,11 @@
 letsencrypt_certificates: [["api.{{ domain }}"]]
 letsencrypt_email: "{{ vault_letsencrypt_email }}"
 
+# posthog
+
+posthog_id: "{{ vault_posthog_id }}"
+posthog_host: "{{ vault_posthog_host }}"
+
 # grafana configuration
 
 otlp_url: https://otlp-gateway-prod-eu-west-0.grafana.net/otlp
