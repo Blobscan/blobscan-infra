@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 cd /home/deploy/blobscan-indexer.rs
 git pull
