@@ -1,7 +1,0 @@
-#!/bin/bash
-
-cd /home/deploy/{{item}}
-git pull
-
-docker compose pull && docker compose up -d
-#docker image prune -f

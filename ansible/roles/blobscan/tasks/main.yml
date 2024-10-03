@@ -65,13 +65,19 @@
 - name: Allow deploy user to deploy things
   script: "./update-authorized-keys.sh {{ apps|join(' ') }}"
 
-- name: Copy app-specific deploy scripts
+- name: Copy app-specific deploy scripts (api)
   template:
-    src: ./deploy-app.sh.j2
-    dest: /home/deploy/deploy-{{ item }}.sh
+    src: ./deploy-blobscan.sh
+    dest: /home/deploy/deploy-blobscan.sh
     mode: '0770'
     owner: deploy
-  loop: "{{ apps }}"
+
+- name: Copy app-specific deploy scripts (indexer)
+  template:
+    src: ./deploy-blobscan-indexer.sh
+    dest: /home/deploy/deploy-indexer.sh
+    mode: '0770'
+    owner: deploy
 
 # Configure deploy's SSH to use the deploy keys generated earlier when cloning/pulling git repos.
 # When cloning/pulling/etc the <app> repo, we'll use <app>.github.com, so that way, we can
