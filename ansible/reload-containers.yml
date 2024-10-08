@@ -1,0 +1,15 @@
+---
+- hosts: blobscan
+  become: yes
+  become_user: root
+
+  tasks:
+    - name: Reload api container
+      community.docker.docker_compose_v2:
+        project_src: /home/deploy/blobscan
+        pull: "always"
+
+    - name: Reload indexer container
+      community.docker.docker_compose_v2:
+        project_src: /home/deploy/blobscan-indexer.rs
+        pull: "always"

@@ -20,12 +20,11 @@
         owner: deploy
       loop: "{{ apps }}"
 
-    - name: Reload api container
-      community.docker.docker_compose_v2:
-        project_src: /home/deploy/blobscan
-        pull: "always"
-
-    - name: Reload indexer container
-      community.docker.docker_compose_v2:
-        project_src: /home/deploy/blobscan-indexer.rs
-        pull: "always"
+    - name: Copy blobscan aliases
+      copy:
+        src: ./roles/blobscan/files/blobscan_aliases.sh
+        dest: /home/deploy/aliases.sh
+        owner: deploy
+    - name: Finished
+      debug:
+        msg: "Done! Remember to run playbook reload-containers.yml"

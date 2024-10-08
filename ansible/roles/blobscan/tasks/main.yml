@@ -121,7 +121,6 @@
 
 - name: Clone repositories
   command: git -C /home/deploy clone https://github.com/blobscan/{{ item }}.git
-  # command: git -C /home/deploy clone git@{{ item }}.github.com:{{ github_account }}/{{ item }}.git
   args:
     creates: /home/deploy/{{ item }}/
   loop: "{{ apps }}"

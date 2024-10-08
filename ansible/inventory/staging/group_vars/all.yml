@@ -1,4 +1,4 @@
-indexer_tag: master
+indexer_tag: latest
 blobscan_tag: development
 
 beacon_node_endpoint: "{{ vault_beacon_node_endpoint }}"

@@ -1,5 +1,4 @@
-# once promoted to production, change to latest
-indexer_tag: master
+indexer_tag: latest
 blobscan_tag: latest
 
 postgres_storage_enabled: "false"
