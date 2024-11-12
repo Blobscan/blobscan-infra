@@ -8,7 +8,7 @@ blobscan-check-blocks() {
 
 blobscan-sql() {
 	source $HOME/blobscan/.env
-	docker run -ti --rm postgres:16 psql "$DATABASE_DIRECT_URL"
+	docker run -ti --rm -v /tmp:/tmp postgres:16 psql "$DATABASE_DIRECT_URL"
 }
 
 alias propagator='docker compose exec api pnpm propagator'
