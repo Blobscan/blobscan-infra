@@ -61,7 +61,7 @@ ansible-playbook ethereum-node.yml -i hosts.yml
 ansible-playbook ethereum-node.yml -i hosts.yml -l sepolia_nodes
 ```
 
-Using ethpandaops roles (only for Gnosis chain at the moment):
+Using ethPandaOps roles (only for Gnosis chain at the moment):
 
 ```
 ansible-playbook ethereum-node-pandaops.yml -i hosts.yml
