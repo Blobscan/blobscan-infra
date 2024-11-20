@@ -2,3 +2,6 @@ chain_id: 11155111
 explorer_base_url: https://dora.sepolia.ethpandaops.io/
 beacon_base_url: https://sepolia.beaconcha.in/
 consensus_checkpoint_sync_url: https://sepolia.checkpoint-sync.ethpandaops.io
+
+swarm_storage_enabled: "true"
+swarm_batch_id: "5dd40b561e34f0ae9fb771283f4aa6de58be4d39e89124610e5ee2fa16a9e740"
