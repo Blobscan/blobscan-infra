@@ -87,14 +87,6 @@ resource "vercel_project_environment_variable" "enable_swarm" {
   target     = ["production"]
 }
 
-resource "vercel_project_environment_variable" "enable_propagator" {
-  project_id = vercel_project.blobscan.id
-  team_id    = "${var.vercel_team_id}"
-  key        = "BLOB_PROPAGATOR_ENABLED"
-  value      = "false"
-  target     = ["production"]
-}
-
 resource "vercel_project_environment_variable" "enable_postgres" {
   project_id = vercel_project.blobscan.id
   team_id    = "${var.vercel_team_id}"
