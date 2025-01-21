@@ -3,5 +3,5 @@ explorer_base_url: https://dora.ethpandaops.io/
 beacon_base_url: https://beaconcha.in/
 consensus_checkpoint_sync_url: https://beaconstate.ethstaker.cc/
 
-swarm_storage_enabled: "true"
+swarm_storage_enabled: "false"
 swarm_batch_id: "394c6927473b0441b7e0a2bfd94494c4de5b3a3a1515e9689f03d4aac32d7913"

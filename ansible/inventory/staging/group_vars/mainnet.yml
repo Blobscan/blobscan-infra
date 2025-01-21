@@ -1,4 +1,4 @@
 domain: staging.blobscan.com
 
-swarm_storage_enabled: "true"
+swarm_storage_enabled: "false"
 swarm_batch_id: "72aea6aad84b6e888839500e1de029f24ce3cd80db56f1fc68943aa8d6b1b8ba"
