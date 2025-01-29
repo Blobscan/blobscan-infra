@@ -30,6 +30,7 @@ blobscan_api_endpoint: "http://localhost:3001"
 database_url: "{{ vault_database_url }}"
 database_direct_url: "{{ vault_database_direct_url }}"
 secret_key: "{{ vault_secret_key }}"
+weavevm_api_key: "{{ vault_weavevm_api_key }}"
 
 bee_endpoint: "{{ vault_bee_endpoint }}"
 
