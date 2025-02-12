@@ -134,6 +134,13 @@
     owner: deploy
   loop: "{{ apps }}"
 
+- name: Copy backup_db.sh script
+  template:
+    src: ./backup_db.sh
+    dest: /home/deploy/backup_db.sh
+    owner: deploy
+    mode: '0755'
+
 - name: Reload services
   community.docker.docker_compose_v2:
     project_src: /home/deploy/{{ item }}
