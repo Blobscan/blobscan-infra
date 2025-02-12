@@ -1,0 +1,176 @@
+helmDefaults:
+  createNamespace: true
+
+# TODO: Once feat/import branch is merged, change to use
+# chart: cnpg/cluster
+# instead of:
+# chart: ./helm/cloudnative-pg/charts/cluster/
+repositories:
+  - name: cnpg
+    url: https://cloudnative-pg.github.io/charts
+  - name: ingress-nginx
+    url: https://kubernetes.github.io/ingress-nginx
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
+  - name: ethersphere
+    url: https://ethersphere.github.io/helm
+  - name: blobscan
+    url: https://blobscan.github.io/blobscan-helm-charts
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+  - name: jetstack
+    url: https://charts.jetstack.io
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+
+releases:
+  - name: blackbox-exporter
+    namespace: monitoring
+    chart: prometheus-community/prometheus-blackbox-exporter
+    version: 9.4.0
+
+  - name: cert-manager
+    namespace: cert-manager
+    chart: jetstack/cert-manager
+    version: 1.17.1
+
+  - name: grafana-k8s-monitoring
+    namespace: monitoring
+    chart: grafana/k8s-monitoring
+    version: 2.0.16
+    values:
+      - values/grafana_cloud.yaml
+    # TODO: helm upgrade --install --version ^2 --atomic --timeout 300s
+    # TODO: test with diff
+
+  - name: nginx-ingress
+    namespace: ingress
+    chart: ingress-nginx/ingress-nginx
+    version: 4.12.1
+    values:
+      - values/ingress.yaml
+
+  - name: cnpg
+    namespace: cnpg-system
+    chart: cnpg/cloudnative-pg
+    version: 0.23.2
+
+  - name: bee
+    namespace: swarm
+    chart: ethersphere/bee
+    version: 0.16.7
+    values:
+      - values/bee.yaml
+
+  # common or one per instance?
+  # TODO: deploy redis instance from the blobscan package
+  - name: redis
+    namespace: staging
+    chart: bitnami/redis
+    version: 20.11.3
+    values:
+      - values/staging-redis.yaml
+
+  # Ethereum (staging)
+  - name: blobscan-staging-db
+    namespace: staging
+    chart: ./helm/cloudnative-pg/charts/cluster/
+    # version: 18.19.2
+    values:
+      - values/blobscan-db.yaml
+      - values/staging-db.yaml
+      - values/staging-import.yaml
+
+  - name: blobscan
+    namespace: staging
+    chart: blobscan/blobscan
+    version: 0.6.6
+    values:
+      - values/staging-blobscan.yaml
+    secrets:
+      - secrets/staging-blobscan.yaml
+
+  # Gnosis
+  - name: blobscan-gnosis-db
+    namespace: gnosis
+    chart: ./helm/cloudnative-pg/charts/cluster/
+    # version: 18.19.2
+    values:
+      - values/blobscan-db.yaml
+      - values/gnosis-db.yaml
+      - values/gnosis-import.yaml
+
+  - name: blobscan
+    namespace: gnosis
+    chart: blobscan/blobscan
+    version: 0.5.5
+    values:
+      - values/gnosis-blobscan.yaml
+
+  # Holesky testnet
+  - name: blobscan-holesky-db
+    namespace: holesky
+    chart: ./helm/cloudnative-pg/charts/cluster/
+    # version: 18.19.2
+    values:
+      - values/blobscan-db.yaml
+      - values/holesky-db.yaml
+      - values/holesky-import.yaml
+
+  - name: blobscan
+    namespace: holesky
+    chart: blobscan/blobscan
+    version: 0.5.5
+    values:
+      - values/holesky-blobscan.yaml
+
+  # Sepolia testnet
+  - name: blobscan-sepolia-db
+    namespace: sepolia
+    chart: ./helm/cloudnative-pg/charts/cluster/
+    # version: 18.19.2
+    values:
+      - values/blobscan-db.yaml
+      - values/sepolia-db.yaml
+      - values/sepolia-import.yaml
+
+  - name: blobscan
+    namespace: sepolia
+    chart: blobscan/blobscan
+    version: 0.5.5
+    values:
+      - values/sepolia-blobscan.yaml
+
+  # Ethereum mainnet
+  - name: blobscan-mainnet-db
+    namespace: mainnet
+    chart: ./helm/cloudnative-pg/charts/cluster/
+    # version: 18.19.2
+    values:
+      - values/blobscan-db.yaml
+      - values/mainnet-db.yaml
+      - values/mainnet-import.yaml
+
+  - name: blobscan
+    namespace: mainnet
+    chart: blobscan/blobscan
+    version: 0.5.5
+    values:
+      - values/mainnet-blobscan.yaml
+
+  # Preview environment
+  - name: blobscan-preview-db
+    namespace: preview
+    chart: ./helm/cloudnative-pg/charts/cluster/
+    # version: 18.19.2
+    values:
+      - values/blobscan-db.yaml
+      - values/preview-db.yaml
+      - values/preview-import.yaml
+
+  - name: blobscan
+    namespace: preview
+    chart: blobscan/blobscan
+    version: 0.5.5
+    values:
+      - values/preview-blobscan.yaml

@@ -1,0 +1,36 @@
+controller:
+  config:
+    use-proxy-protocol: "true"
+    use-forwarded-headers: "true"
+    proxy-real-ip-cidr: "10.108.0.0/20"
+    log-format-upstream: '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$host"'
+  ingressClass: nginx-pp
+  ingressClassResource:
+    controllerValue: "k8s.io/ingress-nginx-pp"
+    default: true
+    name: "nginx-pp"
+  metrics:
+    enabled: "true"
+    serviceMonitor:
+      enabled: "true"
+      metricRelabelings:
+        - regex: exported_service|container|controller_class|controller_namespace|controller_pod|endpoint|instance|job|pod|service
+          action: labeldrop
+        - sourceLabels: [__name__]
+          regex: nginx_ingress_controller_connect_duration_seconds_bucket
+          action: drop
+        - sourceLabels: [__name__]
+          regex: nginx_ingress_controller_header_duration_seconds_bucket
+          action: drop
+        - sourceLabels: [__name__]
+          regex: nginx_ingress_controller_request_size_bucket
+          action: drop
+        - sourceLabels: [__name__]
+          regex: nginx_ingress_controller_bytes_sent_bucket
+          action: drop
+
+  service:
+    annotations:
+      service.beta.kubernetes.io/do-loadbalancer-name: "http-lb"
+      service.beta.kubernetes.io/do-loadbalancer-protocol: "tcp"
+      service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"

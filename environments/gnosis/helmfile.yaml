@@ -1,0 +1,12 @@
+helmDefaults:
+  createNamespace: true
+
+releases:
+  - name: blobscan
+    namespace: gnosis
+    chart: blobscan/blobscan
+    version: 0.9.6
+    values:
+      - values.yaml
+    secrets:
+      - secrets.yaml

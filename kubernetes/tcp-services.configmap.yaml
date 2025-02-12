@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tcp-services
+  namespace: ingress
+data:
+  "30100": "gnosis/blobscan-gnosis-db-cluster-pooler-rw:5432"
+  "30200": "sepolia/blobscan-sepolia-db-cluster-pooler-rw:5432"
+  "30300": "holesky/blobscan-holesky-db-cluster-pooler-rw:5432"
+  "30400": "staging/blobscan-staging-db-cluster-pooler-rw:5432"
+  "30500": "mainnet/blobscan-mainnet-db-cluster-pooler-rw:5432"
+  "30600": "preview/blobscan-preview-db-cluster-pooler-rw:5432"

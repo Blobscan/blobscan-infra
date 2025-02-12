@@ -1,0 +1,22 @@
+cluster:
+  initdb:
+    database: blobscan_sepolia_prod
+    owner: blobscan
+
+  storage:
+    size: 40Gi
+
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "4"
+
+backups:
+  scheduledBackups:
+    - name: daily-backup
+      schedule: "0 10 4 * * *"
+      backupOwnerReference: none
+      method: barmanObjectStore

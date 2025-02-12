@@ -1,0 +1,35 @@
+deploymentAnnotations:
+  keel.sh/policy: "force"
+  keel.sh/match-tag: "true"
+  keel.sh/approvals: "0"
+
+replicas: 2
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+image:
+  pullPolicy: "Always"
+
+ingress:
+  enabled: true
+  className: nginx-pp
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-dns-gcp
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: "docs.blobscan.com"
+      paths:
+      - path: "/"
+        pathType: Prefix
+  tls:
+    - secretName: blobscan-docs-tls
+      hosts:
+        - "docs.blobscan.com"

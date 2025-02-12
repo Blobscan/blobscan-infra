@@ -1,0 +1,22 @@
+cluster:
+  initdb:
+    database: blobscan_mainnet_prod
+    owner: blobscan
+
+  storage:
+    size: 60Gi
+
+  resources:
+    requests:
+      memory: "3Gi"
+      cpu: "1"
+    limits:
+      memory: "4Gi"
+      cpu: "4"
+
+backups:
+  scheduledBackups:
+    - name: daily-backup
+      schedule: "0 10 8 * * *"
+      backupOwnerReference: none
+      method: barmanObjectStore

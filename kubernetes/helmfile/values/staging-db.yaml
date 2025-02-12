@@ -1,0 +1,26 @@
+cluster:
+
+  initdb:
+    database: blobscan_mainnet_staging
+    owner: blobscan
+
+  storage:
+    size: 60Gi
+
+  walStorage:
+    size: 10Gi
+
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "2"
+
+backups:
+  scheduledBackups:
+    - name: daily-backup
+      schedule: "0 10 0 * * *"  # staging
+      backupOwnerReference: none
+      method: barmanObjectStore

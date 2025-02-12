@@ -1,0 +1,185 @@
+blobscan-api:
+  annotations:
+    keel.sh/policy: major
+    keel.sh/approvals: "0"
+  podLabels:
+    environment: mainnet
+
+  # externalConfigMaps:
+  #   - "blobscan"
+  fullnameOverride: "blobscan-api"
+  config:
+    CHAIN_ID: "1"
+    NETWORK_NAME: "mainnet"
+    BLOBSCAN_API_BASE_URL: "https://api.blobscan.com"
+    POSTGRES_STORAGE_ENABLED: "false"
+    SWARM_STORAGE_ENABLED: "true"
+    SWARM_BATCH_ID: "394c6927473b0441b7e0a2bfd94494c4de5b3a3a1515e9689f03d4aac32d7913"
+    GOOGLE_STORAGE_ENABLED: "true"
+    GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
+    GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
+    BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
+    METRICS_ENABLED: "true"
+    LOG_LEVEL: "info"
+    BLOB_DATA_API_ENABLED: "false"
+    ETH_PRICE_SYNCER_ENABLED: "true"
+    # ETH_PRICE_SYNCER_TIME_TOLERANCE: "100"
+  extraEnv:
+    - name: BLOB_PROPAGATOR_COMPLETED_JOBS_AGE
+      value: "1"
+    - name: WEAVEVM_API_KEY
+      value: "ee84a5a406dde363941744c8ffbebafd"
+    - name: WEAVEVM_STORAGE_API_BASE_URL
+      value: "https://blobscan.load.rs"
+    # TODO: no se usa en mainnet??
+    - name: WEAVEVM_STORAGE_ENABLED
+      value: "true"
+
+  bullmqExporter:
+    enabled: true
+    # TODO: review mainnet or ethereum in grafana?
+    databaseMapping: "0:mainnet-prod"
+    image:
+      pullPolicy: "Always"
+    serviceMonitor:
+      enabled: true
+
+  image:
+    tag: 1
+    pullPolicy: "Always"
+
+  ingress:
+    enabled: true
+    className: nginx-pp
+    annotations:
+      kubernetes.io/tls-acme: "true"
+      cert-manager.io/cluster-issuer: letsencrypt-dns-gcp
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    hosts:
+      - host: "api.blobscan.com"
+        paths:
+        - path: "/"
+          pathType: Prefix
+    tls:
+      - secretName: api-mainnet-blobscan-tls
+        hosts:
+          - "api.blobscan.com"
+
+  resources:
+    limits:
+      cpu: 2
+      memory: 1Gi
+
+    requests:
+      cpu: 100m
+      memory: 512Mi
+
+blobscan-indexer:
+  annotations:
+    keel.sh/policy: major
+    keel.sh/approvals: "0"
+  podLabels:
+    environment: mainnet
+  fullnameOverride: "blobscan-indexer"
+  config:
+    BLOBSCAN_API_ENDPOINT: "http://blobscan-api:3001"
+    RUST_LOG: "blob_indexer=INFO"
+
+  image:
+    tag: 0
+    pullPolicy: "Always"
+
+blobscan-web:
+  replicas: 2
+  annotations:
+    keel.sh/policy: major
+    keel.sh/approvals: "0"
+  podLabels:
+    environment: mainnet
+  fullnameOverride: "blobscan-web"
+  config:
+    NETWORK_NAME: "mainnet"
+    BLOBSCAN_API_BASE_URL: "https://api.blobscan.com"
+    BLOBSCAN_API_PORT: 443
+    POSTGRES_STORAGE_ENABLED: "false"
+    SWARM_STORAGE_ENABLED: "true"
+    GOOGLE_STORAGE_ENABLED: "true"
+    GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
+    GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
+    METRICS_ENABLED: "true"
+    LOG_LEVEL: info
+    BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
+  extraEnv:
+    - name: PUBLIC_POSTHOG_ID
+      value: "phc_n7WONIedZmpeWUlvgQq2KW3p59g6Au8JDTRVciqpcWl"
+    - name: PUBLIC_POSTHOG_HOST
+      value: "https://us.i.posthog.com"
+    - name: SENTRY_ORG
+      value: "blossom-labs"
+    - name: SENTRY_PROJECT
+      value: "blobscan-web"
+    - name: SENTRY_IGNORE_API_RESOLUTION_ERROR
+      value: "1"
+
+  image:
+    tag: 1
+    pullPolicy: Always
+
+  ingress:
+    enabled: true
+    className: nginx-pp
+    annotations:
+      kubernetes.io/tls-acme: "true"
+      cert-manager.io/cluster-issuer: letsencrypt-dns-gcp
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    hosts:
+      - host: "blobscan.com"
+        paths:
+        - path: "/"
+          pathType: Prefix
+    tls:
+      - secretName: mainnet-blobscan-tls
+        hosts:
+          - "blobscan.com"
+
+  resources:
+    limits:
+      cpu: 2
+      memory: 512Mi
+
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+blobscandb:
+  enabled: false
+
+redis:
+  enabled: true
+  global:
+    defaultStorageClass: "do-block-storage-retain"
+
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: false
+
+  master:
+    persistence:
+      enabled: true
+      storageClass: "do-block-storage-retain"
+      accessModes:
+        - ReadWriteOnce
+      size: 20Gi
+    resources:
+      limits:
+        cpu: 150m
+        memory: 2Gi
+        ephemeral-storage: 2Gi
+
+      requests:
+        cpu: 100m
+        memory: 128Mi
+        ephemeral-storage: 50Mi

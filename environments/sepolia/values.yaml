@@ -1,0 +1,182 @@
+blobscan-api:
+  annotations:
+    keel.sh/policy: major
+    keel.sh/approvals: "0"
+  podLabels:
+    environment: sepolia
+
+  # externalConfigMaps:
+  #   - "blobscan"
+  fullnameOverride: "blobscan-api"
+  config:
+    CHAIN_ID: "11155111"
+    NETWORK_NAME: "sepolia"
+    BLOBSCAN_API_BASE_URL: "https://api.sepolia.blobscan.com"
+    POSTGRES_STORAGE_ENABLED: "false"
+    SWARM_STORAGE_ENABLED: "true"
+    SWARM_BATCH_ID: "5dd40b561e34f0ae9fb771283f4aa6de58be4d39e89124610e5ee2fa16a9e740"
+    GOOGLE_STORAGE_ENABLED: "true"
+    GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
+    GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
+    BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
+    METRICS_ENABLED: "true"
+    LOG_LEVEL: "info"
+    BLOB_DATA_API_ENABLED: "false"
+
+  extraEnv:
+    - name: BLOB_PROPAGATOR_COMPLETED_JOBS_AGE
+      value: "1"
+
+  bullmqExporter:
+    enabled: true
+    databaseMapping: "0:sepolia-prod"
+    image:
+      pullPolicy: "Always"
+    serviceMonitor:
+      enabled: true
+
+  image:
+    tag: 1
+    pullPolicy: "Always"
+
+  ingress:
+    enabled: true
+    className: nginx-pp
+    annotations:
+      kubernetes.io/tls-acme: "true"
+      cert-manager.io/cluster-issuer: letsencrypt-dns-gcp
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    hosts:
+      - host: "api.sepolia.blobscan.com"
+        paths:
+        - path: "/"
+          pathType: Prefix
+    tls:
+      - secretName: api-sepolia-blobscan-tls
+        hosts:
+          - "api.sepolia.blobscan.com"
+
+  resources:
+    limits:
+      cpu: 2
+      memory: 1Gi
+
+    requests:
+      cpu: 100m
+      memory: 512Mi
+
+blobscan-indexer:
+  annotations:
+    keel.sh/policy: major
+    keel.sh/approvals: "0"
+  podLabels:
+    environment: sepolia
+  fullnameOverride: "blobscan-indexer"
+  config:
+    BLOBSCAN_API_ENDPOINT: "http://blobscan-api:3001"
+    RUST_LOG: "blob_indexer=INFO"
+
+  image:
+    tag: 0
+    pullPolicy: "Always"
+
+blobscan-web:
+  replicas: 2
+  annotations:
+    keel.sh/policy: major
+    keel.sh/approvals: "0"
+  podLabels:
+    environment: sepolia
+  fullnameOverride: "blobscan-web"
+  config:
+    NETWORK_NAME: "sepolia"
+    BLOBSCAN_API_BASE_URL: "https://api.sepolia.blobscan.com"
+    BLOBSCAN_API_PORT: 443
+    POSTGRES_STORAGE_ENABLED: "false"
+    SWARM_STORAGE_ENABLED: "true"
+    GOOGLE_STORAGE_ENABLED: "true"
+    GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
+    GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
+    METRICS_ENABLED: "true"
+    LOG_LEVEL: info
+    BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
+  extraEnv:
+    - name: PUBLIC_NETWORK_NAME
+      value: "sepolia"
+    - name: PUBLIC_EXPLORER_BASE_URL
+      value: "https://dora.sepolia.ethpandaops.io/"
+    - name: PUBLIC_BEACON_BASE_URL
+      value: "https://sepolia.beaconcha.in/"
+    - name: PUBLIC_POSTHOG_ID
+      value: "phc_n7WONIedZmpeWUlvgQq2KW3p59g6Au8JDTRVciqpcWl"
+    - name: PUBLIC_POSTHOG_HOST
+      value: "https://us.i.posthog.com"
+    - name: SENTRY_ORG
+      value: "blossom-labs"
+    - name: SENTRY_PROJECT
+      value: "blobscan-web"
+    - name: SENTRY_IGNORE_API_RESOLUTION_ERROR
+      value: "1"
+
+  image:
+    tag: 1
+    pullPolicy: Always
+
+  ingress:
+    enabled: true
+    className: nginx-pp
+    annotations:
+      kubernetes.io/tls-acme: "true"
+      cert-manager.io/cluster-issuer: letsencrypt-dns-gcp
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    hosts:
+      - host: "sepolia.blobscan.com"
+        paths:
+        - path: "/"
+          pathType: Prefix
+    tls:
+      - secretName: sepolia-blobscan-tls
+        hosts:
+          - "sepolia.blobscan.com"
+
+  resources:
+    limits:
+      cpu: 2
+      memory: 512Mi
+
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+blobscandb:
+  enabled: false
+
+redis:
+  enabled: true
+  global:
+    defaultStorageClass: "do-block-storage-retain"
+
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: false
+
+  master:
+    persistence:
+      enabled: true
+      storageClass: "do-block-storage-retain"
+      accessModes:
+        - ReadWriteOnce
+      size: 20Gi
+    resources:
+      limits:
+        cpu: 150m
+        memory: 2Gi
+        ephemeral-storage: 2Gi
+
+      requests:
+        cpu: 100m
+        memory: 128Mi
+        ephemeral-storage: 50Mi
