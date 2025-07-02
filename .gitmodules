@@ -1,4 +1,0 @@
-[submodule "kubernetes/helm/cloudnative-pg"]
-	path = kubernetes/helmfile/helm/cloudnative-pg
-	url = https://github.com/cloudnative-pg/charts.git
-	branch = feat/import

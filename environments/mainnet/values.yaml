@@ -20,7 +20,7 @@ blobscan-api:
     GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
     BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
     METRICS_ENABLED: "true"
-    LOG_LEVEL: "info"
+    LOG_LEVEL: "http"
     BLOB_DATA_API_ENABLED: "false"
     ETH_PRICE_SYNCER_ENABLED: "true"
     # ETH_PRICE_SYNCER_TIME_TOLERANCE: "100"
@@ -37,12 +37,23 @@ blobscan-api:
 
   bullmqExporter:
     enabled: true
-    # TODO: review mainnet or ethereum in grafana?
-    databaseMapping: "0:mainnet-prod"
+    databaseMapping: "0:mainnet"
     image:
       pullPolicy: "Always"
+    service:
+      annotations:
+        k8s.grafana.com/scrape: "true"
+
     serviceMonitor:
       enabled: true
+      relabelings:
+        - action: replace
+          replacement: mainnet
+          targetLabel: environment
+
+  service:
+    annotations:
+      k8s.grafana.com/scrape: "true"
 
   image:
     tag: 1

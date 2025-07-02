@@ -1,10 +1,6 @@
 helmDefaults:
   createNamespace: true
 
-# TODO: Once feat/import branch is merged, change to use
-# chart: cnpg/cluster
-# instead of:
-# chart: ./helm/cloudnative-pg/charts/cluster/
 repositories:
   - name: cnpg
     url: https://cloudnative-pg.github.io/charts
@@ -71,16 +67,6 @@ releases:
     values:
       - values/staging-redis.yaml
 
-  # Ethereum (staging)
-  - name: blobscan-staging-db
-    namespace: staging
-    chart: ./helm/cloudnative-pg/charts/cluster/
-    # version: 18.19.2
-    values:
-      - values/blobscan-db.yaml
-      - values/staging-db.yaml
-      - values/staging-import.yaml
-
   - name: blobscan
     namespace: staging
     chart: blobscan/blobscan
@@ -90,32 +76,12 @@ releases:
     secrets:
       - secrets/staging-blobscan.yaml
 
-  # Gnosis
-  - name: blobscan-gnosis-db
-    namespace: gnosis
-    chart: ./helm/cloudnative-pg/charts/cluster/
-    # version: 18.19.2
-    values:
-      - values/blobscan-db.yaml
-      - values/gnosis-db.yaml
-      - values/gnosis-import.yaml
-
   - name: blobscan
     namespace: gnosis
     chart: blobscan/blobscan
     version: 0.5.5
     values:
       - values/gnosis-blobscan.yaml
-
-  # Holesky testnet
-  - name: blobscan-holesky-db
-    namespace: holesky
-    chart: ./helm/cloudnative-pg/charts/cluster/
-    # version: 18.19.2
-    values:
-      - values/blobscan-db.yaml
-      - values/holesky-db.yaml
-      - values/holesky-import.yaml
 
   - name: blobscan
     namespace: holesky
@@ -124,16 +90,6 @@ releases:
     values:
       - values/holesky-blobscan.yaml
 
-  # Sepolia testnet
-  - name: blobscan-sepolia-db
-    namespace: sepolia
-    chart: ./helm/cloudnative-pg/charts/cluster/
-    # version: 18.19.2
-    values:
-      - values/blobscan-db.yaml
-      - values/sepolia-db.yaml
-      - values/sepolia-import.yaml
-
   - name: blobscan
     namespace: sepolia
     chart: blobscan/blobscan
@@ -141,32 +97,12 @@ releases:
     values:
       - values/sepolia-blobscan.yaml
 
-  # Ethereum mainnet
-  - name: blobscan-mainnet-db
-    namespace: mainnet
-    chart: ./helm/cloudnative-pg/charts/cluster/
-    # version: 18.19.2
-    values:
-      - values/blobscan-db.yaml
-      - values/mainnet-db.yaml
-      - values/mainnet-import.yaml
-
   - name: blobscan
     namespace: mainnet
     chart: blobscan/blobscan
     version: 0.5.5
     values:
       - values/mainnet-blobscan.yaml
-
-  # Preview environment
-  - name: blobscan-preview-db
-    namespace: preview
-    chart: ./helm/cloudnative-pg/charts/cluster/
-    # version: 18.19.2
-    values:
-      - values/blobscan-db.yaml
-      - values/preview-db.yaml
-      - values/preview-import.yaml
 
   - name: blobscan
     namespace: preview

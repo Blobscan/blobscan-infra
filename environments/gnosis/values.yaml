@@ -20,7 +20,7 @@ blobscan-api:
     GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
     BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
     METRICS_ENABLED: "true"
-    LOG_LEVEL: "info"
+    LOG_LEVEL: "http"
     BLOB_DATA_API_ENABLED: "false"
 
   extraEnv:
@@ -29,11 +29,16 @@ blobscan-api:
 
   bullmqExporter:
     enabled: true
-    databaseMapping: "0:gnosis-prod"
+    databaseMapping: "0:gnosis"
     image:
       pullPolicy: "Always"
-    serviceMonitor:
-      enabled: true
+    service:
+      annotations:
+        k8s.grafana.com/scrape: "true"
+
+  service:
+    annotations:
+      k8s.grafana.com/scrape: "true"
 
   image:
     tag: 1

@@ -1,0 +1,20 @@
+mode: recovery
+
+recovery:
+  method: import
+
+  import:
+    type: microservice
+    databases:
+      - blobscan_mainnet_prod
+    source:
+      database: blobscan_mainnet_prod
+      host: blobscan-mainnet-production-do-user-2001904-0.c.db.ondigitalocean.com
+      port: 25060
+      # verify-ca and verify-full require ssl certs
+      sslMode: require
+      username: "doadmin"
+      passwordSecret:
+        name: do-migration-db
+        key: password
+

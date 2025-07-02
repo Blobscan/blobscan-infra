@@ -1,0 +1,27 @@
+cluster:
+
+  initdb:
+    database: blobscan_hoodi_prod
+    owner: blobscan
+
+  storage:
+    size: 40Gi
+
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "500m"
+    limits:
+      memory: "4Gi"
+      cpu: "2"
+
+backups:
+  scheduledBackups:
+    - name: daily-backup
+      schedule: "0 10 12 * * *"
+      backupOwnerReference: none
+      method: barmanObjectStore
+    - name: monthly-backup
+      schedule: "0 0 12 3 * *"
+      backupOwnerReference: none
+      method: barmanObjectStore

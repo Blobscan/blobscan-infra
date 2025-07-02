@@ -40,9 +40,12 @@ blobscan-api:
 
   bullmqExporter:
     enabled: true
-    databaseMapping: "0:ethereum-staging"
+    databaseMapping: "0:staging"
     image:
       pullPolicy: "Always"
+    service:
+      annotations:
+        k8s.grafana.com/scrape: "true"
     serviceMonitor:
       enabled: true
       relabelings:
@@ -131,7 +134,7 @@ blobscan-web:
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-staging
     GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
     METRICS_ENABLED: "true"
-    LOG_LEVEL: info
+    LOG_LEVEL: debug
     BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
   extraEnv:
     - name: PUBLIC_POSTHOG_ID
