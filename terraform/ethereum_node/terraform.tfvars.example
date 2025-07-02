@@ -1,4 +1,0 @@
-project_name         = "blobscan-123456"
-gcp_credentials_path = "/path/to/blobscan-123456-0f827ce37f8b.json"
-ssh_username         = "username"
-ssh_pub_key_path     = "/path/to/ssh/key.pub"

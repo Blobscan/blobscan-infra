@@ -60,6 +60,7 @@ releases:
 
   # common or one per instance?
   # TODO: deploy redis instance from the blobscan package
+  # TODO: remove?
   - name: redis
     namespace: staging
     chart: bitnami/redis

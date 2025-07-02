@@ -1,6 +1,0 @@
-ssh_username         = "username"
-ssh_pub_key_path     = "/path/to/ssh/key.pub"
-do_token             = "12345678901234567890"
-do_region            = "nyc3"
-redis_size           = "db-s-1vcpu-2gb"  # db-s-1vcpu-1gb, db-s-2vcpu-4gb, ...
-redis_count          = 1
