@@ -4,7 +4,10 @@ cluster:
     owner: blobscan
 
   storage:
-    size: 60Gi
+    size: 80Gi
+
+  walStorage:
+    size: 10Gi
 
   resources:
     requests:
