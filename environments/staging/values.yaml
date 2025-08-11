@@ -18,16 +18,16 @@ blobscan-api:
     # BLOBSCAN_API_BASE: "api.staging.blobscan.com"
     # BLOBSCAN_API_PORT  # TODO remove, unused
     POSTGRES_STORAGE_ENABLED: "false"
-    SWARM_STORAGE_ENABLED: "false" # TODO: create new batch and reenable
-    SWARM_BATCH_ID: "7add92aaff105db17f09f8c0a2fcc7312209ace92aba87e61f8ea40e34f1da52"
+    SWARM_STORAGE_ENABLED: "true"
+    SWARM_BATCH_ID: "f073102432c648fd9720e3856ffdbca6d7f595fda52f50bfc3043d1e55e78b5b"
     SWARM_CHUNKSTORM_ENABLED: "true"
     SWARM_CHUNKSTORM_URL: "http://chunkstorm:3050"
     GOOGLE_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-staging
     GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
-    BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
+    BEE_ENDPOINT: "http://bee-1.swarm.svc.cluster.local:1633"
     METRICS_ENABLED: "true"
-    LOG_LEVEL: info
+    LOG_LEVEL: debug
     # NODE_ENV: "production"
     ETH_PRICE_SYNCER_ENABLED: "true"
     ETH_PRICE_SYNCER_TIME_TOLERANCE: "100"
@@ -130,9 +130,7 @@ blobscan-web:
     BLOBSCAN_API_PORT: 443
     POSTGRES_STORAGE_ENABLED: "false"
     SWARM_STORAGE_ENABLED: "true"
-    GOOGLE_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-staging
-    GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
     METRICS_ENABLED: "true"
     LOG_LEVEL: debug
     BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"

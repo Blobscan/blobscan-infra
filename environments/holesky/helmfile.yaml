@@ -5,7 +5,7 @@ releases:
   - name: blobscan
     namespace: holesky
     chart: blobscan/blobscan
-    version: 0.9.6
+    version: 0.9.21
     values:
       - values.yaml
     secrets:

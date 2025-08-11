@@ -115,9 +115,7 @@ blobscan-web:
     BLOBSCAN_API_PORT: 443
     POSTGRES_STORAGE_ENABLED: "false"
     SWARM_STORAGE_ENABLED: "true"
-    GOOGLE_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
-    GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
     METRICS_ENABLED: "true"
     LOG_LEVEL: info
     BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"

@@ -89,6 +89,7 @@ blobscan-indexer:
   config:
     BLOBSCAN_API_ENDPOINT: "http://blobscan-api:3001"
     RUST_LOG: "blob_indexer=INFO"
+    NETWORK_NAME: "holesky"
 
   image:
     tag: 0
@@ -108,19 +109,13 @@ blobscan-web:
     BLOBSCAN_API_PORT: 443
     POSTGRES_STORAGE_ENABLED: "false"
     SWARM_STORAGE_ENABLED: "true"
-    GOOGLE_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
-    GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
     METRICS_ENABLED: "true"
     LOG_LEVEL: info
     BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
   extraEnv:
     - name: PUBLIC_NETWORK_NAME
       value: "holesky"
-    - name: PUBLIC_EXPLORER_BASE_URL
-      value: "https://dora.holesky.ethpandaops.io/"
-    - name: PUBLIC_BEACON_BASE_URL
-      value: "https://holesky.beaconcha.in/"
     - name: PUBLIC_POSTHOG_ID
       value: "phc_n7WONIedZmpeWUlvgQq2KW3p59g6Au8JDTRVciqpcWl"
     - name: PUBLIC_POSTHOG_HOST
