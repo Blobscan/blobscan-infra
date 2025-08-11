@@ -3,9 +3,8 @@ helmDefaults:
 
 releases:
   - name: blobscan
-    namespace: staging
+    namespace: hoodi
     chart: blobscan/blobscan
-    # chart: /home/.../blobscan-helm-charts/charts/blobscan
     version: 0.9.21
     values:
       - values.yaml

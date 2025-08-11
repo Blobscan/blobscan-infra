@@ -1,0 +1,218 @@
+blobscan-api:
+  annotations:
+    keel.sh/policy: "force"
+    keel.sh/match-tag: "true"
+    keel.sh/approvals: "0"
+
+  podLabels:
+    environment: hoodi
+
+  externalConfigMaps:
+    - "blobscan"
+
+  fullnameOverride: "blobscan-api"
+  config:
+    CHAIN_ID: "560048"
+    NETWORK_NAME: "hoodi"
+    BLOBSCAN_API_BASE_URL: "https://api.hoodi.blobscan.com"
+    POSTGRES_STORAGE_ENABLED: "false"
+    GOOGLE_STORAGE_ENABLED: "true"
+    GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
+    GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
+    METRICS_ENABLED: "true"
+    LOG_LEVEL: http
+    # TODO: in web too?
+    BLOB_DATA_API_ENABLED: "false"
+
+  extraEnv:
+    - name: BLOB_PROPAGATOR_COMPLETED_JOBS_AGE
+      value: "1"
+
+  bullmqExporter:
+    enabled: true
+    databaseMapping: "0:hoodi"
+    image:
+      pullPolicy: "Always"
+    service:
+      annotations:
+        k8s.grafana.com/scrape: "true"
+    serviceMonitor:
+      enabled: true
+      relabelings:
+        - action: replace
+          replacement: hoodi
+          targetLabel: environment
+
+#   serviceMonitor:
+#     enabled: true
+#     relabelings:
+#       - action: replace
+#         replacement: hoodi
+#         targetLabel: environment
+
+  service:
+    annotations:
+      k8s.grafana.com/scrape: "true"
+  # TODO: remove servicemonitor
+  serviceMonitor:
+    enabled: true
+    relabelings:
+      - action: replace
+        replacement: hoodi
+        targetLabel: environment
+
+  image:
+    tag: development
+    pullPolicy: "Always"
+
+  ingress:
+    enabled: true
+    className: nginx-pp
+    annotations:
+      kubernetes.io/tls-acme: "true"
+      cert-manager.io/cluster-issuer: letsencrypt-dns-gcp
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+
+    hosts:
+      - host: "api.hoodi.blobscan.com"
+        paths:
+        - path: "/"
+          pathType: Prefix
+    tls:
+      - secretName: api-hoodi-blobscan-tls
+        hosts:
+          - "api.hoodi.blobscan.com"
+
+  resources:
+    limits:
+      cpu: 2
+      memory: 1Gi
+
+    requests:
+      cpu: 100m
+      memory: 512Mi
+
+blobscan-indexer:
+  annotations:
+    keel.sh/policy: "force"
+    keel.sh/match-tag: "true"
+    keel.sh/approvals: "0"
+
+  podLabels:
+    environment: hoodi
+
+  fullnameOverride: "blobscan-indexer"
+  config:
+    BLOBSCAN_API_ENDPOINT: "http://blobscan-api:3001"
+    RUST_LOG: "blob_indexer=INFO"
+    NETWORK_NAME: "hoodi"
+
+  image:
+    tag: latest
+    pullPolicy: "Always"
+
+blobscan-web:
+  replicas: 2
+
+  annotations:
+    keel.sh/policy: "force"
+    keel.sh/match-tag: "true"
+    keel.sh/approvals: "0"
+
+  podLabels:
+    environment: hoodi
+
+  externalConfigMaps:
+    - "blobscan"
+
+  fullnameOverride: "blobscan-web"
+  config:
+    NETWORK_NAME: "hoodi"
+    BLOBSCAN_API_BASE_URL: "https://api.hoodi.blobscan.com"
+    BLOBSCAN_API_PORT: 443
+    POSTGRES_STORAGE_ENABLED: "false"
+    GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
+    S3_STORAGE_ENABLED: "true"
+    METRICS_ENABLED: "true"
+    LOG_LEVEL: http
+  extraEnv:
+    - name: PUBLIC_NETWORK_NAME
+      value: "hoodi"
+    - name: PUBLIC_POSTHOG_ID
+      value: "phc_n7WONIedZmpeWUlvgQq2KW3p59g6Au8JDTRVciqpcWl"
+    - name: PUBLIC_POSTHOG_HOST
+      value: "https://us.i.posthog.com"
+    - name: SENTRY_ORG
+      value: "blossom-labs"
+    - name: SENTRY_PROJECT
+      value: "blobscan-web"
+    - name: SENTRY_IGNORE_API_RESOLUTION_ERROR
+      value: "1"
+# TODO: review:
+#   - name: PUBLIC_SENTRY_DSN_WEB
+#     value: ""
+
+  image:
+    tag: development
+    pullPolicy: "Always"
+
+  ingress:
+    enabled: true
+    className: nginx-pp
+    annotations:
+      kubernetes.io/tls-acme: "true"
+      cert-manager.io/cluster-issuer: letsencrypt-dns-gcp
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    hosts:
+      - host: "hoodi.blobscan.com"
+        paths:
+        - path: "/"
+          pathType: Prefix
+    tls:
+      - secretName: hoodi-blobscan-tls
+        hosts:
+          - "hoodi.blobscan.com"
+
+  resources:
+    limits:
+      cpu: 2
+      memory: 512Mi
+
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+
+blobscandb:
+  enabled: false
+
+redis:
+  enabled: true
+  global:
+    defaultStorageClass: "do-block-storage-retain"
+
+  metrics:
+    enabled: true
+    serviceMonitor:
+      # TODO: enable
+      enabled: false
+
+  master:
+    persistence:
+      enabled: true
+      storageClass: "do-block-storage-retain"
+      accessModes:
+        - ReadWriteOnce
+      size: 20Gi
+    resources:
+      limits:
+        cpu: 150m
+        memory: 2Gi
+        ephemeral-storage: 2Gi
+
+      requests:
+        cpu: 100m
+        memory: 128Mi
+        ephemeral-storage: 50Mi

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blobscan
+  namespace: hoodi
+data:
+  BLOB_DATA_API_ENABLED: "false"
