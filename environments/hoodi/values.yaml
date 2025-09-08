@@ -27,6 +27,8 @@ blobscan-api:
   extraEnv:
     - name: BLOB_PROPAGATOR_COMPLETED_JOBS_AGE
       value: "1"
+    - name: PRIMARY_BLOB_STORAGE
+      value: "GOOGLE"
 
   bullmqExporter:
     enabled: true
@@ -111,6 +113,15 @@ blobscan-indexer:
   image:
     tag: latest
     pullPolicy: "Always"
+
+  resources:
+    limits:
+      cpu: 1
+      memory: 256Mi
+
+    requests:
+      cpu: 100m
+      memory: 128Mi
 
 blobscan-web:
   replicas: 2

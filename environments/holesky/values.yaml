@@ -27,6 +27,8 @@ blobscan-api:
   extraEnv:
     - name: BLOB_PROPAGATOR_COMPLETED_JOBS_AGE
       value: "1"
+    - name: PRIMARY_BLOB_STORAGE
+      value: "GOOGLE"
 
   bullmqExporter:
     enabled: true

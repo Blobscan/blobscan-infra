@@ -27,6 +27,8 @@ blobscan-api:
   extraEnv:
     - name: BLOB_PROPAGATOR_COMPLETED_JOBS_AGE
       value: "1"
+    - name: PRIMARY_BLOB_STORAGE
+      value: "GOOGLE"
     - name: WEAVEVM_API_KEY
       value: "ee84a5a406dde363941744c8ffbebafd"
     - name: WEAVEVM_STORAGE_API_BASE_URL

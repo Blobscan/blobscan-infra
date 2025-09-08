@@ -19,7 +19,7 @@ cluster:
 
   walStorage:
     enabled: true
-    size: 5Gi
+    size: 10Gi
     storageClass: "do-block-storage-retain"
 
 # services:

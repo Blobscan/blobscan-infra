@@ -18,7 +18,7 @@ blobscan-api:
     # BLOBSCAN_API_BASE: "api.staging.blobscan.com"
     # BLOBSCAN_API_PORT  # TODO remove, unused
     POSTGRES_STORAGE_ENABLED: "false"
-    SWARM_STORAGE_ENABLED: "true"
+    # SWARM_STORAGE_ENABLED: "true"
     SWARM_BATCH_ID: "f073102432c648fd9720e3856ffdbca6d7f595fda52f50bfc3043d1e55e78b5b"
     SWARM_CHUNKSTORM_ENABLED: "true"
     SWARM_CHUNKSTORM_URL: "http://chunkstorm:3050"
@@ -37,6 +37,8 @@ blobscan-api:
   extraEnv:
     - name: BLOB_PROPAGATOR_COMPLETED_JOBS_AGE
       value: "1"
+    - name: PRIMARY_BLOB_STORAGE
+      value: "GOOGLE"
 
   bullmqExporter:
     enabled: true
@@ -54,9 +56,33 @@ blobscan-api:
           targetLabel: environment
 
   chunkstorm:
+    # tag: 0.3.0
+    tag: development
+    pullPolicy: Always
     stamperstorePersistentVolume:
       storageClassName: "do-block-storage-retain"
 
+    annotations:
+      keel.sh/policy: "force"
+      keel.sh/match-tag: "true"
+      keel.sh/approvals: "0"
+
+    # TODO: enable when endpoint exists
+    service:
+      annotations:
+        k8s.grafana.com/scrape: "true"
+
+#   serviceMonitor:
+#     enabled: true
+#     relabelings:
+#       - action: replace
+#         replacement: staging
+#         targetLabel: environment
+
+  service:
+    annotations:
+      k8s.grafana.com/scrape: "true"
+  # TODO: remove servicemonitor
   serviceMonitor:
     enabled: true
     relabelings:
@@ -112,7 +138,7 @@ blobscan-indexer:
     RUST_LOG: "blob_indexer=INFO"
 
   image:
-    tag: latest
+    tag: master
     pullPolicy: "Always"
 
 blobscan-web:
@@ -129,7 +155,7 @@ blobscan-web:
     BLOBSCAN_API_BASE_URL: "https://api.staging.blobscan.com"
     BLOBSCAN_API_PORT: 443
     POSTGRES_STORAGE_ENABLED: "false"
-    SWARM_STORAGE_ENABLED: "true"
+    # SWARM_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-staging
     METRICS_ENABLED: "true"
     LOG_LEVEL: debug

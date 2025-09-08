@@ -6,9 +6,6 @@ cluster:
   storage:
     size: 80Gi
 
-  walStorage:
-    size: 10Gi
-
   resources:
     requests:
       memory: "3Gi"
