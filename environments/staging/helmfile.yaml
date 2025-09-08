@@ -6,7 +6,7 @@ releases:
     namespace: staging
     chart: blobscan/blobscan
     # chart: /home/.../blobscan-helm-charts/charts/blobscan
-    version: 0.9.21
+    version: 0.10.0
     values:
       - values.yaml
     secrets:
