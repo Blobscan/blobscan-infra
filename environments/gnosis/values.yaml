@@ -74,10 +74,10 @@ blobscan-api:
       memory: 512Mi
 
 blobscan-indexer:
-  enabled: true
   annotations:
     keel.sh/policy: major
     keel.sh/approvals: "0"
+  # customArgs: ["-s", "1"]
   podLabels:
     environment: gnosis
   fullnameOverride: "blobscan-indexer"

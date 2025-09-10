@@ -83,6 +83,7 @@ blobscan-indexer:
   annotations:
     keel.sh/policy: major
     keel.sh/approvals: "0"
+  customArgs: ["-s", "1"]
   podLabels:
     environment: sepolia
   fullnameOverride: "blobscan-indexer"

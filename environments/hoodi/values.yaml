@@ -101,6 +101,7 @@ blobscan-indexer:
     keel.sh/match-tag: "true"
     keel.sh/approvals: "0"
 
+  # customArgs: ["-s", "1"]
   podLabels:
     environment: hoodi
 

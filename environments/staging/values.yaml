@@ -115,13 +115,12 @@ blobscan-api:
           - "api.staging.blobscan.com"
 
   resources:
-    limits:
-      cpu: 2
-      memory: 1Gi
-
     requests:
       cpu: 100m
       memory: 512Mi
+    limits:
+      cpu: 2
+      memory: 1Gi
 
 blobscan-indexer:
   annotations:
@@ -129,6 +128,7 @@ blobscan-indexer:
     keel.sh/match-tag: "true"
     keel.sh/approvals: "0"
 
+  customArgs: ["-s", "1"]
   podLabels:
     environment: staging
 
@@ -142,6 +142,14 @@ blobscan-indexer:
     pullPolicy: "Always"
 
 blobscan-web:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 2
+      memory: 512Mi
+
   replicas: 2
   annotations:
     keel.sh/policy: "force"
@@ -197,15 +205,6 @@ blobscan-web:
       - secretName: staging-blobscan-tls
         hosts:
           - "staging.blobscan.com"
-
-  resources:
-    limits:
-      cpu: 2
-      memory: 512Mi
-
-    requests:
-      cpu: 100m
-      memory: 128Mi
 
 
 blobscandb:
