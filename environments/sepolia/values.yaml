@@ -71,12 +71,11 @@ blobscan-api:
           - "api.sepolia.blobscan.com"
 
   resources:
-    limits:
-      cpu: 2
-      memory: 1Gi
-
     requests:
-      cpu: 100m
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 1
       memory: 512Mi
 
 blobscan-indexer:
@@ -91,6 +90,14 @@ blobscan-indexer:
     BLOBSCAN_API_ENDPOINT: "http://blobscan-api:3001"
     RUST_LOG: "blob_indexer=INFO"
     NETWORK_NAME: "sepolia"
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 300m
+      memory: 128Mi
 
   image:
     tag: 0
@@ -151,13 +158,12 @@ blobscan-web:
           - "sepolia.blobscan.com"
 
   resources:
-    limits:
-      cpu: 2
-      memory: 512Mi
-
     requests:
       cpu: 100m
-      memory: 128Mi
+      memory: 200Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
 
 blobscandb:
   enabled: false
