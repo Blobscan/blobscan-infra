@@ -64,7 +64,7 @@ blobscan-api:
         targetLabel: environment
 
   image:
-    tag: development
+    tag: latest
     pullPolicy: "Always"
 
   ingress:
@@ -166,7 +166,7 @@ blobscan-web:
 #     value: ""
 
   image:
-    tag: development
+    tag: latest
     pullPolicy: "Always"
 
   ingress:
