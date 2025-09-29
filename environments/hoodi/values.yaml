@@ -112,7 +112,7 @@ blobscan-indexer:
     NETWORK_NAME: "hoodi"
 
   image:
-    tag: latest
+    tag: 0
     pullPolicy: "Always"
 
   resources:
