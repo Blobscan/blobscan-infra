@@ -18,10 +18,6 @@ blobscan-api:
     # BLOBSCAN_API_BASE: "api.staging.blobscan.com"
     # BLOBSCAN_API_PORT  # TODO remove, unused
     POSTGRES_STORAGE_ENABLED: "false"
-    # SWARM_STORAGE_ENABLED: "true"
-    SWARM_BATCH_ID: "f073102432c648fd9720e3856ffdbca6d7f595fda52f50bfc3043d1e55e78b5b"
-    SWARM_CHUNKSTORM_ENABLED: "true"
-    SWARM_CHUNKSTORM_URL: "http://chunkstorm:3050"
     GOOGLE_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-staging
     GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
@@ -39,6 +35,8 @@ blobscan-api:
       value: "1"
     - name: PRIMARY_BLOB_STORAGE
       value: "GOOGLE"
+    - name: SWARMY_STORAGE_ENABLED
+      value: "true"
 
   bullmqExporter:
     enabled: true
@@ -163,7 +161,7 @@ blobscan-web:
     BLOBSCAN_API_BASE_URL: "https://api.staging.blobscan.com"
     BLOBSCAN_API_PORT: 443
     POSTGRES_STORAGE_ENABLED: "false"
-    # SWARM_STORAGE_ENABLED: "true"
+    SWARMY_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-staging
     METRICS_ENABLED: "true"
     LOG_LEVEL: debug
@@ -179,6 +177,8 @@ blobscan-web:
       value: "blobscan-web"
     - name: SENTRY_IGNORE_API_RESOLUTION_ERROR
       value: "1"
+    - name: SWARMY_STORAGE_ENABLED
+      value: "true"
 # TODO: review:
 #   - name: PUBLIC_SENTRY_DSN_WEB
 #     value: ""
