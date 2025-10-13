@@ -161,7 +161,6 @@ blobscan-web:
     BLOBSCAN_API_BASE_URL: "https://api.staging.blobscan.com"
     BLOBSCAN_API_PORT: 443
     POSTGRES_STORAGE_ENABLED: "false"
-    SWARMY_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-staging
     METRICS_ENABLED: "true"
     LOG_LEVEL: debug
