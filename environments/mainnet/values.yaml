@@ -29,11 +29,8 @@ blobscan-api:
       value: "1"
     - name: PRIMARY_BLOB_STORAGE
       value: "GOOGLE"
-    - name: WEAVEVM_API_KEY
-      value: "ee84a5a406dde363941744c8ffbebafd"
     - name: WEAVEVM_STORAGE_API_BASE_URL
       value: "https://blobscan.load.rs"
-    # TODO: no se usa en mainnet??
     - name: WEAVEVM_STORAGE_ENABLED
       value: "true"
 
@@ -133,6 +130,8 @@ blobscan-web:
       value: "blobscan-web"
     - name: SENTRY_IGNORE_API_RESOLUTION_ERROR
       value: "1"
+    - name: WEAVEVM_STORAGE_API_BASE_URL
+      value: "https://blobscan.load.rs"
 
   image:
     tag: 1
