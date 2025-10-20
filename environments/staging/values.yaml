@@ -21,7 +21,6 @@ blobscan-api:
     GOOGLE_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-staging
     GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
-    BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
     METRICS_ENABLED: "true"
     LOG_LEVEL: debug
     # NODE_ENV: "production"
@@ -164,7 +163,6 @@ blobscan-web:
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-staging
     METRICS_ENABLED: "true"
     LOG_LEVEL: debug
-    BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
   extraEnv:
     - name: PUBLIC_POSTHOG_ID
       value: "phc_n7WONIedZmpeWUlvgQq2KW3p59g6Au8JDTRVciqpcWl"

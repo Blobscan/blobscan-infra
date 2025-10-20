@@ -13,12 +13,9 @@ blobscan-api:
     NETWORK_NAME: "gnosis"
     BLOBSCAN_API_BASE_URL: "https://api.gnosis.blobscan.com"
     POSTGRES_STORAGE_ENABLED: "false"
-    SWARM_STORAGE_ENABLED: "true"
-    SWARM_BATCH_ID: "aa371babdbcad2c511066941e6f638383825e489a7e69e2665d7d046d8bbe116"
     GOOGLE_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
     GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
-    BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
     METRICS_ENABLED: "true"
     LOG_LEVEL: "http"
     BLOB_DATA_API_ENABLED: "false"
@@ -103,11 +100,9 @@ blobscan-web:
     BLOBSCAN_API_BASE_URL: "https://api.gnosis.blobscan.com"
     BLOBSCAN_API_PORT: 443
     POSTGRES_STORAGE_ENABLED: "false"
-    SWARM_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
     METRICS_ENABLED: "true"
     LOG_LEVEL: info
-    BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
   extraEnv:
     - name: PUBLIC_NETWORK_NAME
       value: "gnosis"

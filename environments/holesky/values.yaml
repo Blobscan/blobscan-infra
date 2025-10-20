@@ -14,12 +14,9 @@ blobscan-api:
     NETWORK_NAME: "holesky"
     BLOBSCAN_API_BASE_URL: "https://api.holesky.blobscan.com"
     POSTGRES_STORAGE_ENABLED: "false"
-    SWARM_STORAGE_ENABLED: "true"
-    SWARM_BATCH_ID: "681516b8e343060758d495248a0912f6c4fde11ebf11e510b429a3c109bcabb2"
     GOOGLE_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
     GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
-    BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
     METRICS_ENABLED: "true"
     LOG_LEVEL: "http"
     BLOB_DATA_API_ENABLED: "false"
@@ -111,11 +108,9 @@ blobscan-web:
     BLOBSCAN_API_BASE_URL: "https://api.holesky.blobscan.com"
     BLOBSCAN_API_PORT: 443
     POSTGRES_STORAGE_ENABLED: "false"
-    SWARM_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
     METRICS_ENABLED: "true"
     LOG_LEVEL: info
-    BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
   extraEnv:
     - name: PUBLIC_NETWORK_NAME
       value: "holesky"

@@ -13,12 +13,9 @@ blobscan-api:
     NETWORK_NAME: "mainnet"
     BLOBSCAN_API_BASE_URL: "https://api.blobscan.com"
     POSTGRES_STORAGE_ENABLED: "false"
-    # SWARM_STORAGE_ENABLED: "true"
-    # SWARM_BATCH_ID: "394c6927473b0441b7e0a2bfd94494c4de5b3a3a1515e9689f03d4aac32d7913"
     GOOGLE_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
     GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
-    BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
     METRICS_ENABLED: "true"
     LOG_LEVEL: "debug"
     BLOB_DATA_API_ENABLED: "false"
@@ -114,11 +111,9 @@ blobscan-web:
     BLOBSCAN_API_BASE_URL: "https://api.blobscan.com"
     BLOBSCAN_API_PORT: 443
     POSTGRES_STORAGE_ENABLED: "false"
-    # SWARM_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
     METRICS_ENABLED: "true"
     LOG_LEVEL: info
-    BEE_ENDPOINT: "http://bee-0.swarm.svc.cluster.local:1633"
   extraEnv:
     - name: PUBLIC_POSTHOG_ID
       value: "phc_n7WONIedZmpeWUlvgQq2KW3p59g6Au8JDTRVciqpcWl"
