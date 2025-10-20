@@ -181,7 +181,7 @@ redis:
       size: 20Gi
     resources:
       limits:
-        cpu: 150m
+        cpu: 1
         memory: 2Gi
         ephemeral-storage: 2Gi
 
