@@ -24,18 +24,6 @@ releases:
     secrets:
       - values/secrets.yaml
 
-  # Holesky testnet
-  - name: blobscan-holesky-db
-    namespace: holesky
-    chart: cnpg/cluster
-    version: 0.3.1
-    values:
-      - values/blobscan-db.yaml
-      - values/holesky-db.yaml
-      - values/holesky-import.yaml
-    secrets:
-      - values/secrets.yaml
-
   # Sepolia testnet
   - name: blobscan-sepolia-db
     namespace: sepolia
