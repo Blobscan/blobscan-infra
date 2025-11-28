@@ -34,8 +34,6 @@ blobscan-api:
       value: "1"
     - name: PRIMARY_BLOB_STORAGE
       value: "GOOGLE"
-    - name: SWARMYCLOUD_STORAGE_ENABLED
-      value: "true"
 
   bullmqExporter:
     enabled: true
@@ -174,8 +172,6 @@ blobscan-web:
       value: "blobscan-web"
     - name: SENTRY_IGNORE_API_RESOLUTION_ERROR
       value: "1"
-    - name: SWARMYCLOUD_STORAGE_ENABLED
-      value: "true"
 # TODO: review:
 #   - name: PUBLIC_SENTRY_DSN_WEB
 #     value: ""
