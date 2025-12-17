@@ -22,6 +22,10 @@ blobscan-api:
     ETH_PRICE_SYNCER_ENABLED: "true"
     # ETH_PRICE_SYNCER_TIME_TOLERANCE: "100"
   extraEnv:
+    - name: PUBLIC_NETWORK_NAME
+      value: "mainnet"
+    - name: PUBLIC_MATOMO_TAG_MANAGER_CONTAINER_URL
+      value: "https://matomo.blobscan.com/js/container_5gsEruk6.js"
     - name: BLOB_PROPAGATOR_COMPLETED_JOBS_AGE
       value: "1"
     - name: PRIMARY_BLOB_STORAGE

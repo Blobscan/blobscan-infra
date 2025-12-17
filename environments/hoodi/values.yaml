@@ -155,6 +155,8 @@ blobscan-web:
       value: "phc_n7WONIedZmpeWUlvgQq2KW3p59g6Au8JDTRVciqpcWl"
     - name: PUBLIC_POSTHOG_HOST
       value: "https://us.i.posthog.com"
+    - name: PUBLIC_MATOMO_TAG_MANAGER_CONTAINER_URL
+      value: "https://matomo.blobscan.com/js/container_5gsEruk6.js"
     - name: SENTRY_ORG
       value: "blossom-labs"
     - name: SENTRY_PROJECT
