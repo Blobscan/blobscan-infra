@@ -119,6 +119,8 @@ blobscan-web:
     METRICS_ENABLED: "true"
     LOG_LEVEL: info
   extraEnv:
+    - name: PUBLIC_MATOMO_TAG_MANAGER_CONTAINER_URL
+      value: "https://matomo.blobscan.com/js/container_5gsEruk6.js"
     - name: PUBLIC_POSTHOG_ID
       value: "phc_n7WONIedZmpeWUlvgQq2KW3p59g6Au8JDTRVciqpcWl"
     - name: PUBLIC_POSTHOG_HOST
