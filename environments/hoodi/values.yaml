@@ -19,9 +19,6 @@ blobscan-api:
     GOOGLE_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
     GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
-    MATOMO_ENABLED: "true"
-    MATOMO_SITE_ID: "2"
-    MATOMO_URL: "https://matomo.blobscan.com/matomo.php"
     METRICS_ENABLED: "true"
     LOG_LEVEL: http
     # TODO: in web too?
@@ -32,7 +29,13 @@ blobscan-api:
       value: "1"
     - name: PRIMARY_BLOB_STORAGE
       value: "GOOGLE"
-
+    - name: MATOMO_ENABLED
+      value: "true"
+    - name: MATOMO_SITE_ID
+      value: "2"
+    - name: MATOMO_URL
+      value: "https://matomo.blobscan.com/matomo.php"
+      
   bullmqExporter:
     enabled: true
     databaseMapping: "0:hoodi"
