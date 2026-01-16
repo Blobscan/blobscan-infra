@@ -19,6 +19,9 @@ blobscan-api:
     GOOGLE_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
     GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
+    MATOMO_ENABLED: "true"
+    MATOMO_SITE_ID: "2"
+    MATOMO_URL: "https://matomo.blobscan.com/matomo.php"
     METRICS_ENABLED: "true"
     LOG_LEVEL: http
     # TODO: in web too?
