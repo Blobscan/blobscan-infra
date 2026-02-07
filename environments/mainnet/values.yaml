@@ -33,7 +33,7 @@ blobscan-api:
     - name: WEAVEVM_STORAGE_API_BASE_URL
       value: "https://blobscan.load.rs"
     - name: WEAVEVM_STORAGE_ENABLED
-      value: "true"
+      value: "false"
     - name: MATOMO_ENABLED
       value: "true"
     - name: MATOMO_SITE_ID
@@ -76,8 +76,8 @@ blobscan-api:
     hosts:
       - host: "api.blobscan.com"
         paths:
-        - path: "/"
-          pathType: Prefix
+          - path: "/"
+            pathType: Prefix
     tls:
       - secretName: api-mainnet-blobscan-tls
         hosts:
@@ -155,8 +155,8 @@ blobscan-web:
     hosts:
       - host: "blobscan.com"
         paths:
-        - path: "/"
-          pathType: Prefix
+          - path: "/"
+            pathType: Prefix
     tls:
       - secretName: mainnet-blobscan-tls
         hosts:
