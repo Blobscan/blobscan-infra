@@ -1,0 +1,17 @@
+helmDefaults:
+  createNamespace: true
+
+repositories:
+  - name: dagster
+    url: https://dagster-io.github.io/helm
+
+releases:
+  - name: blobscan-dagster
+    namespace: dagster
+    chart: dagster/dagster
+    # chart: /home/.../blobscan-helm-charts/charts/blobscan
+    version: 1.12.19
+    values:
+      - values.yaml
+#   secrets:
+#     - secrets.yaml
