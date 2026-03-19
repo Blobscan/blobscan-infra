@@ -6,7 +6,7 @@ cluster:
     owner: blobscan
 
   storage:
-    size: 40Gi
+    size: 60Gi
 
   resources:
     requests:
