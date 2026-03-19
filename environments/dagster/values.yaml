@@ -334,7 +334,7 @@ dagster-user-deployments:
 
   # List of unique deployments
   deployments:
-    - name: "k8s-example-user-code-1"
+    - name: "blobscan-dagster"
       image:
         # When a tag is not supplied, it will default as the Helm chart version.
         repository: "docker.io/blossomlabs/blobscan-dagster"
@@ -358,9 +358,11 @@ dagster-user-deployments:
       # experimental `dagster code-server start` command instead of `dagster api grpc`, which can
       # reload its definitions from within the Dagster UI without needing to restart the user code
       # deployment pod.
-#     dagsterApiGrpcArgs:
-#       - "--python-file"
-#       - "/example_project/example_repo/repo.py"
+      dagsterApiGrpcArgs:
+        - "-m"
+        - "analytics.definitions"
+        - "-p"
+        - "3030"
       port: 3030
 
       # Whether or not to include configuration specified for this user code deployment in the pods
@@ -915,67 +917,6 @@ redis:
   backendUrl: ""
 
 ####################################################################################################
-# Flower: (Optional) The flower web interface for diagnostics and debugging Celery queues & workers
-####################################################################################################
-flower:
-  enabled: false
-
-  image:
-    repository: "docker.io/mher/flower"
-    tag: "0.9.5"
-    pullPolicy: Always
-
-  service:
-    type: ClusterIP
-    annotations: {}
-    port: 5555
-
-  # Support Node, affinity and tolerations for Flower pod assignment. See:
-  # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
-  # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-  # https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-  annotations: {}
-  nodeSelector: {}
-  affinity: {}
-  tolerations: []
-  podSecurityContext: {}
-  securityContext: {}
-
-  # Enable the check-db-ready initContainer
-  checkDbReadyInitContainer: true
-  # Override the default K8s scheduler
-  # schedulerName: ~
-
-  resources: {}
-  # If you want to specify resources, uncomment the following lines, adjust them as necessary,
-  # and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-  # Liveness probe detects when to restart flower.
-  # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes
-  livenessProbe:
-    tcpSocket:
-      port: "flower"
-    # initialDelaySeconds: 60
-    periodSeconds: 20
-    failureThreshold: 3
-
-  # Startup probe (available in kubernetes v1.16+) is used at pod startup. Once it has succeeded,
-  # then liveness probe takes over.
-  # If on kubernetes < v1.16, then comment out `startupProbe` lines and comment in
-  # `initialDelaySeconds: 60` under `livenessProbe`
-  startupProbe:
-    tcpSocket:
-      port: "flower"
-    periodSeconds: 10
-    failureThreshold: 6
-
-####################################################################################################
 # Ingress: (Optional) Create ingresses for the Dagster webserver and Flower
 ####################################################################################################
 ingress:
@@ -1048,38 +989,6 @@ ingress:
     precedingPaths: []
 
     # Different http paths to add to the ingress after the default webserver path
-    # Example:
-    #
-    # succeedingPaths:
-    #   - path: "/*"
-    #     pathType: ImplementationSpecific
-    #     serviceName: "ssl-redirect"
-    #     servicePort: "use-annotation"
-    succeedingPaths: []
-
-  flower:
-    # Ingress hostname for Flower e.g. flower.mycompany.com
-    host: ""
-    # if path is '/flower', Flower will be accessible at 'mycompany.com/flower'
-    # NOTE: do NOT keep trailing slash. For root configuration, set as empty string
-    path: ""
-    pathType: ImplementationSpecific
-
-    tls:
-      enabled: false
-      secretName: ""
-
-    # Different http paths to add to the ingress before the default flower path
-    # Example:
-    #
-    # precedingPaths:
-    #   - path: "/*"
-    #     pathType: ImplementationSpecific
-    #     serviceName: "ssl-redirect"
-    #     servicePort: "use-annotation"
-    precedingPaths: []
-
-    # Different http paths to add to the ingress after the default flower path
     # Example:
     #
     # succeedingPaths:
@@ -1332,49 +1241,6 @@ dagsterDaemon:
   readinessProbe: {}
   startupProbe: {}
 
-####################################################################################################
-# busybox: Configuration for the busybox image used to check connections
-####################################################################################################
-busybox:
-  image:
-    repository: "docker.io/busybox"
-    tag: "1.28"
-    pullPolicy: "IfNotPresent"
-
-####################################################################################################
-# Extra Manifests: (Optional) Create additional k8s resources within this chart
-####################################################################################################
-extraManifests:
-#  # Set default container resource requests/limits for the namespace
-#  #   * To override these for dagster system containers; edit the resources sections of
-#  #     this values yaml -  eg: webserver.resources & celery.resources
-#  #   * To override these in solid execution containers; add a @solid(tag=) similar to:
-#  #      { "dagster-k8s/config": { "container_config": { "resources": {...
-#  - apiVersion: v1
-#    kind: LimitRange
-#    metadata:
-#      name: default-container-resources
-#    spec:
-#      limits:
-#        - default:
-#            cpu: 250m
-#            memory: 512Mi
-#          defaultRequest:
-#            cpu: 100m
-#            memory: 256Mi
-#          type: Container
-#  # Example 2:
-#  - apiVersion: cloud.google.com/v1beta1
-#    kind: BackendConfig
-#    metadata:
-#      name: "{{ .Release.Name }}-backend-config"
-#      labels:
-#      {{- include "dagster.labels" . | nindent 6 }}
-#      spec:
-#        securityPolicy:
-#          name: "gcp-cloud-armor-policy-test"
-
-####################################################################################################
 # Dagster Instance Migrate: Creates a job to migrate your instance. This field should only be
 # enabled in a one-off setting.
 #
@@ -1491,40 +1357,3 @@ concurrency:
     #       applyLimitPerUniqueValue: true
     #     limit: 2
     tagConcurrencyLimits: []
-
-####################################################################################################
-# Additional fields on the instance to configure that aren't already determined by a key above.
-# See https://docs.dagster.io/deployment/dagster-instance for the full set of available fields.
-####################################################################################################
-# Example:
-#
-# additionalInstanceConfig:
-#   auto_materialize: # See: https://docs.dagster.io/deployment/dagster-instance#auto-materialize
-#     run_tags:
-#       key: value
-additionalInstanceConfig: {}
-
-####################################################################################################
-# [DEPRECATED] Pipeline Run
-#
-# This config can now be set with dagster-user-deployments.
-####################################################################################################
-pipelineRun:
-  image:
-    # When a tag is not supplied for a Dagster provided image,
-    # it will default as the Helm chart version.
-    repository: "docker.io/dagster/user-code-example"
-    tag: ~
-    pullPolicy: Always
-
-  # Additional environment variables to set.
-  # A Kubernetes ConfigMap will be created with these environment variables. See:
-  # https://kubernetes.io/docs/concepts/configuration/configmap/
-  #
-  # Example:
-  #
-  # env:
-  #   ENV_ONE: one
-  #   ENV_TWO: two
-  env: {}
-
