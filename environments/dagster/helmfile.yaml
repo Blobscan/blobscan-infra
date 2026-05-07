@@ -6,7 +6,7 @@ repositories:
     url: https://dagster-io.github.io/helm
 
 releases:
-  - name: blobscan-dagster
+  - name: dagster
     namespace: dagster
     chart: dagster/dagster
     # chart: /home/.../blobscan-helm-charts/charts/blobscan

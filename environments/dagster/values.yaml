@@ -334,7 +334,7 @@ dagster-user-deployments:
 
   # List of unique deployments
   deployments:
-    - name: "blobscan-dagster"
+    - name: "blobscan"
       image:
         # When a tag is not supplied, it will default as the Helm chart version.
         repository: "docker.io/blossomlabs/blobscan-dagster"
