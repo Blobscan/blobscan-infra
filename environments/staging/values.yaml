@@ -32,6 +32,8 @@ blobscan-api:
   extraEnv:
     - name: BLOB_PROPAGATOR_COMPLETED_JOBS_AGE
       value: "1"
+    - name: GOOGLE_STORAGE_SIGNED_URLS_ENABLED
+      value: "true"
     - name: PRIMARY_BLOB_STORAGE
       value: "GOOGLE"
     - name: MATOMO_ENABLED
@@ -40,7 +42,7 @@ blobscan-api:
       value: "2"
     - name: MATOMO_URL
       value: "https://matomo.blobscan.com/matomo.php"
-      
+
   bullmqExporter:
     enabled: true
     databaseMapping: "0:staging"
