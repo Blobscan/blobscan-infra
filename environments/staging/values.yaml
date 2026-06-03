@@ -180,6 +180,8 @@ blobscan-web:
       value: "blobscan-web"
     - name: SENTRY_IGNORE_API_RESOLUTION_ERROR
       value: "1"
+    - name: GOOGLE_STORAGE_SIGNED_URLS_ENABLED
+      value: "true"
 # TODO: review:
 #   - name: PUBLIC_SENTRY_DSN_WEB
 #     value: ""
