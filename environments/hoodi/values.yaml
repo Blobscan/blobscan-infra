@@ -35,7 +35,9 @@ blobscan-api:
       value: "2"
     - name: MATOMO_URL
       value: "https://matomo.blobscan.com/matomo.php"
-      
+    - name: GOOGLE_STORAGE_SIGNED_URLS_ENABLED
+      value: "true"
+
   bullmqExporter:
     enabled: true
     databaseMapping: "0:hoodi"
@@ -150,7 +152,9 @@ blobscan-web:
     BLOBSCAN_API_BASE_URL: "https://api.hoodi.blobscan.com"
     BLOBSCAN_API_PORT: 443
     POSTGRES_STORAGE_ENABLED: "false"
+    GOOGLE_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
+    GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
     S3_STORAGE_ENABLED: "true"
     METRICS_ENABLED: "true"
     LOG_LEVEL: http
@@ -169,6 +173,8 @@ blobscan-web:
       value: "blobscan-web"
     - name: SENTRY_IGNORE_API_RESOLUTION_ERROR
       value: "1"
+    - name: GOOGLE_STORAGE_SIGNED_URLS_ENABLED
+      value: "true"
 # TODO: review:
 #   - name: PUBLIC_SENTRY_DSN_WEB
 #     value: ""

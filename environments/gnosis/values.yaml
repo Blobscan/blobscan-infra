@@ -31,7 +31,8 @@ blobscan-api:
       value: "2"
     - name: MATOMO_URL
       value: "https://matomo.blobscan.com/matomo.php"
-
+    - name: GOOGLE_STORAGE_SIGNED_URLS_ENABLED
+      value: "true"
 
   bullmqExporter:
     enabled: true
@@ -107,7 +108,9 @@ blobscan-web:
     BLOBSCAN_API_BASE_URL: "https://api.gnosis.blobscan.com"
     BLOBSCAN_API_PORT: 443
     POSTGRES_STORAGE_ENABLED: "false"
+    GOOGLE_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
+    GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
     METRICS_ENABLED: "true"
     LOG_LEVEL: info
   extraEnv:
@@ -125,6 +128,8 @@ blobscan-web:
       value: "blobscan-web"
     - name: SENTRY_IGNORE_API_RESOLUTION_ERROR
       value: "1"
+    - name: GOOGLE_STORAGE_SIGNED_URLS_ENABLED
+      value: "true"
 
   image:
     tag: 1

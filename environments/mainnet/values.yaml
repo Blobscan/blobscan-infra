@@ -40,6 +40,8 @@ blobscan-api:
       value: "2"
     - name: MATOMO_URL
       value: "https://matomo.blobscan.com/matomo.php"
+    - name: GOOGLE_STORAGE_SIGNED_URLS_ENABLED
+      value: "true"
 
   bullmqExporter:
     enabled: true
@@ -121,7 +123,9 @@ blobscan-web:
     BLOBSCAN_API_BASE_URL: "https://api.blobscan.com"
     BLOBSCAN_API_PORT: 443
     POSTGRES_STORAGE_ENABLED: "false"
+    GOOGLE_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-production
+    GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
     METRICS_ENABLED: "true"
     LOG_LEVEL: info
   extraEnv:
@@ -139,6 +143,8 @@ blobscan-web:
       value: "1"
     - name: WEAVEVM_STORAGE_API_BASE_URL
       value: "https://blobscan.load.rs"
+    - name: GOOGLE_STORAGE_SIGNED_URLS_ENABLED
+      value: "true"
 
   image:
     tag: 1
