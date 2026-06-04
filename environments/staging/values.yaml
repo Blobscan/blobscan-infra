@@ -32,8 +32,6 @@ blobscan-api:
   extraEnv:
     - name: BLOB_PROPAGATOR_COMPLETED_JOBS_AGE
       value: "1"
-    - name: GOOGLE_STORAGE_SIGNED_URLS_ENABLED
-      value: "true"
     - name: PRIMARY_BLOB_STORAGE
       value: "GOOGLE"
     - name: MATOMO_ENABLED
@@ -172,8 +170,6 @@ blobscan-web:
     METRICS_ENABLED: "true"
     LOG_LEVEL: debug
   extraEnv:
-    - name: GOOGLE_STORAGE_SIGNED_URLS_ENABLED
-      value: "true"
     - name: PUBLIC_POSTHOG_ID
       value: "phc_n7WONIedZmpeWUlvgQq2KW3p59g6Au8JDTRVciqpcWl"
     - name: PUBLIC_POSTHOG_HOST
