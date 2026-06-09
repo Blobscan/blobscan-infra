@@ -42,6 +42,8 @@ blobscan-api:
       value: "https://matomo.blobscan.com/matomo.php"
     - name: GOOGLE_STORAGE_SIGNED_URLS_ENABLED
       value: "true"
+    - name: IPFS_STORAGE_ENABLED
+      value: "true"
 
   bullmqExporter:
     enabled: true
