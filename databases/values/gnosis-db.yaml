@@ -10,10 +10,10 @@ cluster:
   resources:
     requests:
       memory: "512Mi"
-      cpu: "500m"
+      cpu: "1"
     limits:
       memory: "2Gi"
-      cpu: "2"
+      cpu: "4"
 
 
 backups:

@@ -60,23 +60,6 @@ blobscan-api:
           replacement: staging
           targetLabel: environment
 
-  chunkstorm:
-    # tag: 0.3.0
-    tag: development
-    pullPolicy: Always
-    stamperstorePersistentVolume:
-      storageClassName: "do-block-storage-retain"
-
-    annotations:
-      keel.sh/policy: "force"
-      keel.sh/match-tag: "true"
-      keel.sh/approvals: "0"
-
-    # TODO: enable when endpoint exists
-    service:
-      annotations:
-        k8s.grafana.com/scrape: "true"
-
 #   serviceMonitor:
 #     enabled: true
 #     relabelings:

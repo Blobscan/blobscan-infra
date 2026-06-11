@@ -8,8 +8,6 @@ repositories:
     url: https://kubernetes.github.io/ingress-nginx
   - name: grafana
     url: https://grafana.github.io/helm-charts
-  - name: ethersphere
-    url: https://ethersphere.github.io/helm
   - name: blobscan
     url: https://blobscan.github.io/blobscan-helm-charts
   - name: bitnami

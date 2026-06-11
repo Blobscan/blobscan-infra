@@ -5,15 +5,20 @@ cluster:
     owner: blobscan
 
   storage:
-    size: 80Gi
+    size: 100Gi
+
+  walStorage:
+    enabled: true
+    size: 20Gi
+    storageClass: "do-block-storage-retain"
 
   resources:
     requests:
-      memory: "3Gi"
-      cpu: "1"
+      memory: "3379Mi"
+      cpu: "3"
     limits:
-      memory: "4Gi"
-      cpu: "4"
+      memory: "4306Mi"
+      cpu: "6"
 
 backups:
   scheduledBackups:
