@@ -11,7 +11,7 @@ version:
 mode: standalone
 
 cluster:
-  instances: 2
+  instances: 1
 
   storage:
     size: 20Gi

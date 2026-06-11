@@ -1,6 +1,4 @@
 cluster:
-  instances: 1
-
   initdb:
     database: blobscan_preview
     owner: blobscan
