@@ -41,7 +41,9 @@ spec:
             - name: TS_EXTRA_ARGS
               value: "--login-server={{ .Values.loginServer }} --accept-routes"
           securityContext:
-            privileged: true
+            # NET_ADMIN + the /dev/net/tun device below are sufficient for the
+            # Tailscale subnet router; full privilege is not required.
+            privileged: false
             capabilities:
               add:
                 - NET_ADMIN
