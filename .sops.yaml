@@ -1,3 +1,7 @@
 creation_rules:
   - pgp: "FE7F3ABE1470369E0839081616EFB510AB8B3C4C"
-    encrypted_regex: '^(MATOMO_AUTH_TOKEN|DATABASE_URL|DIRECT_URL|REDIS_URI|SECRET_KEY|GOOGLE_SERVICE_KEY|GOOGLE_STORAGE_BUCKET_NAME|GOOGLE_STORAGE_PROJECT_ID|WEAVEVM_API_KEY|BEACON_NODE_ENDPOINT|EXECUTION_NODE_ENDPOINT|SENTRY_DSN|value|access-token|email|ETH_PRICE_SYNCER_CHAIN_JSON_RPC_URL|FEEDBACK_WEBHOOK_URL|SENTRY_DSN_API|WEAVEVM_API_KEY|password|keystorePassword|accessKey|secretKey|SWARMY_API_KEY|IPFS_API_KEY|authKey|POSTGRES_DSN|BEACON_RPC|EXECUTION_RPC)$'
+    # Fail-closed: encrypt every value by default. Only the clearly non-secret
+    # configuration keys listed below are left in plaintext (for readable diffs).
+    # Any new key — e.g. a freshly added *_API_KEY — is encrypted automatically,
+    # so a missing allowlist entry can no longer leak a secret in this public repo.
+    unencrypted_regex: '^(enabled|provider|endpointURL|destinationPath|create|name|retentionPolicy|compression|maxParallel|encryption)$'
