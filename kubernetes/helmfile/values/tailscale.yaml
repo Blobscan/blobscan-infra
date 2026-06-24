@@ -1,0 +1,20 @@
+loginServer: "https://hs.blobscan.com"
+hostname: "k8s-subnet-router"
+# SECURITY: this advertises the whole cluster CIDR to the tailnet, so any
+# tailnet node with an approved route can reach every pod/service IP. The IPFS
+# proxies below only need the subnet router's own listeners reachable. Narrow
+# this to the smallest range that still serves the proxies — e.g. the Service
+# ClusterIP /24 that fronts this router, not the full /20 — once verified
+# against the live Service CIDR. Keep it in sync with the headscale
+# autoApprovers route (kubernetes/helmfile/values/headscale.yaml).
+routes: "10.108.0.0/20"
+headscaleClusterIP: "10.108.60.63"
+headscaleHostname: "hs.blobscan.com"
+
+proxies:
+  - name: tango-ipfs
+    localPort: 5001
+    target: 100.90.1.2:5001
+  - name: tango-ipfs-gateway
+    localPort: 8080
+    target: 100.90.1.2:8080
