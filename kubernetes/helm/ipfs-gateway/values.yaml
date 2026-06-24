@@ -1,0 +1,18 @@
+externalService:
+  name: ipfs-gateway
+  # FQDN of the tailscale subnet-router service exposing the IPFS gateway port
+  externalName: tailscale-subnet-router.tailscale.svc.cluster.local
+  port: 8080
+
+ingress:
+  enabled: true
+  className: nginx-pp
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-dns-gcp
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /ipfs/$2
+    nginx.ingress.kubernetes.io/upstream-vhost: tailscale-subnet-router.tailscale.svc.cluster.local
+  host: ""
+  path: /ipfs(/|$)(.*)
+  tlsSecretName: ""

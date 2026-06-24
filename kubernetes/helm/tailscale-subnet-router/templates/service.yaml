@@ -1,0 +1,16 @@
+{{- if .Values.proxies }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: {{ .Release.Name }}
+  ports:
+    {{- range .Values.proxies }}
+    - name: {{ .name }}
+      port: {{ .localPort }}
+      targetPort: {{ .localPort }}
+    {{- end }}
+{{- end }}

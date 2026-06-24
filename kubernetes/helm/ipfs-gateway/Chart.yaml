@@ -1,0 +1,5 @@
+apiVersion: v2
+name: ipfs-gateway
+description: Ingress + ExternalName service exposing the external IPFS gateway
+type: application
+version: 0.1.0

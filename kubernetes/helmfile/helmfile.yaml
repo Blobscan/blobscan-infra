@@ -16,6 +16,8 @@ repositories:
     url: https://charts.jetstack.io
   - name: prometheus-community
     url: https://prometheus-community.github.io/helm-charts
+  - name: gabe565
+    url: https://charts.gabe565.com
 
 releases:
   - name: blackbox-exporter
@@ -49,12 +51,20 @@ releases:
     chart: cnpg/cloudnative-pg
     version: 0.23.2
 
-  - name: bee
-    namespace: swarm
-    chart: ethersphere/bee
-    version: 0.16.7
+  - name: headscale
+    namespace: headscale
+    chart: gabe565/headscale
+    version: 0.16.0
     values:
-      - values/bee.yaml
+      - values/headscale.yaml
+
+  - name: tailscale-subnet-router
+    namespace: tailscale
+    chart: ../helm/tailscale-subnet-router
+    values:
+      - values/tailscale.yaml
+    secrets:
+      - secrets/tailscale.yaml
 
   # common or one per instance?
   # TODO: deploy redis instance from the blobscan package
