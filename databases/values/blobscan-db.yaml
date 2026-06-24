@@ -83,6 +83,15 @@ cluster:
   # initdb:
   #  database: app
 
+  # -- Spread primary and replicas across different nodes
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              cnpg.io/cluster: "{{ .Release.Name }}"
+          topologyKey: "kubernetes.io/hostname"
+
   # -- Configure the metadata of the generated service account
   serviceAccountTemplate: {}
 
