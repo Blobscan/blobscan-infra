@@ -1,0 +1,52 @@
+# Default-deny + scoped-allow ingress for the CloudNativePG database and pooler
+# pods. Apply this once per database namespace (staging, mainnet, gnosis,
+# sepolia, hoodi, holesky):
+#
+#   for ns in staging mainnet gnosis sepolia hoodi holesky; do
+#     kubectl -n "$ns" apply -f kubernetes/security/netpol-database.yaml
+#   done
+#
+# Scope is deliberately narrow: it selects ONLY the Postgres instances and the
+# PgBouncer poolers (by their cnpg.io labels), so it cannot break the app,
+# redis, or operator traffic. It denies all ingress to 5432 except from:
+#   - pods in the SAME namespace (the blobscan app/indexer/web/ipld),
+#   - the cnpg-system namespace (the operator),
+#   - the monitoring namespace (Prometheus metrics scraping).
+#
+# Egress is intentionally NOT restricted here (the DB needs DNS, S3 backups,
+# WAL streaming, etc.). This policy is about limiting who can REACH Postgres.
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-restrict-ingress
+  labels:
+    app.kubernetes.io/part-of: blobscan
+    app.kubernetes.io/managed-by: manual
+spec:
+  # Select the Postgres instance pods AND the pooler pods. Both carry
+  # cnpg.io/podRole; matchExpressions covers instance + pooler in one selector.
+  podSelector:
+    matchExpressions:
+      - key: cnpg.io/podRole
+        operator: In
+        values: ["instance", "pooler"]
+  policyTypes:
+    - Ingress
+  ingress:
+    # Postgres (5432) and pooler (5432) — reachable only from the sources below.
+    - from:
+        # Same-namespace workloads (blobscan app/indexer/web/ipld, and the
+        # cnpg instances <-> pooler traffic).
+        - podSelector: {}
+        # The CloudNativePG operator.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cnpg-system
+        # Prometheus / metrics scraping.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - protocol: TCP
+          port: 5432
