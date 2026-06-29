@@ -112,13 +112,7 @@ poolers:
     # https://manpages.debian.org/testing/pgbouncer/pgbouncer.5.en.html
     # The controller will recreate it at /controller/configs/pgbouncer.ini
     # Example defaults en /etc/pgbouncer/pgbouncer.ini.example
-    # Enforce TLS on both legs of the pooler. CNPG already issues the pooler
-    # serving cert (<cluster>-pooler) and the cluster CA, and the app
-    # connection strings already use sslmode=require, so no client change is
-    # needed. client_tls = client->pooler, server_tls = pooler->Postgres.
-    parameters:
-      client_tls_sslmode: "require"
-      server_tls_sslmode: "require"
+    # parameters:
     #   max_client_conn: "1000"
     #   default_pool_size: "25"
     monitoring:

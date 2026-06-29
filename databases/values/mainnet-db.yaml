@@ -9,16 +9,16 @@ cluster:
 
   walStorage:
     enabled: true
-    size: 20Gi
+    size: 30Gi
     storageClass: "do-block-storage-retain"
 
   resources:
     requests:
-      memory: "3379Mi"
-      cpu: "3"
+      memory: "2Gi"
+      cpu: "500m"
     limits:
-      memory: "4306Mi"
-      cpu: "6"
+      memory: "4Gi"
+      cpu: "4"
 
 backups:
   scheduledBackups:
