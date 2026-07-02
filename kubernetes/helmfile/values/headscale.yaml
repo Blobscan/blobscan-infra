@@ -42,19 +42,16 @@ configMaps:
           },
           "acls": [
             {
-              "//": "Admin reaches the managed node groups on any port. Scoped to the tags actually in use instead of *:* so a compromised admin node cannot pivot to arbitrary tailnet hosts. Add new tag groups here as they are introduced.",
               "action": "accept",
               "src": ["tag:admin"],
               "dst": ["tag:infra:*", "tag:homelab:*", "tag:admin:*"]
             },
             {
-              "//": "Cluster (infra) reaches the homelab IPFS node: 5001 admin API + 8080 gateway only.",
               "action": "accept",
               "src": ["tag:infra"],
               "dst": ["tag:homelab:5001", "tag:homelab:8080"]
             },
             {
-              "//": "Homelab reaches only the cluster-side IPFS proxy ports (5001/8080) on the subnet router, not every infra port.",
               "action": "accept",
               "src": ["tag:homelab"],
               "dst": ["tag:infra:5001", "tag:infra:8080"]
