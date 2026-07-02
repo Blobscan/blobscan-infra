@@ -314,11 +314,15 @@ blobscan-ipld:
   networkPolicy:
     enabled: true
     ingress:
-      # blobscan-api POSTs blobs to /blob on the push API (8080).
       from:
+        # blobscan-api POSTs blobs to /blob on the push API (8080).
         - podSelector:
             matchLabels:
               app.kubernetes.io/name: blobscan-api
+        # Prometheus scrapes /metrics.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
       ports:
         - port: 8080
           protocol: TCP
