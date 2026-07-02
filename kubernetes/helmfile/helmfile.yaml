@@ -10,8 +10,6 @@ repositories:
     url: https://grafana.github.io/helm-charts
   - name: blobscan
     url: https://blobscan.github.io/blobscan-helm-charts
-  - name: bitnami
-    url: https://charts.bitnami.com/bitnami
   - name: jetstack
     url: https://charts.jetstack.io
   - name: prometheus-community
@@ -24,27 +22,29 @@ releases:
     namespace: monitoring
     chart: prometheus-community/prometheus-blackbox-exporter
     version: 9.4.0
+    values:
+      - values/blackbox.yaml
 
   - name: cert-manager
     namespace: cert-manager
     chart: jetstack/cert-manager
     version: 1.17.1
 
-  - name: grafana-k8s-monitoring
-    namespace: monitoring
-    chart: grafana/k8s-monitoring
-    version: 2.0.16
-    values:
-      - values/grafana_cloud.yaml
-    # TODO: helm upgrade --install --version ^2 --atomic --timeout 300s
+# - name: grafana-k8s-monitoring
+#   namespace: monitoring
+#   chart: grafana/k8s-monitoring
+#   version: 2.0.16
+#   values:
+#     - values/grafana_cloud.yaml
+#   # TODO: helm upgrade --install --version ^2 --atomic --timeout 300s
     # TODO: test with diff
 
-  - name: nginx-ingress
+  - name: nginx-ingress-proxy
     namespace: ingress
     chart: ingress-nginx/ingress-nginx
     version: 4.12.1
     values:
-      - values/ingress.yaml
+      - values/ingress_pp.yaml
 
   - name: cnpg
     namespace: cnpg-system
@@ -65,57 +65,3 @@ releases:
       - values/tailscale.yaml
     secrets:
       - secrets/tailscale.yaml
-
-  # common or one per instance?
-  # TODO: deploy redis instance from the blobscan package
-  # TODO: remove?
-  - name: redis
-    namespace: staging
-    chart: bitnami/redis
-    version: 20.11.3
-    values:
-      - values/staging-redis.yaml
-
-  - name: blobscan
-    namespace: staging
-    chart: blobscan/blobscan
-    version: 0.6.6
-    values:
-      - values/staging-blobscan.yaml
-    secrets:
-      - secrets/staging-blobscan.yaml
-
-  - name: blobscan
-    namespace: gnosis
-    chart: blobscan/blobscan
-    version: 0.5.5
-    values:
-      - values/gnosis-blobscan.yaml
-
-  - name: blobscan
-    namespace: holesky
-    chart: blobscan/blobscan
-    version: 0.5.5
-    values:
-      - values/holesky-blobscan.yaml
-
-  - name: blobscan
-    namespace: sepolia
-    chart: blobscan/blobscan
-    version: 0.5.5
-    values:
-      - values/sepolia-blobscan.yaml
-
-  - name: blobscan
-    namespace: mainnet
-    chart: blobscan/blobscan
-    version: 0.5.5
-    values:
-      - values/mainnet-blobscan.yaml
-
-  - name: blobscan
-    namespace: preview
-    chart: blobscan/blobscan
-    version: 0.5.5
-    values:
-      - values/preview-blobscan.yaml

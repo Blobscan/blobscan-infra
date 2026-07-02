@@ -1,0 +1,11 @@
+serviceMonitor:
+  enabled: true
+  defaults:
+    interval: 60s
+    scrapeTimeout: 30s
+    module: http_2xx
+  targets:
+    - name: ipfs-gateway-empty-file
+      url: https://staging.blobscan.com/ipfs/bafkqaaa
+      labels:
+        probe: ipfs-gateway
