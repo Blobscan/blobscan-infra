@@ -18,3 +18,14 @@ proxies:
   - name: tango-ipfs-gateway
     localPort: 8080
     target: 100.90.1.2:8080
+
+ipfsMetrics:
+  enabled: true
+  interval: 30s
+  scrapeTimeout: 10s
+  labels:
+    app.kubernetes.io/name: ipfs
+  relabelings:
+    - action: replace
+      replacement: tango
+      targetLabel: ipfs_node

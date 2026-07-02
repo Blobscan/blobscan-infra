@@ -1,0 +1,23 @@
+{{- if .Values.ipfsMetrics.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Release.Name }}-ipfs
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- toYaml .Values.ipfsMetrics.labels | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  endpoints:
+    - port: tango-ipfs
+      path: /debug/metrics/prometheus
+      interval: {{ .Values.ipfsMetrics.interval }}
+      scrapeTimeout: {{ .Values.ipfsMetrics.scrapeTimeout }}
+      relabelings:
+        {{- toYaml .Values.ipfsMetrics.relabelings | nindent 8 }}
+{{- end }}

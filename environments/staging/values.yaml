@@ -33,7 +33,7 @@ blobscan-api:
     - name: BLOB_PROPAGATOR_COMPLETED_JOBS_AGE
       value: "1"
     - name: PRIMARY_BLOB_STORAGE
-      value: "GOOGLE"
+      value: "IPFS"
     - name: MATOMO_ENABLED
       value: "true"
     - name: MATOMO_SITE_ID
@@ -46,6 +46,8 @@ blobscan-api:
       value: "true"
     - name: IPFS_STORAGE_GATEWAY_URL
       value: "https://staging.blobscan.com"
+    - name: IPFS_STORAGE_IPLD_URL
+      value: "http://blobscan-ipld:8080"
 
   bullmqExporter:
     enabled: true
@@ -104,6 +106,24 @@ blobscan-api:
         hosts:
           - "api.staging.blobscan.com"
 
+  networkPolicy:
+    enabled: true
+    ingress:
+      from:
+        # nginx ingress controller forwards external HTTP traffic.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress
+        # Prometheus scrapes /metrics.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+        # blobscan-web and blobscan-indexer call the API from the same namespace.
+        - podSelector: {}
+      ports:
+        - port: 3001
+          protocol: TCP
+
   resources:
     requests:
       cpu: 100m
@@ -130,6 +150,13 @@ blobscan-indexer:
   image:
     tag: master
     pullPolicy: "Always"
+
+  networkPolicy:
+    enabled: true
+    ingress:
+      # Default-deny: indexer is a pure outbound worker, no inbound traffic.
+      from: []
+      ports: []
 
 blobscan-web:
   resources:
@@ -173,9 +200,28 @@ blobscan-web:
       value: "true"
     - name: IPFS_STORAGE_GATEWAY_URL
       value: "https://staging.blobscan.com"
+    - name: IPFS_STORAGE_IPLD_URL
+      value: "http://blobscan-ipld:8080"
+
 # TODO: review:
 #   - name: PUBLIC_SENTRY_DSN_WEB
 #     value: ""
+
+  networkPolicy:
+    enabled: true
+    ingress:
+      from:
+        # nginx ingress controller forwards external HTTP traffic.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress
+        # Prometheus scrapes /metrics.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 3000
+          protocol: TCP
 
   image:
     tag: development
@@ -219,7 +265,7 @@ blobscan-ipld:
     pullPolicy: "Always"
 
   # Run in push-API mode: blobs are POSTed to /blob; no beacon RPC needed.
-  # customCommand: ["blobscan-ipld", "serve"]
+  #customCommand: ["blobscan-ipld", "serve"]
   customCommand: ["blobscan-ipld", "serve", "-pull"]
 
   # Provision the ipld database (ipld_mainnet) in the existing staging CNPG
@@ -254,23 +300,43 @@ blobscan-ipld:
       port: http
     initialDelaySeconds: 30
     periodSeconds: 30
+    timeoutSeconds: 3
+    failureThreshold: 3
   readinessProbe:
     httpGet:
-      path: /healthz
+      path: /readyz
       port: http
     initialDelaySeconds: 10
     periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  networkPolicy:
+    enabled: true
+    ingress:
+      # blobscan-api POSTs blobs to /blob on the push API (8080).
+      from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: blobscan-api
+      ports:
+        - port: 8080
+          protocol: TCP
 
   serviceMonitor:
-    enabled: false
+    enabled: true
+    relabelings:
+      - action: replace
+        replacement: staging
+        targetLabel: environment
 
   resources:
     requests:
       cpu: 250m
-      memory: 256Mi
+      memory: 512Mi
     limits:
       cpu: 2
-      memory: 1Gi
+      memory: 2Gi
 
 
 blobscandb:

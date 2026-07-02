@@ -15,6 +15,13 @@ proxies: []
 #   localPort: 5001
 #   target: <vpn-ip>:5001
 
+ipfsMetrics:
+  enabled: false
+  interval: 30s
+  scrapeTimeout: 10s
+  labels: {}
+  relabelings: []
+
 resources:
   requests:
     cpu: 50m
