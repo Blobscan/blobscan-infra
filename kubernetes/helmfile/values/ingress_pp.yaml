@@ -34,3 +34,4 @@ controller:
       service.beta.kubernetes.io/do-loadbalancer-name: "http-lb"
       service.beta.kubernetes.io/do-loadbalancer-protocol: "tcp"
       service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
+      service.beta.kubernetes.io/do-loadbalancer-type: REGIONAL
