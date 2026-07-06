@@ -5,7 +5,12 @@ cluster:
     owner: blobscan
 
   storage:
-    size: 60Gi
+    size: 100Gi
+
+  walStorage:
+    enabled: true
+    size: 30Gi
+    storageClass: "do-block-storage-retain"
 
   resources:
     requests:
