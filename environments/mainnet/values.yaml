@@ -29,7 +29,7 @@ blobscan-api:
     - name: BLOB_PROPAGATOR_COMPLETED_JOBS_AGE
       value: "1"
     - name: PRIMARY_BLOB_STORAGE
-      value: "GOOGLE"
+      value: "IPFS"
     - name: WEAVEVM_STORAGE_API_BASE_URL
       value: "https://blobscan.load.rs"
     - name: WEAVEVM_STORAGE_ENABLED
@@ -42,6 +42,12 @@ blobscan-api:
       value: "https://matomo.blobscan.com/matomo.php"
     - name: GOOGLE_STORAGE_SIGNED_URLS_ENABLED
       value: "true"
+    - name: IPFS_STORAGE_ENABLED
+      value: "true"
+    - name: IPFS_STORAGE_GATEWAY_URL
+      value: "https://blobscan.com"
+    - name: IPFS_STORAGE_IPLD_URL
+      value: "http://blobscan-ipld:8080"
 
   bullmqExporter:
     enabled: true
@@ -145,6 +151,10 @@ blobscan-web:
       value: "https://blobscan.load.rs"
     - name: GOOGLE_STORAGE_SIGNED_URLS_ENABLED
       value: "true"
+    - name: IPFS_STORAGE_GATEWAY_URL
+      value: "https://blobscan.com"
+    - name: IPFS_STORAGE_IPLD_URL
+      value: "http://blobscan-ipld:8080"
 
   image:
     tag: 1
@@ -176,6 +186,97 @@ blobscan-web:
     requests:
       cpu: 100m
       memory: 128Mi
+
+blobscan-ipld:
+  enabled: true
+
+  fullnameOverride: "blobscan-ipld"
+
+  podLabels:
+    environment: mainnet
+
+  annotations:
+    keel.sh/policy: major
+    keel.sh/approvals: "0"
+
+  image:
+    tag: latest
+    pullPolicy: "Always"
+
+  # Run in push-API mode: blobs are POSTed to /blob; no beacon RPC needed.
+  customCommand: ["blobscan-ipld", "serve"]
+
+  # Provision the ipld database in the existing mainnet CNPG cluster.
+  # Owner role "blobscan" already exists.
+  database:
+    create: true
+    clusterName: "blobscan-mainnet-db-cluster"
+    name: "ipld_mainnet"
+    owner: "blobscan"
+
+  # State file lives on a retained PVC; CAR archives use ephemeral storage.
+  persistence:
+    enabled: true
+    storageClass: "do-block-storage-retain"
+    size: 20Gi
+
+  config:
+    NETWORK_NAME: "mainnet"
+    IPFS_API_ADDR: "http://tailscale-subnet-router.tailscale.svc.cluster.local:5001"
+    IPFS_PIN_ON_ADD: "true"
+    DATA_DIR: "/data"
+    CAR_DIR: "/car"
+    GENERATOR_START_EPOCH: "459684"
+    # Push API listen address (serve mode).
+    GENERATOR_API_LISTEN: ":8080"
+
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 3
+    failureThreshold: 3
+  readinessProbe:
+    httpGet:
+      path: /readyz
+      port: http
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  networkPolicy:
+    enabled: true
+    ingress:
+      from:
+        # blobscan-api POSTs blobs to /blob on the push API (8080).
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: blobscan-api
+        # Prometheus scrapes /metrics.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 8080
+          protocol: TCP
+
+  serviceMonitor:
+    enabled: true
+    relabelings:
+      - action: replace
+        replacement: mainnet
+        targetLabel: environment
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 2
+      memory: 2Gi
 
 blobscandb:
   enabled: false
