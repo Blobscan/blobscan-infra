@@ -55,6 +55,11 @@ configMaps:
               "action": "accept",
               "src": ["tag:homelab"],
               "dst": ["tag:infra:5001", "tag:infra:8080"]
+            },
+            {
+              "action": "accept",
+              "src": ["tag:infra"],
+              "dst": ["10.108.0.0/20:30138", "10.108.0.0/20:31636"]
             }
           ]
         }
