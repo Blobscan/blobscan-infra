@@ -114,6 +114,7 @@ blobscan-web:
     NETWORK_NAME: "gnosis"
     BLOBSCAN_API_BASE_URL: "https://api.gnosis.blobscan.com"
     BLOBSCAN_API_PORT: 443
+    TRUSTED_PROXY_COUNT: "1"
     POSTGRES_STORAGE_ENABLED: "false"
     GOOGLE_STORAGE_ENABLED: "true"
     GOOGLE_STORAGE_BUCKET_NAME: blobscan-production

@@ -124,6 +124,7 @@ blobscan-web:
     NETWORK_NAME: "mainnet"
     BLOBSCAN_API_BASE_URL: "https://api.blobscan.com"
     BLOBSCAN_API_PORT: 443
+    TRUSTED_PROXY_COUNT: "1"
     POSTGRES_STORAGE_ENABLED: "false"
     METRICS_ENABLED: "true"
     LOG_LEVEL: info
