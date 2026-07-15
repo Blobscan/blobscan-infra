@@ -18,6 +18,7 @@ blobscan-api:
     GOOGLE_STORAGE_PROJECT_ID: blobscan-379218
     METRICS_ENABLED: "true"
     LOG_LEVEL: "http"
+    TRUSTED_PROXIES: "10.108.0.0/20"
     BLOB_DATA_API_ENABLED: "false"
 
   extraEnv:
