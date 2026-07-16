@@ -42,6 +42,8 @@ blobscan-api:
       value: "true"
     - name: IPFS_STORAGE_GATEWAY_URL
       value: "https://blobscan.com"
+    - name: IPFS_STORAGE_INTERNAL_GATEWAY_URL
+      value: "http://tailscale-subnet-router.tailscale.svc.cluster.local:8080"
     - name: IPFS_STORAGE_IPLD_URL
       value: "http://blobscan-ipld:8080"
 
@@ -149,6 +151,8 @@ blobscan-web:
       value: "https://blobscan.load.rs"
     - name: IPFS_STORAGE_GATEWAY_URL
       value: "https://blobscan.com"
+    - name: IPFS_STORAGE_INTERNAL_GATEWAY_URL
+      value: "http://tailscale-subnet-router.tailscale.svc.cluster.local:8080"
     - name: IPFS_STORAGE_IPLD_URL
       value: "http://blobscan-ipld:8080"
 
