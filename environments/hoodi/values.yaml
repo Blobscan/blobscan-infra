@@ -85,6 +85,10 @@ blobscan-api:
       cert-manager.io/cluster-issuer: letsencrypt-dns-gcp
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
       nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/limit-rps: "5"
+      nginx.ingress.kubernetes.io/limit-rpm: "60"
+      nginx.ingress.kubernetes.io/limit-burst-multiplier: "1"
+      nginx.ingress.kubernetes.io/limit-whitelist: "10.108.0.0/20,10.109.0.0/16"
 
     hosts:
       - host: "api.hoodi.blobscan.com"
@@ -153,7 +157,7 @@ blobscan-web:
     NETWORK_NAME: "hoodi"
     BLOBSCAN_API_BASE_URL: "https://api.hoodi.blobscan.com"
     BLOBSCAN_API_PORT: 443
-    TRUSTED_PROXY_COUNT: "1"
+    TRUSTED_PROXY_COUNT: "0"
     POSTGRES_STORAGE_ENABLED: "false"
     S3_STORAGE_ENABLED: "true"
     METRICS_ENABLED: "true"

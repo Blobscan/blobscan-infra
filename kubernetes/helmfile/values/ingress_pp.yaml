@@ -3,6 +3,10 @@ controller:
     use-proxy-protocol: "true"
     use-forwarded-headers: "true"
     proxy-real-ip-cidr: "10.108.0.0/20"
+    # Return 429 (not the nginx default 503) when limit-rps annotations trip,
+    # so clients can tell throttling apart from an outage.
+    limit-req-status-code: "429"
+    limit-conn-status-code: "429"
     log-format-upstream: '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$host"'
   ingressClass: nginx-pp
   ingressClassResource:
