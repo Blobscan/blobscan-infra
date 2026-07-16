@@ -30,8 +30,13 @@ controller:
           action: drop
 
   service:
-    annotations:
-      service.beta.kubernetes.io/do-loadbalancer-name: "http-lb"
-      service.beta.kubernetes.io/do-loadbalancer-protocol: "tcp"
-      service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
-      service.beta.kubernetes.io/do-loadbalancer-type: REGIONAL
+    # Fronted by a self-managed HAProxy LB, not a DO managed
+    # LB. The Service must stay NodePort with pinned nodePorts because HAProxy
+    # (haproxy.cfg) and the headscale ACL (values/headscale.yaml) hardcode
+    # 30138/31636. Previously the live Service was NodePort only via manual
+    # drift while these values still requested a LoadBalancer; pinning it here
+    # keeps `helmfile apply` from provisioning a DO LB and reassigning ports.
+    type: NodePort
+    nodePorts:
+      http: 30138
+      https: 31636

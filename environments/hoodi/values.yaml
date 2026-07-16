@@ -18,7 +18,7 @@ blobscan-api:
     POSTGRES_STORAGE_ENABLED: "false"
     METRICS_ENABLED: "true"
     LOG_LEVEL: http
-    TRUSTED_PROXIES: "10.108.0.0/20"
+    TRUSTED_PROXIES: "10.108.0.0/20,10.109.0.0/16"
     # TODO: in web too?
     BLOB_DATA_API_ENABLED: "false"
 
