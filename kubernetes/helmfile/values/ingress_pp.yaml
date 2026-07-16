@@ -2,7 +2,7 @@ controller:
   config:
     use-proxy-protocol: "true"
     use-forwarded-headers: "true"
-    proxy-real-ip-cidr: "10.108.0.0/20"
+    proxy-real-ip-cidr: "10.108.0.0/20,10.109.0.0/16"
     # Return 429 (not the nginx default 503) when limit-rps annotations trip,
     # so clients can tell throttling apart from an outage.
     limit-req-status-code: "429"
